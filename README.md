@@ -8,7 +8,7 @@
 
 - ابتدا به [صفحه‌ی دانلود آرچ](https://archlinux.org/download/) مراجعه کنید و فایل ایزو را به همراه signature مربوطه دانلود کنید.
 
-- سپس با استفاده از [GnuPG](https://wiki.archlinux.org/title/GnuPG) فایل ایزوی دانلود شده را تست کنید تا از صحت آن اطمینان حاصل شود.
+- سپس با استفاده از [GnuPG](https://wiki.archlinux.org/title/GnuPG) فایل ایزوی دانلود شده را تست کنید تا از صحت آن اطمینان حاصل شود.  
   بدین صورت `تائید امضا` را بررسی کنید:
 
   `gpg --keyserver-options auto-key-retrieve --verify archlinux-version-x86_64.iso.sig`
