@@ -28,7 +28,7 @@
 
   </details>
 
-- بوت‌ایبل کرن فلش  
+- بوت‌ایبل کرن فلش    
   برای اینکار روشهای زیادی وجود داره و برنامه‌های گرافیکی هم هستن که کار رو ساده‌تر کردن اما روش ترمینالی اینکار استفاده از دستور زیر هست:  
    ‍‍
 > `dd bs=4M if=path/to/archlinux-version-x86_64.iso of=/dev/sdx conv=fsync oflag=direct status=progress`  
