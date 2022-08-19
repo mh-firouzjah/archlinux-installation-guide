@@ -13,7 +13,7 @@
 
   `gpg --keyserver-options auto-key-retrieve --verify archlinux-version-x86_64.iso.sig`
 
-  <details dir="rtl">
+  <details>
   <summary>تائید امضا </summary>
 
   مطابق اطلاعات [این لینک](https://www2.cs.arizona.edu/stork/packagemanagersecurity/attacks-on-package-managers.html)
