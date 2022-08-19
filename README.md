@@ -1,2 +1,9 @@
-# arhclinux-installation-guide
-This is an installation guide to help everybody install Arch Linux
+# راهنمای نصب آرچ
+
+این مطلب در راستای کمک به نصب آرچ لینوکس تهیه شده است.
+
+---
+
+## قدم اول
+
+- تهیه فایل ISO و ساختن یک فلش bootable از آن
