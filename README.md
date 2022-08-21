@@ -84,7 +84,7 @@
 
 | partition  |       size        | filesystem-type| mount point |          partition          |
 |   :---:    |       :---:       |     :---:      |     :---:   |            :---:            |
-| boot       |       1 GiB       |   EFI system   | `/mnt/boot` | `/dev/efi_system_partition` |
+| boot       |      512 MiB      |   EFI system   | `/mnt/boot` | `/dev/efi_system_partition` |
 | [SWAP]	    | More than 512 MiB |   Linux swap   |  `swapon`   | `/dev/swap_partition`       |
 | root       |  remaining space  | Linux file sys | `/mnt`      | `/dev/root_partition`       |
 
@@ -130,7 +130,7 @@
    -   با نوشتن علامت سوال `m` و زدن اینتر (نوشتن دستور فلان و زدن اینتر رو خلاصه کنیم، با زدن دستور فلان) لیست راهنمای این ابزار باز میشه که میتونید در هر مرحله بهش روجوع کنید  
    - با زدن دستور`g` جدول بندی دیسک رو به حالت GPT تغییر میده که برای نصب ما این حالت لازمه    
    - با دستور `n` یک پارتیشن جدید معرفی می‌کنیم که اولین پارتیشن رو برای بوت منیجر درنظر می‌گیریم و حجم یک گیگ و فایل سیستم efi رو براش درنظر میگیریم
-   درواقع اول n رو می‌زنیم، برای سوال بعدیش دیافلتش که ۱ هست کافیه و فقط اینتر رو می‌زنیم، برای سوال بعدیش هم فقط اینتر رو میزنیم، برای سوال بعدی علامت + رو بذارید و 1024M رو 
+   درواقع اول n رو می‌زنیم، برای سوال بعدیش دیافلتش که ۱ هست کافیه و فقط اینتر رو می‌زنیم، برای سوال بعدیش هم فقط اینتر رو میزنیم، برای سوال بعدی علامت + رو بذارید و 512M رو 
    بدون فاصله بعدش بنویسد، که یعنی یک گیگ براش حجم ببره(میشه +1G هم نوشت.) و اینتر رو میزنیم تا پارتیشن اول ایجاد بشه    
    - با دستور `p` میتونیم چک کنیم که پارتیشن مدنظر ایجاد شده و سایزش هم درسته، می‌تونیم با دستور `d` هم پارتیشنی رو حذف کنیم      
    -  مجدد روال رو طی می‌کنیم تا پارتیشن‌های بیشتری که لازم هستن رو بسازیم مطابق جدول بالا. دستور `n` رو میزنیم. سوال اول و دوم رو فقط اینتر می‌زنیم، 
@@ -154,7 +154,7 @@
 > ‍mkswap -L SWAP /dev/your_drive2  # your_drive2 = /dev/sda2 or /dev/nvme0n1p2  
   - برای پارتیشن اصلی هم دستورات رو می‌زنیم
 > mkfs.btrfs -f -L ROOT /dev/your_drive3 # your_drive3 = /dev/sda3 or /dev/nvme0n1p3  
-  - از اینجا به بعد حواستون باشه که your_drive3 رو باید با اسم درایو مربوطه روی سیستم خودتون جایگزین کنید
+  - از اینجا به بعد من از nvme0n1p3 استفاده می‌کنم، حواستون باشه که nvme0n1p3 رو باید با اسم درایو مربوطه روی سیستم خودتون جایگزین کنید
 
  <details dir="rtl">
   <summary>درباره‌ی فایل سیستم btrfs بخونیم</summary> 
@@ -185,8 +185,19 @@
  
   </details>
  
+ - بریم سراغ ساختن ساب‌ولیوم‌ها، اول باید پارتیشن روت رو مانت کنیم و بعد ساب‌ولیوم‌ها رو روش بسازیم  
+> mount /dev/nvme0n1p3 /mnt
  
- 
- 
+- به این ساب‌ولیوم‌ها نیاز داریم
+  - @ – This is the main root subvolume /.
+  - @home – This is the home directory. This consists of most of your data including Desktop and Downloads.
+  - @log – Contains logs, temp. files, caches, games, etc.
+  - @pkg – Contains all the pacman packages
+  - @tmp – Contains certain temporory files and caches
+  - @snapshots – Directory to store snapshots.
+- این ها هم دستوراتی که استفاده می‌کنیم و اختصارشون
+>  su = subvolume
+>  cr = create
+>  li = list
  
  
