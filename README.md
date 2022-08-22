@@ -1,7 +1,7 @@
 # راهنمای نصب آرچ
 
 این مطلب در راستای کمک به نصب آرچ لینوکس تهیه شده  
-در این روش آرچ را به صورت efi و با systemdboot نصب و از فایل سیستم btrfs استفاده می‌کنیم
+در این روش آرچ را به صورت efi و با `systemdboot` نصب و از فایل سیستم `btrfs` استفاده می‌کنیم
 
  - سعی نمی‌کنم همه‌ی اصطلاحات رو ترجمه کنم و اکثرا کلمات انگلیسی رو فقط فارسی می‌نویسم تا دوستانی که با این کلمات آشنا نیستن هم خونده باشن، بعضی از این کلمات مثل `محیط اینتراکتیو` و موارد دیگه هم چون در عمل نشون داده میشه بهتر درک میشه و در آخر اینکه هرچی هم منابع فارسی پیدا کنید باز مجبورید یه روزی به سراغ منابع انگلیسی برید و خب آشنایی با کلمات انگلیسی اونجا کار رو ساده‌تر می‌کنه
   
@@ -9,9 +9,10 @@
 
 ## قدم اول: تهیه فایل ISO و ساختن یک فلش bootable از آن    
 
-- ابتدا به [صفحه‌ی دانلود آرچ](https://archlinux.org/download/) مراجعه کنید و فایل ایزو را به همراه signature مربوطه دانلود کنید
+- ابتدا به [صفحه‌ی دانلود آرچ](https://archlinux.org/download/) مراجعه کنید و فایل ایزو را به همراه `signature` مربوطه دانلود کنید
 - سپس با استفاده از [GnuPG](https://wiki.archlinux.org/title/GnuPG) فایل ایزوی دانلود شده رو با این روش `تائید امضا` بررسی کنید:  
-> gpg --keyserver-options auto-key-retrieve --verify archlinux-version-x86_64.iso.sig   
+
+`gpg --keyserver-options auto-key-retrieve --verify archlinux-version-x86_64.iso.sig`  
 
  <details dir="rtl">
   <summary>تائید امضا</summary>
@@ -30,7 +31,7 @@
 - بوت‌ایبل کرن فلش    
   برای اینکار روشهای زیادی وجود داره و برنامه‌های گرافیکی هم هستن که کار رو ساده‌تر کردن اما روش ترمینالی اینکار استفاده از دستور زیر هست:  
    ‍‍
-> dd bs=4M if=path/to/archlinux-version-x86_64.iso of=/dev/sdx conv=fsync oflag=direct status=progress  
+`dd bs=4M if=path/to/archlinux-version-x86_64.iso of=/dev/sdx conv=fsync oflag=direct status=progress`  
 
    - برای اطلاعات بیشتر می‌تونید [این لینک](https://wiki.archlinux.org/title/USB_flash_installation_medium#Using_the_ISO_as_is_(BIOS_and_UEFI)) رو مطالعه کنید
   
@@ -48,9 +49,7 @@
   
  </details>
 
-- برای اینکه مطمئن بشیم فلش ما به صورت efi بوت شده دستور زیر رو میزنیم:  
-
-> ls /sys/firmware/efi/efivars
+- برای اینکه مطمئن بشیم فلش ما به صورت efi بوت شده دستور زیر رو میزنیم `ls /sys/firmware/efi/efivars`  
 
   اگر این دستور خروجی نداشته باشه یعنی درحال حاضر این فلش به صورت efi بوت‌ایبل و درنتیجه بوت نشده پس باید دوباره مراحل قبلی رو طی کنید
 
@@ -70,9 +69,8 @@
   - اگر نیاز به پسورد برای وای‌فای باشه یک پرامپت باز میشه تا پسورد رو بگیره،‌ همچنین میتونید یکجا و در یک دستور بزنید(نیازی به گفتن نداره که `passphrase` دومی هم همون پسورد وای‌فای هست)  
 > iwctl --passphrase passphrase station device connect SSID  
   - برای اطلاعات بیشتر به [این لینک](https://wiki.archlinux.org/title/Iwd#iwctl) از ویکی آرچ مراجعه کنید
-  - با دستور پینگ چک کنید که به اینترنت وصل شدین یا نه
-> ping -c 4 archlinux.org
-  - ساعت سیستم رو تنظیم کنید `timedatectl set-ntp true`
+  - با دستور پینگ چک کنید که به اینترنت وصل شدین یا نه `ping -c 4 archlinux.org`  
+  - ساعت سیستم رو تنظیم کنید `timedatectl set-ntp true`  
 ---
 
 ## پارتیشن بندی دیسک
@@ -149,11 +147,17 @@
 
 ## ساختن فایل سیستم    
   -  اول پارتیشن بوت منیجر رو فرمت می‌کنیم، دستور زیر رو بزنید   
-> mkfs.fat -F 32 -n EFI /dev/efi_system_partition   # efi_system_partition = /dev/sda1 or /dev/nvme0n1p1    
+
+`mkfs.fat -F 32 -n EFI /dev/efi_system_partition   # efi_system_partition = /dev/sda1 or /dev/nvme0n1p1` 
+
   - برای پارتیشن swap دستور  
-> ‍mkswap -L SWAP /dev/your_drive2  # your_drive2 = /dev/sda2 or /dev/nvme0n1p2  
+
+`mkswap -L SWAP /dev/your_drive2  # your_drive2 = /dev/sda2 or /dev/nvme0n1p2`  
+
   - برای پارتیشن اصلی هم دستورات رو می‌زنیم
-> mkfs.btrfs -f -L ROOT /dev/your_drive3 # your_drive3 = /dev/sda3 or /dev/nvme0n1p3  
+
+`mkfs.btrfs -f -L ROOT /dev/your_drive3 # your_drive3 = /dev/sda3 or /dev/nvme0n1p3`  
+
   - از اینجا به بعد من از nvme0n1p3 استفاده می‌کنم، حواستون باشه که nvme0n1p3 رو باید با اسم درایو مربوطه روی سیستم خودتون جایگزین کنید
 
  <details dir="rtl">
@@ -185,8 +189,10 @@
  
   </details>
  
- - بریم سراغ ساختن ساب‌ولیوم‌ها، اول باید پارتیشن روت رو مانت کنیم و بعد ساب‌ولیوم‌ها رو روش بسازیم  
-> mount /dev/nvme0n1p3 /mnt
+ - بریم سراغ ساختن ساب‌ولیوم‌ها، اول باید پارتیشن روت رو مانت کنیم و بعد ساب‌ولیوم‌ها رو روش بسازیم
+
+`mount /dev/nvme0n1p3 /mnt`
+
  
  - به این ساب‌ولیوم‌ها نیاز داریم
 > @, @home, @log, @pkg, @tmp, @snapshots
@@ -211,14 +217,28 @@
  - ساختن ساب‌ولیوم‌ها  
   
 ```
+btrfs su cr /mnt/@  
+btrfs su cr /mnt/@home  
+btrfs su cr /mnt/@root  
+btrfs su cr /mnt/@srv  
+btrfs su cr /mnt/@log  
+btrfs su cr /mnt/@cache  
+btrfs su cr /mnt/@tmp  
+btrfs su li /mnt  
+cd /  
+umount /mnt  
+```
+ - و حالا مانت کردن ساب‌ولیوم‌ها
 
-   btrfs su cr /mnt/@  
-   btrfs su cr /mnt/@home  
-   btrfs su cr /mnt/@root  
-   btrfs su cr /mnt/@srv  
-   btrfs su cr /mnt/@log  
-   btrfs su cr /mnt/@cache  
-   btrfs su cr /mnt/@tmp  
-   btrfs su li /mnt  
+```
+mount -o defaults,noatime,compress=zstd,commit=120,subvol=@ /dev/nvme0n1p3 /mnt  
 
+mkdir -p /mnt/{home,root,srv,var/log,var/cache,tmp}
+
+mount -o defaults,noatime,compress=zstd,commit=120,subvol=@home /dev/sda3 /mnt/home
+mount -o defaults,noatime,compress=zstd,commit=120,subvol=@root /dev/sda3 /mnt/root
+mount -o defaults,noatime,compress=zstd,commit=120,subvol=@srv /dev/sda3 /mnt/srv
+mount -o defaults,noatime,compress=zstd,commit=120,subvol=@log /dev/sda3 /mnt/var/log
+mount -o defaults,noatime,compress=zstd,commit=120,subvol=@cache /dev/sda3 /mnt/var/cache
+mount -o defaults,noatime,compress=zstd,commit=120,subvol=@tmp /dev/sda3 /mnt/tmp
 ```
