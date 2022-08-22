@@ -188,7 +188,7 @@
  - بریم سراغ ساختن ساب‌ولیوم‌ها، اول باید پارتیشن روت رو مانت کنیم و بعد ساب‌ولیوم‌ها رو روش بسازیم  
 > mount /dev/nvme0n1p3 /mnt
  
-- به این ساب‌ولیوم‌ها نیاز داریم
+ - به این ساب‌ولیوم‌ها نیاز داریم
 > @, @home, @log, @pkg, @tmp, @snapshots
 
 <details dir="rtl">
@@ -203,9 +203,18 @@
  
 </details>
  
-- این ها هم دستوراتی که استفاده می‌کنیم و اختصارشون
+ - این ها هم دستوراتی که استفاده می‌کنیم و اختصارشون
 >  su = subvolume
 >  cr = create
 >  li = list
  
+ - ساختن ساب‌ولیوم‌ها
+  btrfs su cr /mnt/@
+  btrfs su cr /mnt/@home
+  btrfs su cr /mnt/@root
+  btrfs su cr /mnt/@srv
+  btrfs su cr /mnt/@log
+  btrfs su cr /mnt/@cache
+  btrfs su cr /mnt/@tmp
+  btrfs su li /mnt
  
