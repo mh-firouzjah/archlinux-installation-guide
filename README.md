@@ -210,7 +210,7 @@
  
  - ساختن ساب‌ولیوم‌ها  
   
-‍‍```bash
+```
 
    btrfs su cr /mnt/@  
    btrfs su cr /mnt/@home  
