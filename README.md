@@ -189,12 +189,12 @@
 > mount /dev/nvme0n1p3 /mnt
  
 - به این ساب‌ولیوم‌ها نیاز داریم
-  - @ – This is the main root subvolume /.
-  - @home – This is the home directory. This consists of most of your data including Desktop and Downloads.
-  - @log – Contains logs, temp. files, caches, games, etc.
-  - @pkg – Contains all the pacman packages
-  - @tmp – Contains certain temporory files and caches
-  - @snapshots – Directory to store snapshots.
+  - `@` – This is the main root subvolume /.
+  - `@home` – This is the home directory. This consists of most of your data including Desktop and Downloads.
+  - `@log` – Contains logs, temp. files, caches, games, etc.
+  - `@pkg` – Contains all the pacman packages
+  - `@tmp` – Contains certain temporory files and caches
+  - `@snapshots` – Directory to store snapshots.
 - این ها هم دستوراتی که استفاده می‌کنیم و اختصارشون
 >  su = subvolume
 >  cr = create
