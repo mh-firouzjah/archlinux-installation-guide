@@ -209,7 +209,7 @@
 >  li = list
  
  - ساختن ساب‌ولیوم‌ها  
-
+‍‍```sh
   btrfs su cr /mnt/@
   btrfs su cr /mnt/@home
   btrfs su cr /mnt/@root
@@ -218,4 +218,4 @@
   btrfs su cr /mnt/@cache
   btrfs su cr /mnt/@tmp
   btrfs su li /mnt
- 
+```
