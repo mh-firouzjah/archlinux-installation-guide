@@ -208,7 +208,8 @@
 >  cr = create
 >  li = list
  
- - ساختن ساب‌ولیوم‌ها
+ - ساختن ساب‌ولیوم‌ها  
+
   btrfs su cr /mnt/@
   btrfs su cr /mnt/@home
   btrfs su cr /mnt/@root
