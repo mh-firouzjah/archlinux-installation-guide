@@ -106,6 +106,17 @@
 
 ساعت سیستم رو تنظیم کنید `timedatectl set-ntp true`  
 
+## بروزرسانی میرورهای مدیر بسته
+
+برای اینکه در ادامه و برای نصب بسته‌های لازم کمی سرعت دانلود از اینترنت بهتری داشته باشم لازم است تا لیست میرورهای مخازن را بروزرسانی کنیم. برای این کار از 
+بسته‌ی erflector استفاده می‌کنیم. ابتدا باید آن را نصب کنیم و سپس لیست میرورها را آپدیت کنیم. قبل از آپدیت کردن از لیست فعلی یک بک‌آپ تهیه می‌کنیم برای احتیاط
+
+```bash
+cp /etc/pacman.d/mirrorlist  /etc/pacman.d/mirrorlist.bac
+pacman -Sy reflector
+reflector --country Germany,France,England,Nederland --protocol https --age 24 --sort rate --save /etc/pacman.d/mirrorlist
+```
+
 ---
 
 ## پارتیشن بندی دیسک
@@ -116,11 +127,11 @@
 
 حداقل دو تا پارتیشن لازم داریم. یکی برای efi و بوت شدن سیستم و یکی هم برای خود سیستم‌عامل و درایوهای هوم و غیره،‌ از ابزار `cfdisk‍` یا `fdsik` برای پارتیشن بندی استفاده کنید. طرز کار ساده‌ای دارن، ابزارهای دیگه هم فرقی نداره استفاده بشن و مهم خروجی کار هست. نهایتا در خروجی کار همچین چیزی لازمه:
 
-| partition  |       size        | filesystem-type| mount point |          partition          |
-|   :---:    |       :---:       |     :---:      |     :---:   |            :---:            |
-| boot       |      512 MiB      |   EFI system   | `/mnt/boot` | `/dev/efi_system_partition` |
-| [SWAP]     | More than 512 MiB |   Linux swap   |  `swapon`   | `/dev/swap_partition`       |
-| root       |  remaining space  | Linux file sys | `/mnt`      | `/dev/root_partition`       |
+| partition  |       size        | filesystem-type|  mount point  |         partition         |
+|   :---:    |       :---:       |     :---:      |     :---:     |           :---:           |
+| boot       |      512 MiB      |   EFI system   | /mnt/boot/efi | /dev/efi_system_partition |
+| [SWAP]     | More than 512 MiB |   Linux swap   |     swapon    | /dev/swap_partition       |
+| root       |  remaining space  | Linux file sys |     /mnt      | /dev/root_partition       |
 
 ساختن پارتیشن `swap` الزامی نیست بعدا هم می‌تونید اضافه کنید! تصمیم گیری با خودتون
 
@@ -212,7 +223,12 @@
 
 </div>
 
-برای پارتیشن اصلی هم دستورات رو می‌زنیم
+برای پارتیشن اصلی هم دستور زیر رو می‌زنیم. اما اگر یک پارتیشن ویندوزی دارین که میخواین به همون فرمت ویندوزی باقی بمونه و فرمتش نمی‌کنید یا فرمت می‌کنید ولی 
+بازم میخواین که توی ویندوز قابل استفاده باشه نیازه پکیج ntfs-3g نصب کنید همچنین برای احتیاط یک پکیج برای btrfs هم چک می‌کنیم که نصب هست یا نه
+
+```bash
+pacman -Sy ntfs-3g btrfs-progs
+```
 
 <div dir='ltr' align='left'>
 
