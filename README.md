@@ -515,7 +515,7 @@ swapon /dev/nvme0n1p2
 <div dir='ltr' align='left'>
 
 ```bash
-pacstrap /mnt base linux-zen linux-zen-headers linux-firmware intel-ucode ntfs-3g btrfs-progs  
+pacstrap /mnt base linux-zen linux-firmware intel-ucode ntfs-3g btrfs-progs  
 
 genfstab -U /mnt >> /mnt/etc/fstab
 
@@ -547,7 +547,7 @@ echo "127.0.0.1 localhost" > /etc/hosts
 echo "::1  localhost" >> /etc/hosts
 echo "127.0.1.1 ${what-ever-your-hostname}.localdomain ${what-ever-your-hostname}" >> /etc/hosts
 
-pacman -Sy sudo networkmanager ufw reflector sof-firmware alsa-firmware alsa-ucm-conf alsa-utils alsa-plugins vim nano man-db man-pages texinfo
+pacman -Sy vim nano man-db man-pages texinfo
 
 # bootloader as we are going to use systemd-boot
 bootctl install
@@ -560,7 +560,23 @@ default      arch.conf
 timeout      0
 editor       no
 console-mode auto
+```
 
+</div>
+
+درصورتی که فقط گرافیک nvidia دارین در قسمت options این چندتا آپشن رو وارد کنید
+
+<div dir='ltr' align='left'>
+
+```bash
+nvidia nvidia_modeset nvidia_uvm nvidia_drm
+```
+
+</div>
+
+<div dir='ltr' align='left'>
+
+```bash
 # config the loader entery and set some kernel modules(options)
 vim esp/loader/entries/arch.conf
 ---------------------
@@ -568,34 +584,39 @@ title    Arch Linux
 linux    /vmlinuz-linux
 initrd   /intel-ucode.img
 initrd   /initramfs-linux.img
-options  root=/dev/nvme0n1p3 rootfstype=btrfs rootflags=subvol=@ elevator=deadline add_efi_memmap rw quiet splash loglevel=3 vt.global_cursor_default=0 plymouth.ignore_serial_consoles vga=current rd.systemd.show_status=auto r.udev.log_priority=3 nowatchdog fbcon=nodefer i915.fastboot=1 i915.invert_brightness=1
+options  root=/dev/nvme0n1p3 rootfstype=btrfs rootflags=subvol=@ elevator=deadline add_efi_memmap rw quiet splash loglevel=3 vt.global_cursor_default=0 plymouth.ignore_serial_consoles rd.systemd.show_status=auto r.udev.log_priority=3 nowatchdog fbcon=nodefer i915 i915.fastboot=1 i915.enable_fbc=1 i915.invert_brightness=1 intel_iommu=on,igfx_off
 
 
 # pacman hook to automate the bootloader update after kernel update
 mkdir /etc/pacman.d/hooks/
-touch /etc/pacman.d/hooks/100-systemd-boot.hook
 vim /etc/pacman.d/hooks/100-systemd-boot.hook
 ---------------------
 [Trigger]
-Type = Package
-Operation = Upgrade
-Target = systemd
+Type=Package
+Operation=Upgrade
+Target=systemd
 
 [Action]
-Description = Updating systemd-boot
-When = PostTransaction
-Exec = /usr/bin/bootctl update
+Description=Updating systemd-boot
+When=PostTransaction
+Exec=/usr/bin/bootctl update
 
 # enabling silent boot
 echo "kernel.printk = 3 3 3 3" > /etc/sysctl.d/20-quiet-printk.conf
 
 # hide startx messages
 echo "[[ $(fgconsole 2>/dev/null) == 1 ]] && exec startx -- vt1 &> /dev/null" >> .bash_profile
+```
 
+</div>
+
+<div dir='ltr' align='left'>
+
+```bash
 # To hide fsck messages during boot, let systemd check the root filesystem. For this, replace udev hook with systemd
 vim /etc/mkinitcpio.conf
 
-HOOKS=( base [udev]systemd fsck ...)
+HOOKS=( base [udev]systemd fsck intel_agp i915 ...)
 
 mkinitcpio -P
 
@@ -603,7 +624,7 @@ mkinitcpio -P
 passwd
 
 # create another user
-useradd --create-home -g users --groups audio,games,log,lp,optical,power,scanner,storage,video,wheel -s /bin/bash <your username>
+useradd -m -G wheel -s /bin/bash <your username>
 passwd <your username>
 cp ~/.bash_profile /home/<your username>/.bash_profile
 
@@ -611,8 +632,73 @@ cp ~/.bash_profile /home/<your username>/.bash_profile
 visudo
 ## type /%wheel hit enter to find the line %wheel ALL=(ALL) ALL type ^ then hit x then type :wq
 
+pacman -S sudo networkmanager ufw reflector
+pacman -S --needed git base-devel
+
+# enabling chaotic-aur
+pacman-key --recv-key FBA220DFC880C036 --keyserver keyserver.ubuntu.com
+pacman-key --lsign-key FBA220DFC880C036
+pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
+
+echo "[chaotic-aur]" >> /etc/pacman.conf
+echo "Include = /etc/pacman.d/chaotic-mirrorlist" >> /etc/pacman.conf
+
 # network and firewall
 systemctl enable NetworkManager
 ufw enable
+
+```
+
+</div>
+
+## بخش گرافیکی
+
+در این بخش من قصد دارم دسکتاپ کی‌دی‌ای و پلاسما را نصب و کانفیگ کنم
+پکیج‌هایی که لازم داریم و تنظیماتی که باید بعد از نسب آن‌ها انجام بشن رو به همراه توضیح مختصری می‌نویسم
+برای شناسایی کارت گرافیکی که روی سیستم دارین دستور زیر رو بزنید و بعد هم با پکمن سرچ کنید ببینید بسته‌ی مناسب سخت‌افزار شما کدوم هست
+
+<div dir='ltr' align='left'>
+
+```bash
+lspci -v | grep -A1 -e VGA -e 3D
+
+pacman -Ss xf86-video
+
+pacman -S xf86-video-intel1 mesa lib32-mesa
+pacman -S nvidia-dkms linux-zen-headers nvidia-utils lib32-nvidia-utils nvidia-settings
+pacman -S vulkan-icd-loader vulkan-intel lib32-vulkan-icd-loader
+
+# pacman hook to automate initcpio update after nvidia update
+vim /etc/pacman.d/hooks/nvidia.hook
+---------------------
+[Trigger]
+Operation=Install
+Operation=Upgrade
+Operation=Remove
+Type=Package
+Target=nvidia
+Target=linux-zen
+# Change the linux part above and in the Exec line if a different kernel is used
+
+[Action]
+Description=Update NVIDIA module in initcpio
+Depends=mkinitcpio
+When=PostTransaction
+NeedsTargets
+Exec=/bin/sh -c 'while read -r trg; do case $trg in linux-zen) exit 0; esac; done; /usr/bin/mkinitcpio -P'
+
+# added this line to kernel parameters
+nvidia_drm.modeset=1
+```
+
+</div>
+
+<div dir='ltr' align='left'>
+
+```bash
+pacman -S xorg plasma-desktop plasma-pa sddm sddm-kcm nm-connection-editor network-manager-applet
+pacman -S kdegraphics-thumbnailers and ffmpegthumbs powerdevil power-profiles-daemon  bluez bluez-utils
+
+systemctl enable display-manager.service
 
 ```
