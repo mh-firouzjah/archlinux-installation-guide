@@ -119,11 +119,15 @@ dd bs=4M if=path/to/archlinux-version-x86_64.iso of=/dev/sdx conv=fsync oflag=di
 برای اینکه در ادامه و برای نصب بسته‌های لازم کمی سرعت دانلود از اینترنت بهتری داشته باشم لازم است تا لیست میرورهای مخازن را بروزرسانی کنیم. برای این کار از 
 بسته‌ی erflector استفاده می‌کنیم. ابتدا باید آن را نصب کنیم و سپس لیست میرورها را آپدیت کنیم. قبل از آپدیت کردن از لیست فعلی یک بک‌آپ تهیه می‌کنیم برای احتیاط
 
+<div dir='ltr' align='left'>
+
 ```bash
 cp /etc/pacman.d/mirrorlist  /etc/pacman.d/mirrorlist.bac
 pacman -Sy reflector
 reflector --country Germany,France,England,Nederland --protocol https --age 24 --sort rate --save /etc/pacman.d/mirrorlist
 ```
+
+</div>
 
 ---
 
