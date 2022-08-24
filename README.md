@@ -82,7 +82,9 @@ dd bs=4M if=path/to/archlinux-version-x86_64.iso of=/dev/sdx conv=fsync oflag=di
 
 <div dir='ltr' align='left'>
 
-> [iwd]#
+```bash
+[iwd]#
+```
 
 </div>
 
@@ -100,7 +102,9 @@ dd bs=4M if=path/to/archlinux-version-x86_64.iso of=/dev/sdx conv=fsync oflag=di
 
 <div dir='ltr' align='left'>
 
-> iwctl --passphrase passphrase station device connect SSID  
+```bash
+[iwd]# iwctl --passphrase passphrase station device connect SSID
+```
 
 </div>
 
@@ -267,7 +271,9 @@ mkfs.btrfs -f -L ROOT /dev/your_drive3 # your_drive3 = /dev/sda3 or /dev/nvme0n1
 
 <div dir='ltr' align='left'>
 
-> mount -o compress=zstd /dev/sdx /mnt  
+```bash
+mount -o compress=zstd /dev/sdx /mnt
+```
 
 </div>
 
