@@ -74,6 +74,8 @@ dd bs=4M if=path/to/archlinux-version-x86_64.iso of=/dev/sdx conv=fsync oflag=di
 ls /sys/firmware/efi/efivars
 ```
 
+</div>
+
 اگر این دستور خروجی نداشته باشه یعنی درحال حاضر این فلش به صورت efi بوت‌ایبل و درنتیجه بوت نشده پس باید دوباره مراحل قبلی رو طی کنید
 
 ---
