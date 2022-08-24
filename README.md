@@ -235,7 +235,7 @@ reflector --country Germany,France,England,Nederland --protocol https --age 24 -
 اول دستور `fdisk /dev/sdX` رو میزنیم تا وارد محیط این ابزار بشیم(اگر از ssd های nvme استفاده میکنید بجای sdX باید nvme0n1 یا همچین چیزی رو بزنید[تب بزنید خودش کامل میکنه]
    و در غیر این صورت هم باید `X` رو با حرفی که برای پارتیشن مدنظرتون هست عوض کنید)  
 
-با نوشتن علامت سوال `m` و زدن اینتر (نوشتن دستور فلان و زدن اینتر رو خلاصه کنیم، با زدن دستور فلان) لیست راهنمای این ابزار باز میشه که میتونید در هر مرحله بهش روجوع کنید  
+با نوشتن `m` و زدن اینتر (نوشتن دستور فلان و زدن اینتر رو خلاصه کنیم، با زدن دستور فلان) لیست راهنمای این ابزار باز میشه که میتونید در هر مرحله بهش روجوع کنید  
 
 با زدن دستور`g` جدول بندی دیسک رو به حالت GPT تغییر میده که برای نصب ما این حالت لازمه
 
@@ -248,7 +248,8 @@ reflector --country Germany,France,England,Nederland --protocol https --age 24 -
 مجدد روال رو طی می‌کنیم تا پارتیشن‌های بیشتری که لازم هستن رو بسازیم مطابق جدول بالا. دستور `n` رو میزنیم. سوال اول و دوم رو فقط اینتر می‌زنیم،
    و سوال چالشی اینجاست! برای swap چقدر حجم ببریم؟ این واقعا جواب‌های مختلفی داره ولی برای هایبرنیت حجم رم + ۲ گیگ برای اطمینان از از دست نرفتن دیتا و برای سایر سیستم‌ها
    اگر رم سیستم کمتر از ۲ گیگ هست یک گیگ و اگر بین ۲ تا ۴ گیگ هست ۲ گیگ و برای ۴ گیگ و بیشتر هم ۴ گیگ مقادیر مرسومی هستن، ولی همونطور که گفته شد اگر ویرچوآل مموری
-   بیشتری لازم دارین مقدارش رو بیشتر درنظر بگیرید. ضمن اینکه می‌تونید کلا این مرحله رو رد بشین و swap نسازید  
+   بیشتری لازم دارین مقدارش رو بیشتر درنظر بگیرید. ضمن اینکه می‌تونید کلا این مرحله رو رد بشین و swap نسازید
+   حتما علامت + رو قبل از عددی که برای حجم میدین بذارید.  
 
 برای آخرین پارتیشن که قراره روت و هوم و سایر پارتیشن‌ها رو داخلش و با استفاده از subvolume بسازیم. مجدد دستور `n` رو می‌زنیم، دو سوال اول رو فقط اینتر می‌زنیم و این دفعه
    سوال سوم هم اینتر می‌زنیم چون همه‌ی حجم باقی‌مونده رو میخوایم بدیم به این پارتیشن  
@@ -262,6 +263,68 @@ reflector --country Germany,France,England,Nederland --protocol https --age 24 -
 دستور `w` رو می‌زنیم تا تغییرات روی دیسک رایت بشه و از fdisk خارج بشیم
 
 </details>
+
+<div dir='ltr' align='left'>
+
+```bash
+$ fdisk -l
+$ fdisk /dev/nvme0n1
+
+# Welcome to fdisk (util-linux 2.38.1).
+# Changes will remain in memory only, until you decide to write them.
+# Be careful before using the write command.
+
+Command (m for help): g
+#Created a new GPT disklabel (GUID: 8B0BD377-21F7-5242-9338-AD62411BA6FE).
+
+Command (m for help):  n
+Partition number (1-128, default 1): # hit enter
+First sector (2048-15441886, default 2048): # hit enter
+Last sector, +/-sectors or +/-size{K,M,G,T,P} (2048-15441886, default 15439871): +512M
+#Created a new partition 1 of type 'Linux filesystem' and of size 512 MiB
+
+Command (m for help): n
+Partition number (2-128, default 2): # hit enter
+First sector (1050624-15441886, default 1050624): # hit enter
+Last sector, +/-sectors or +/-size{K,M,G,T,P} (1050624-15441886, default 15439871): +4G
+#Created a new partition 2 of type 'Linux filesystem' and of size 4 GiB.
+
+Command (m for help): n
+Partition number (3-128, default 3): # hit enter
+First sector (9439232-15441886, default 9439232): # hit enter
+Last sector, +/-sectors or +/-size{K,M,G,T,P} (9439232-15441886, default 15439871): # hit enter
+#Created a new partition 3 of type 'Linux filesystem' and of size 2.9 GiB.
+
+Command (m for help): p
+# ...
+# Device          Start     End    Sectors  Size  Type
+# /dev/nvme0n1p1     2048  1050623 1048576  512M  Linux filesystem
+# /dev/nvme0n1p2  1050624  9439231 8388608    4G  Linux filesystem
+# /dev/nvme0n1p3  9439232 15439871 6000640  2.9G  Linux filesystem
+
+Command (m for help): t
+Partition number (1-3, default 3): 1
+Partition type or alias (type L to list all): 1
+#Changed type of partition 'Linux filesystem' to 'EFI System'.
+
+Command (m for help): t
+Partition number (1-3, default 3): 2
+Partition type or alias (type L to list all): 19
+#Changed type of partition 'Linux filesystem' to 'Linux swap'.
+
+Command (m for help): p
+# ...
+# Device           Start      End  Sectors  Size  Type
+# /dev/nvme0n1p1     2048  1050623 1048576  512M  EFI System
+# /dev/nvme0n1p2  1050624  9439231 8388608    4G  Linux swap
+# /dev/nvme0n1p3  9439232 15439871 6000640  2.9G  Linux filesystem
+ 
+Command (m for help): w
+# The partition table has been altered.
+$
+```
+
+</div>
 
 ## ساختن فایل سیستم
 
