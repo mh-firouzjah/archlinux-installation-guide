@@ -502,3 +502,117 @@ swapon /dev/nvme0n1p2
 </details>
 
 </div>
+
+---
+
+## نصب پکیج‌های پایه
+
+در این مرحله حداقل‌هایی رو نصب می‌کنیم که میشه گفت روی سیستم مدنظر یک آرچ خیلی سبک و پایه رو داشته باشیم
+در ادامه پکیج‌های بیشتری رو نصب می‌کنیم تا یک سیستم قابل استفاده بدست بیاریم و بتونیم از روی همون سیستم و نه از روی این لایو مدیا کار رو ادامه بدیم
+بعد از نصب اینها حالا یک آرچ روی سیستم مدنظر داریم وارد محیط آن می‌شویم و باقی کارها را مستقیم از داخل همان ماشین ادامه می‌دهیم
+از آنجا که روی سیستم مقصد نیز باید از روی میرورها بیسته‌های جدید را نصب کنیم، پس لیست میرورهایی که تازه بروزرسانی کردیم به سیستم جدید منتقل می‌کنیم
+
+<div dir='ltr' align='left'>
+
+```bash
+pacstrap /mnt base linux-zen linux-zen-headers linux-firmware intel-ucode ntfs-3g btrfs-progs  
+
+genfstab -U /mnt >> /mnt/etc/fstab
+
+mv /mnt/etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist.back
+
+cp /etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist
+
+arch-chroot /mnt
+
+# set timezone
+ln -sf /usr/share/zoneinfo/Asia/Tehran /etc/localtime
+
+# adjust time
+hwclock --systohc
+
+# generate locale
+echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+
+locale-gen
+
+# generate language locale.conf
+echo "LANGE=en_US.UTF-8" > /etc/locale.conf
+
+# config hostname
+echo "${what-ever-your-hostname}" > /etc/hostname
+
+# config hosts
+echo "127.0.0.1 localhost" > /etc/hosts
+echo "::1  localhost" >> /etc/hosts
+echo "127.0.1.1 ${what-ever-your-hostname}.localdomain ${what-ever-your-hostname}" >> /etc/hosts
+
+pacman -Sy sudo networkmanager ufw reflector sof-firmware alsa-firmware alsa-ucm-conf alsa-utils alsa-plugins vim nano man-db man-pages texinfo
+
+# bootloader as we are going to use systemd-boot
+bootctl install
+
+# set a loader for boot
+## esp is the partition which is mounted for efi system partition
+vim esp/loader/loader.conf
+---------------------
+default      arch.conf
+timeout      0
+editor       no
+console-mode auto
+
+# config the loader entery and set some kernel modules(options)
+vim esp/loader/entries/arch.conf
+---------------------
+title    Arch Linux
+linux    /vmlinuz-linux
+initrd   /intel-ucode.img
+initrd   /initramfs-linux.img
+options  root=/dev/nvme0n1p3 rootfstype=btrfs rootflags=subvol=@ elevator=deadline add_efi_memmap rw quiet splash loglevel=3 vt.global_cursor_default=0 plymouth.ignore_serial_consoles vga=current rd.systemd.show_status=auto r.udev.log_priority=3 nowatchdog fbcon=nodefer i915.fastboot=1 i915.invert_brightness=1
+
+
+# pacman hook to automate the bootloader update after kernel update
+mkdir /etc/pacman.d/hooks/
+touch /etc/pacman.d/hooks/100-systemd-boot.hook
+vim /etc/pacman.d/hooks/100-systemd-boot.hook
+---------------------
+[Trigger]
+Type = Package
+Operation = Upgrade
+Target = systemd
+
+[Action]
+Description = Updating systemd-boot
+When = PostTransaction
+Exec = /usr/bin/bootctl update
+
+# enabling silent boot
+echo "kernel.printk = 3 3 3 3" > /etc/sysctl.d/20-quiet-printk.conf
+
+# hide startx messages
+echo "[[ $(fgconsole 2>/dev/null) == 1 ]] && exec startx -- vt1 &> /dev/null" >> .bash_profile
+
+# To hide fsck messages during boot, let systemd check the root filesystem. For this, replace udev hook with systemd
+vim /etc/mkinitcpio.conf
+
+HOOKS=( base [udev]systemd fsck ...)
+
+mkinitcpio -P
+
+# set password for root user
+passwd
+
+# create another user
+useradd --create-home -g users --groups audio,games,log,lp,optical,power,scanner,storage,video,wheel -s /bin/bash <your username>
+passwd <your username>
+cp ~/.bash_profile /home/<your username>/.bash_profile
+
+# inorder to give new user sudo access
+visudo
+## type /%wheel hit enter to find the line %wheel ALL=(ALL) ALL type ^ then hit x then type :wq
+
+# network and firewall
+systemctl enable NetworkManager
+ufw enable
+
+```
