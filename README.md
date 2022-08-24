@@ -133,7 +133,7 @@ $ iwctl
 <div dir='ltr' align='left'>
 
 ```bash
-$ iwctl --passphrase passphrase station device connect SSID
+iwctl --passphrase passphrase station device connect SSID
 ```
 
 </div>
@@ -233,7 +233,7 @@ reflector --country Germany,France,England,Nederland --protocol https --age 24 -
   <summary>برای پارتیشن بندی من از fdisk استفاده می‌کنم </summary>  
 
 اول دستور `fdisk /dev/sdX` رو میزنیم تا وارد محیط این ابزار بشیم(اگر از ssd های nvme استفاده میکنید بجای sdX باید nvme0n1 یا همچین چیزی رو بزنید[تب بزنید خودش کامل میکنه]
-   و در غیر این صورت هم باید `X` رو با حرفی که برای پارتیشن مدنظرتون هست عوض کنید)  
+   و در غیر این صورت هم باید `X` رو با حرفی که برای پارتیشن مدنظرتون هست عوض کنید) استفاده از `-w` برای اینه که اگر روی دیسک پارتیشن بندی داشتیم ارور و وارنینگ نداشته باشیم و از اون پارتیشن بندی هم صرف نظر کنیم
 
 با نوشتن `m` و زدن اینتر (نوشتن دستور فلان و زدن اینتر رو خلاصه کنیم، با زدن دستور فلان) لیست راهنمای این ابزار باز میشه که میتونید در هر مرحله بهش روجوع کنید  
 
@@ -268,7 +268,7 @@ reflector --country Germany,France,England,Nederland --protocol https --age 24 -
 
 ```bash
 $ fdisk -l
-$ fdisk /dev/nvme0n1
+$ fdisk -w /dev/nvme0n1
 
 # Welcome to fdisk (util-linux 2.38.1).
 # Changes will remain in memory only, until you decide to write them.
