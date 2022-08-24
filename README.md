@@ -18,7 +18,9 @@
 
 <div dir='ltr' align='left'>
 
-`gpg --keyserver-options auto-key-retrieve --verify archlinux-version-x86_64.iso.sig`  
+```bash
+gpg --keyserver-options auto-key-retrieve --verify archlinux-version-x86_64.iso.sig
+```  
 
 </div>
 
@@ -42,7 +44,9 @@
 
 <div dir='ltr' align='left'>
 
-`dd bs=4M if=path/to/archlinux-version-x86_64.iso of=/dev/sdx conv=fsync oflag=direct status=progress`
+```bash
+dd bs=4M if=path/to/archlinux-version-x86_64.iso of=/dev/sdx conv=fsync oflag=direct status=progress
+```
 
 </div>
 
@@ -211,7 +215,9 @@ reflector --country Germany,France,England,Nederland --protocol https --age 24 -
 
 <div dir='ltr' align='left'>
 
-`mkfs.fat -F 32 -n EFI /dev/efi_system_partition   # efi_system_partition = /dev/sda1 or /dev/nvme0n1p1`
+```bash
+mkfs.fat -F 32 -n EFI /dev/efi_system_partition   # efi_system_partition = /dev/sda1 or /dev/nvme0n1p1
+```
 
 </div>
 
@@ -219,24 +225,25 @@ reflector --country Germany,France,England,Nederland --protocol https --age 24 -
 
 <div dir='ltr' align='left'>
 
-`mkswap -L SWAP /dev/your_drive2  # your_drive2 = /dev/sda2 or /dev/nvme0n1p2`  
+```bash
+mkswap -L SWAP /dev/your_drive2  # your_drive2 = /dev/sda2 or /dev/nvme0n1p2
+```  
 
 </div>
 
 برای پارتیشن اصلی هم دستور زیر رو می‌زنیم. اما اگر یک پارتیشن ویندوزی دارین که میخواین به همون فرمت ویندوزی باقی بمونه و فرمتش نمی‌کنید یا فرمت می‌کنید ولی 
 بازم میخواین که توی ویندوز قابل استفاده باشه نیازه پکیج ntfs-3g نصب کنید همچنین برای احتیاط یک پکیج برای btrfs هم چک می‌کنیم که نصب هست یا نه
 
-```bash
-pacman -Sy ntfs-3g btrfs-progs
-```
-
 <div dir='ltr' align='left'>
 
-`mkfs.btrfs -f -L ROOT /dev/your_drive3 # your_drive3 = /dev/sda3 or /dev/nvme0n1p3`  
+```bash
+pacman -Sy ntfs-3g btrfs-progs
+mkfs.btrfs -f -L ROOT /dev/your_drive3 # your_drive3 = /dev/sda3 or /dev/nvme0n1p3
+```  
 
 </div>
 
-از اینجا به بعد من از nvme0n1p3 استفاده می‌کنم، حواستون باشه که nvme0n1p3 رو باید با اسم درایو مربوطه روی سیستم خودتون جایگزین کنید
+از اینجا به بعد من از `nvme0n1p3` استفاده می‌کنم، حواستون باشه که `nvme0n1p3` رو باید با اسم درایو مربوطه روی سیستم خودتون جایگزین کنید
 
 <details>
   <summary>درباره‌ی فایل سیستم btrfs بخونیم</summary>
@@ -275,7 +282,9 @@ pacman -Sy ntfs-3g btrfs-progs
 
 <div dir='ltr' align='left'>
 
-`mount /dev/nvme0n1p3 /mnt`
+```bash
+mount /dev/nvme0n1p3 /mnt
+```
 
 </div>
 
