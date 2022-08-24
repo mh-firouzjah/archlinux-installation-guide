@@ -340,7 +340,7 @@ swapon /dev/nvme0n1p2
 
 </div>
 
-<details  dir="rtl">
+<details>
   <summary> درمورد آپشن‌هایی که در مانت نوشتم </summary>
 
   ۱- آپشن noatime – No access time. برای پرفورمنس بهتر سیستم هست این رو قرار بدیم چرا که درغیر این صورت به دیتای تایم هم نیاز داره که ضرورتی نداره
