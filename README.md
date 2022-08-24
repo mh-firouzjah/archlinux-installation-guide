@@ -66,7 +66,13 @@ dd bs=4M if=path/to/archlinux-version-x86_64.iso of=/dev/sdx conv=fsync oflag=di
 
 </details>
 
-برای اینکه مطمئن بشیم فلش ما به صورت efi بوت شده دستور زیر رو میزنیم `ls /sys/firmware/efi/efivars`  
+برای اینکه مطمئن بشیم فلش ما به صورت efi بوت شده دستور زیر رو میزنیم 
+
+<div dir='ltr' align='left'>
+
+```bash
+ls /sys/firmware/efi/efivars
+```
 
 اگر این دستور خروجی نداشته باشه یعنی درحال حاضر این فلش به صورت efi بوت‌ایبل و درنتیجه بوت نشده پس باید دوباره مراحل قبلی رو طی کنید
 
@@ -78,12 +84,22 @@ dd bs=4M if=path/to/archlinux-version-x86_64.iso of=/dev/sdx conv=fsync oflag=di
 
 دستور `ip link` رو بزنید تا ببینید دیوایس‌های سیستم شناخته شدن و فعال هستن
 
+<div dir='ltr' align='left'>
+
+```bash
+ip link
+```
+
+</div>
+
 دستور ‍`iwctl` رو بزنید تا وارد محیط اینتراکتیوش بشید. بعد از اینکه وارد محیط اینتراکتیوش بشین یک تغییر کوچیک توی ترمینال می‌بینید به این شکل
 
 <div dir='ltr' align='left'>
 
 ```bash
-[iwd]#
+$ iwctl
+
+[iwd]$
 ```
 
 </div>
@@ -98,21 +114,49 @@ dd bs=4M if=path/to/archlinux-version-x86_64.iso of=/dev/sdx conv=fsync oflag=di
 
 حالا با دستور `station device connect SSID` می‌تونید به وای‌فای مدنظرتون وصل بشین.(SSID = اسم وای‌فای، برای اسم وای‌فای چند کاراکتر اول رو بنویسید و دکمه تب کیبورد رو بزنید.)
 
+<div dir='ltr' align='left'>
+
+```bash
+[iwd]$ help
+[iwd]$ device list
+[iwd]$ station device scan
+[iwd]$ station device get-networks
+[iwd]$ station device connect SSID
+```
+
+</div>
+
 اگر نیاز به پسورد برای وای‌فای باشه یک پرامپت باز میشه تا پسورد رو بگیره،‌ همچنین میتونید یکجا و در یک دستور بزنید(نیازی به گفتن نداره که `passphrase` دومی هم همون پسورد وای‌فای هست)  
 
 <div dir='ltr' align='left'>
 
 ```bash
-[iwd]# iwctl --passphrase passphrase station device connect SSID
+$ iwctl --passphrase passphrase station device connect SSID
 ```
 
 </div>
 
 برای اطلاعات بیشتر به [این لینک](https://wiki.archlinux.org/title/Iwd#iwctl) از ویکی آرچ مراجعه کنید
 
-با دستور پینگ چک کنید که به اینترنت وصل شدین یا نه `ping -c 4 archlinux.org`  
+با دستور پینگ چک کنید که به اینترنت وصل شدین یا نه 
 
-ساعت سیستم رو تنظیم کنید `timedatectl set-ntp true`  
+<div dir='ltr' align='left'>
+
+```bash
+ping -c 4 archlinux.org
+```
+
+</div>
+
+ساعت سیستم رو تنظیم کنید 
+
+<div dir='ltr' align='left'>
+
+```bash
+timedatectl set-ntp true
+```
+
+</div>
 
 ## بروزرسانی میرورهای مدیر بسته
 
