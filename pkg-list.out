@@ -43,8 +43,8 @@ lib32-vulkan-mesa-layers
 libmtp
 libva-mesa-driver
 linux-firmware
-linux-zen
-linux-zen-headers
+linux
+linux-headers
 man-db
 mesa
 mesa-demos
@@ -58,7 +58,7 @@ network-manager-applet
 networkmanager
 nm-connection-editor
 ntfs-3g
-nvidia-dkms
+nvidia
 nvidia-settings
 nvidia-utils
 p7zip
