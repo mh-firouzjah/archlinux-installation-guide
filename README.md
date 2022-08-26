@@ -547,11 +547,40 @@ echo "127.0.0.1 localhost" > /etc/hosts
 echo "::1  localhost" >> /etc/hosts
 echo "127.0.1.1 ${what-ever-your-hostname}.localdomain ${what-ever-your-hostname}" >> /etc/hosts
 
-pacman -Sy vim nano man-db man-pages texinfo
-
 # bootloader as we are going to use systemd-boot
 bootctl install
+```
 
+</div>
+
+یک لیست از پکیج‌هایی که برای یک دسکتاپ حداقلی لازم هست تهیه کردم که ضمیمه‌هست اونها رو یکجا نصب میکنیم ولی در ادامه توی توضیحات درموردشون می‌خونیم که چی هستن و چرا نصب شدن
+بجز در قسمت زیری باقی جاهایی که از پکمن استفاده شده نیازی نیست استفاده بشه چون پکیج‌های اون قسمت‌ها رو اینجا داره نصب می کنه
+
+<div dir='ltr' align='left'>
+
+```bash
+# enabling chaotic-aur
+pacman-key --recv-key FBA220DFC880C036 --keyserver keyserver.ubuntu.com
+pacman-key --lsign-key FBA220DFC880C036
+pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
+
+echo "[chaotic-aur]" >> /etc/pacman.conf
+echo "Include = /etc/pacman.d/chaotic-mirrorlist" >> /etc/pacman.conf
+
+pacman -Sy --needed - < pkg-list.out
+
+# network and firewall
+ufw enable
+systemctl enable NetworkManager
+```
+
+</div>
+
+در این قسمت باید بوت‌بولدر سیستم‌دی را کانفیگ کنیم
+
+<div dir='ltr' align='left'>
+
+```bash
 # set a loader for boot
 ## esp is the partition which is mounted for efi system partition
 vim esp/loader/loader.conf
@@ -560,6 +589,15 @@ default      arch.conf
 timeout      0
 editor       no
 console-mode auto
+
+# config the loader entery and set some kernel modules(options)
+vim esp/loader/entries/arch.conf
+---------------------
+title    Arch Linux
+linux    /vmlinuz-linux
+initrd   /intel-ucode.img
+initrd   /initramfs-linux.img
+options  root=/dev/nvme0n1p3 rootfstype=btrfs rootflags=subvol=@ elevator=deadline add_efi_memmap rw quiet splash loglevel=3 vt.global_cursor_default=0 plymouth.ignore_serial_consoles rd.systemd.show_status=auto r.udev.log_priority=3 nowatchdog fbcon=nodefer i915 i915.fastboot=1 i915.enable_fbc=1 i915.invert_brightness=1 intel_iommu=on,igfx_off nvidia_drm.modeset=1
 ```
 
 </div>
@@ -574,19 +612,13 @@ nvidia nvidia_modeset nvidia_uvm nvidia_drm
 
 </div>
 
+در این مرحله یک سری تنظمیات برای بهینه‌سازی و شخصی‌سازی بیشتر انجام میدم.
+ اینها ضروری نیستن و ممکنه در گذر زمان عوض بشن ولی درحال حاضر
+توی ویکی آرچ هستن و برای کمی دستکاری بیشتر استفاده کردم.
+
 <div dir='ltr' align='left'>
 
 ```bash
-# config the loader entery and set some kernel modules(options)
-vim esp/loader/entries/arch.conf
----------------------
-title    Arch Linux
-linux    /vmlinuz-linux
-initrd   /intel-ucode.img
-initrd   /initramfs-linux.img
-options  root=/dev/nvme0n1p3 rootfstype=btrfs rootflags=subvol=@ elevator=deadline add_efi_memmap rw quiet splash loglevel=3 vt.global_cursor_default=0 plymouth.ignore_serial_consoles rd.systemd.show_status=auto r.udev.log_priority=3 nowatchdog fbcon=nodefer i915 i915.fastboot=1 i915.enable_fbc=1 i915.invert_brightness=1 intel_iommu=on,igfx_off nvidia_drm.modeset=1
-
-
 # pacman hook to automate the bootloader update after kernel update
 mkdir /etc/pacman.d/hooks/
 vim /etc/pacman.d/hooks/100-systemd-boot.hook
@@ -610,13 +642,16 @@ echo "[[ $(fgconsole 2>/dev/null) == 1 ]] && exec startx -- vt1 &> /dev/null" >>
 
 </div>
 
+در فایل زیر هم باید udev را با systemd در هوک‌ها عوض کنیم و برای گرافیک اینتل هم intel_agp و i915 رو اضافه کردم
+برای گرافیک‌های انویدیا یا ای‌ام‌دی هم همینکار رو بکنید.
+
 <div dir='ltr' align='left'>
 
 ```bash
 # To hide fsck messages during boot, let systemd check the root filesystem. For this, replace udev hook with systemd
 vim /etc/mkinitcpio.conf
 
-HOOKS=( base [udev]systemd fsck intel_agp i915 ...)
+HOOKS=( base udev[systemd] fsck [intel_agp i915] ...)
 
 mkinitcpio -P
 
@@ -631,25 +666,13 @@ cp ~/.bash_profile /home/<your username>/.bash_profile
 # inorder to give new user sudo access
 visudo
 ## type /%wheel hit enter to find the line %wheel ALL=(ALL) ALL type ^ then hit x then type :wq
-
-pacman -S sudo networkmanager ufw reflector
-pacman -S --needed git base-devel
-
-# enabling chaotic-aur
-pacman-key --recv-key FBA220DFC880C036 --keyserver keyserver.ubuntu.com
-pacman-key --lsign-key FBA220DFC880C036
-pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
-
-echo "[chaotic-aur]" >> /etc/pacman.conf
-echo "Include = /etc/pacman.d/chaotic-mirrorlist" >> /etc/pacman.conf
-
-# network and firewall
-systemctl enable NetworkManager
-ufw enable
-
 ```
 
 </div>
+
+برای یوزر جدید با استفاده از visudo وارد تنظمیات sudo بشین و خط %wheel ALL=(ALL) AL رو از کامنت دربیارین (هشتگ سر خط رو پاک کنید)
+
+---
 
 ## بخش گرافیکی
 
@@ -699,7 +722,6 @@ nvidia_drm.modeset=1
 pacman -S xorg plasma-desktop plasma-pa sddm sddm-kcm nm-connection-editor network-manager-applet
 pacman -S kdegraphics-thumbnailers ffmpegthumbs powerdevil power-profiles-daemon bluez bluez-utils bluedevil
 pacman -S smplayer kde-gtk-config baloo kscreen colord-kde ttf-dejavu ttf-liberation
-pacman -S  
 
 systemctl enable display-manager.service
 
