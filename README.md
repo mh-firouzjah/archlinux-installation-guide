@@ -515,7 +515,7 @@ swapon /dev/nvme0n1p2
 <div dir='ltr' align='left'>
 
 ```bash
-pacstrap /mnt base linux-zen linux-firmware intel-ucode ntfs-3g btrfs-progs  
+pacstrap /mnt base linux linux-firmware intel-ucode ntfs-3g btrfs-progs  
 
 genfstab -U /mnt >> /mnt/etc/fstab
 
@@ -584,7 +584,7 @@ title    Arch Linux
 linux    /vmlinuz-linux
 initrd   /intel-ucode.img
 initrd   /initramfs-linux.img
-options  root=/dev/nvme0n1p3 rootfstype=btrfs rootflags=subvol=@ elevator=deadline add_efi_memmap rw quiet splash loglevel=3 vt.global_cursor_default=0 plymouth.ignore_serial_consoles rd.systemd.show_status=auto r.udev.log_priority=3 nowatchdog fbcon=nodefer i915 i915.fastboot=1 i915.enable_fbc=1 i915.invert_brightness=1 intel_iommu=on,igfx_off
+options  root=/dev/nvme0n1p3 rootfstype=btrfs rootflags=subvol=@ elevator=deadline add_efi_memmap rw quiet splash loglevel=3 vt.global_cursor_default=0 plymouth.ignore_serial_consoles rd.systemd.show_status=auto r.udev.log_priority=3 nowatchdog fbcon=nodefer i915 i915.fastboot=1 i915.enable_fbc=1 i915.invert_brightness=1 intel_iommu=on,igfx_off nvidia_drm.modeset=1
 
 
 # pacman hook to automate the bootloader update after kernel update
@@ -665,7 +665,7 @@ lspci -v | grep -A1 -e VGA -e 3D
 pacman -Ss xf86-video
 
 pacman -S xf86-video-intel1 mesa lib32-mesa
-pacman -S nvidia-dkms linux-zen-headers nvidia-utils lib32-nvidia-utils nvidia-settings
+pacman -S nvidia linux-headers nvidia-utils lib32-nvidia-utils nvidia-settings
 pacman -S vulkan-icd-loader vulkan-intel lib32-vulkan-icd-loader
 
 # pacman hook to automate initcpio update after nvidia update
@@ -677,7 +677,7 @@ Operation=Upgrade
 Operation=Remove
 Type=Package
 Target=nvidia
-Target=linux-zen
+Target=linux
 # Change the linux part above and in the Exec line if a different kernel is used
 
 [Action]
@@ -685,7 +685,7 @@ Description=Update NVIDIA module in initcpio
 Depends=mkinitcpio
 When=PostTransaction
 NeedsTargets
-Exec=/bin/sh -c 'while read -r trg; do case $trg in linux-zen) exit 0; esac; done; /usr/bin/mkinitcpio -P'
+Exec=/bin/sh -c 'while read -r trg; do case $trg in linux) exit 0; esac; done; /usr/bin/mkinitcpio -P'
 
 # added this line to kernel parameters
 nvidia_drm.modeset=1
@@ -697,7 +697,9 @@ nvidia_drm.modeset=1
 
 ```bash
 pacman -S xorg plasma-desktop plasma-pa sddm sddm-kcm nm-connection-editor network-manager-applet
-pacman -S kdegraphics-thumbnailers and ffmpegthumbs powerdevil power-profiles-daemon  bluez bluez-utils
+pacman -S kdegraphics-thumbnailers ffmpegthumbs powerdevil power-profiles-daemon bluez bluez-utils bluedevil
+pacman -S smplayer kde-gtk-config baloo kscreen colord-kde ttf-dejavu ttf-liberation
+pacman -S  
 
 systemctl enable display-manager.service
 
