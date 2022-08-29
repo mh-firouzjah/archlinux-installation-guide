@@ -454,6 +454,7 @@ btrfs su cr /mnt/@srv
 btrfs su cr /mnt/@log  
 btrfs su cr /mnt/@cache  
 btrfs su cr /mnt/@tmp  
+btrfs su cr /mnt/@snapshots  
 btrfs su li /mnt  
 cd /  
 umount /mnt  
@@ -473,10 +474,11 @@ umount /mnt
 ```bash
 mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@ /dev/nvme0n1p3 /mnt  
 
-mkdir -p /mnt/{boot,hdd,home,root,srv,var/log,var/cache,tmp}
+mkdir -p /mnt/{boot,hdd,home,root,srv,snapshots,var/log,var/cache,tmp}
 
 mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@home   /dev/sda3 /mnt/home
 mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@root   /dev/sda3 /mnt/root
+mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@snapshots    /dev/sda3 /mnt/snapshots
 mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@srv    /dev/sda3 /mnt/srv
 mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@log    /dev/sda3 /mnt/var/log
 mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@cache  /dev/sda3 /mnt/var/cache
