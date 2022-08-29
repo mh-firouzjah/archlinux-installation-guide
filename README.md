@@ -472,21 +472,21 @@ umount /mnt
 <div dir='ltr' align='left'>
 
 ```bash
-mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@ /dev/nvme0n1p3 /mnt  
+  mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@ /dev/nvme0n1p3 /mnt  
 
-mkdir -p /mnt/{boot,hdd,home,root,srv,snapshots,var/log,var/cache,tmp}
+  mkdir -p /mnt/{boot,hdd,home,root,srv,snapshots,var/cache,var/log,var/tmp}
 
-mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@home   /dev/sda3 /mnt/home
-mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@root   /dev/sda3 /mnt/root
-mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@snapshots    /dev/sda3 /mnt/snapshots
-mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@srv    /dev/sda3 /mnt/srv
-mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@log    /dev/sda3 /mnt/var/log
-mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@cache  /dev/sda3 /mnt/var/cache
-mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@tmp    /dev/sda3 /mnt/tmp
+  mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@home   /dev/sda3 /mnt/home
+  mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@root   /dev/sda3 /mnt/root
+  mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@srv    /dev/sda3 /mnt/srv
+  mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@cache  /dev/sda3 /mnt/var/cache
+  mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@log    /dev/sda3 /mnt/var/log
+  mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@tmp    /dev/sda3 /mnt/var/tmp
+  mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@snapshots    /dev/sda3 /mnt/snapshots
 
-mount /dev/nvme0n1p1 /mnt/boot
-ntfs-3g -o defaults,noauto,x-systemd.automount,noatime,windows_names,permissions,streams_interface=windows,allow_other,users,hide_dot_files,hide_hid_files,inherit /dev/sda1 /mnt/hdd
-swapon /dev/nvme0n1p2
+  mount /dev/nvme0n1p1 /mnt/boot
+  ntfs-3g -o defaults,noauto,x-systemd.automount,noatime,windows_names,permissions,streams_interface=windows,allow_other,users,hide_dot_files,hide_hid_files,inherit /dev/sda1 /mnt/hdd
+  swapon /dev/nvme0n1p2
 ```
 
 </div>
