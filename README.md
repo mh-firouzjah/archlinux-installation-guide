@@ -581,8 +581,11 @@ pacman -Sy --needed - < pkg-list.out
 
 # network and firewall
 ufw enable
+systemctl enable ufw.service
 systemctl enable NetworkManager
 sudo ln -s /usr/bin/vim /usr/bin/vi
+pacman -Rns $(pacman -Qtdq)
+pacman-optimize
 ```
 
 </div>
