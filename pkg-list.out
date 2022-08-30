@@ -1,3 +1,4 @@
+acpi
 ark
 baloo
 base
@@ -57,6 +58,8 @@ mtpfs
 network-manager-applet
 networkmanager
 nm-connection-editor
+noto-fonts
+noto-fonts-emoji
 ntfs-3g
 nvidia
 nvidia-settings
@@ -72,21 +75,26 @@ pipewire-alsa
 pipewire-jack
 pipewire-media-session
 pipewire-pulse
+pipewire-v4l2
 plasma-desktop
 plasma-nm
 plasma-pa
+plocate
 power-profiles-daemon
 powerdevil
 reflector
 rsync
 sddm
 sddm-kcm
+slimbookbattery
 smplayer
 spectacle
 sudo
 tar
 telegram-desktop
 texinfo
+tmux
+tmux-bash-completion-git
 ttf-dejavu
 ttf-liberation
 ufw
@@ -106,3 +114,6 @@ xorg-xrander
 yay
 zip
 zstd
+zsh
+zsh-completions
+zsh-zim-git
