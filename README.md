@@ -576,6 +576,10 @@ pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst
 
 echo "[chaotic-aur]" >> /etc/pacman.conf
 echo "Include = /etc/pacman.d/chaotic-mirrorlist" >> /etc/pacman.conf
+ 
+echo "Color" >> /etc/pacman.conf
+echo "ILoveCandy" >> /etc/pacman.conf
+echo "ParallelDownloads = 5" >> /etc/pacman.conf
 
 pacman -Sy --needed - < pkg-list.out
 
@@ -583,6 +587,7 @@ pacman -Sy --needed - < pkg-list.out
 ufw enable
 systemctl enable ufw.service
 systemctl enable NetworkManager
+systemctl enable bluetooth.service
 sudo ln -s /usr/bin/vim /usr/bin/vi
 pacman -Rns $(pacman -Qtdq)
 pacman-optimize
