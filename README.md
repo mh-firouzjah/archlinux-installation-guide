@@ -6,6 +6,9 @@
 
 در این روش آرچ را به صورت efi و با `systemdboot` نصب و از فایل سیستم `btrfs` استفاده می‌کنیم
 
+ - مدنظر داشته باشید که systemd-boot هرچند برای روش نصب انتخاب شده ولی این روش بهتر است برای وقتی که تنها یک سیستم‌عامل روی سیستم دارید استفاده بشود و برای دوآل بوت یا غیره 
+ از گراب استفاده کنید. چرا که سیستم‌دی-بوت کل درایوی که برای efi انتخاب می‌کنید را اورراید می‌کند و مشکلاتی به همراه دارد. من چون فقط یک سیستم‌عامل دارم این را انتخاب کردم.
+
 سعی نمی‌کنم همه‌ی اصطلاحات رو ترجمه کنم و اکثرا کلمات انگلیسی رو فقط فارسی می‌نویسم تا دوستانی که با این کلمات آشنا نیستن هم خونده باشن، بعضی از این کلمات مثل `محیط اینتراکتیو` و موارد دیگه هم چون در عمل نشون داده میشه بهتر درک میشه و در آخر اینکه هرچی هم منابع فارسی پیدا کنید باز مجبورید یه روزی به سراغ منابع انگلیسی برید و خب آشنایی با کلمات انگلیسی اونجا کار رو ساده‌تر می‌کنه
 
 ---
@@ -474,7 +477,7 @@ umount /mnt
 ```bash
   mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@ /dev/nvme0n1p3 /mnt  
 
-  mkdir -p /mnt/{boot,hdd,home,root,srv,snapshots,var/cache,var/log,var/tmp}
+  mkdir -p /mnt/{boot/efi,hdd,home,root,srv,snapshots,var/cache,var/log,var/tmp}
 
   mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@home   /dev/sda3 /mnt/home
   mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@root   /dev/sda3 /mnt/root
@@ -555,7 +558,7 @@ echo "::1  localhost" >> /etc/hosts
 echo "127.0.1.1 ${what-ever-your-hostname}.localdomain ${what-ever-your-hostname}" >> /etc/hosts
 
 # bootloader as we are going to use systemd-boot
-bootctl install
+bootctl  --boot-path=/boot --esp-path=/boot/efi install
 ```
 
 </div>
