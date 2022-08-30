@@ -737,3 +737,5 @@ pacman -S smplayer kde-gtk-config baloo kscreen colord-kde ttf-dejavu ttf-libera
 systemctl enable display-manager.service
 
 ```
+
+برای کانفیگ کردن ادیتور ویم من از روشی که در [این لینک](https://www.freecodecamp.org/news/vimrc-configuration-guide-customize-your-vim-editor/) گفته شده استفاده کردم. البته روشهای خیلی زیادی وجود داره برای شروع یه نگاهی بهش بندازین
