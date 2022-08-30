@@ -61,7 +61,10 @@ ntfs-3g
 nvidia
 nvidia-settings
 nvidia-utils
+openssh
+openssl
 p7zip
+p7zip-plugins
 pavucontrol
 persepolis
 pipewire
@@ -75,10 +78,12 @@ plasma-pa
 power-profiles-daemon
 powerdevil
 reflector
+rsync
 sddm
 sddm-kcm
 smplayer
 spectacle
+tar
 telegram-desktop
 texinfo
 ttf-dejavu
