@@ -582,6 +582,7 @@ pacman -Sy --needed - < pkg-list.out
 # network and firewall
 ufw enable
 systemctl enable NetworkManager
+sudo ln -s /usr/bin/vim /usr/bin/vi
 ```
 
 </div>
