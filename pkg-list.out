@@ -108,9 +108,9 @@ vulkan-tools
 wget
 xf86-input-libinput
 xf86-video-intell
-xorg
+xorg-server
 xorg-xinput
-xorg-xrander
+xrander
 yay
 zip
 zstd
