@@ -588,6 +588,7 @@ ufw enable
 systemctl enable ufw.service
 systemctl enable NetworkManager
 systemctl enable bluetooth.service
+systemctl enable acpid.service
 sudo ln -s /usr/bin/vim /usr/bin/vi
 pacman -Rns $(pacman -Qtdq)
 pacman-optimize
