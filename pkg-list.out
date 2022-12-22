@@ -110,8 +110,6 @@ xf86-input-libinput
 xf86-video-intell
 xorg-server
 xorg-xinput
-xrander
-yay
 zip
 zstd
 zsh
@@ -120,3 +118,17 @@ zsh-completions
 zsh-history-substring-search
 zsh-syntax-highlighting
 zsh-theme-powerlevel10k
+########
+lib32-libva-mesa-driver
+error: target not found: lib32-mesa
+error: target not found: lib32-mesa-vdpau
+error: target not found: lib32-nvidia-utils
+error: target not found: lib32-pipewire-jack
+error: target not found: lib32-vulkan-icd-loader
+error: target not found: lib32-vulkan-mesa-layers
+mkinitcpio-firmware
+slimbookbattery
+tmux-bash-completion-git
+xf86-video-intell
+xrander
+yay
