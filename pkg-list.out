@@ -3,6 +3,7 @@ acpid
 ark
 baloo
 base
+bat
 bluedevil
 bluez
 bluez-utils
@@ -13,8 +14,10 @@ colord-kde
 curl
 dolphin
 dolphin-plugins
+exa
 ffmpegthumbs
-firefox
+firefox-developer-edition
+firewalld
 git
 gst-libav
 gst-plugin-pipewire
@@ -35,13 +38,6 @@ kio-extras
 konsole
 kscreen
 ksysguard
-lib32-libva-mesa-driver
-lib32-mesa
-lib32-mesa-vdpau
-lib32-nvidia-utils
-lib32-pipewire-jack
-lib32-vulkan-icd-loader
-lib32-vulkan-mesa-layers
 libmtp
 libva-mesa-driver
 linux-firmware
@@ -52,7 +48,6 @@ mesa
 mesa-demos
 mesa-utils
 mesa-vdpau
-mkinitcpio-firmware
 man-pages
 mpv
 mtpfs
@@ -68,8 +63,8 @@ nvidia-utils
 openssh
 openssl
 p7zip
+pacman-contrib
 pavucontrol
-persepolis
 pipewire
 pipewire-alsa
 pipewire-jack
@@ -86,17 +81,15 @@ reflector
 rsync
 sddm
 sddm-kcm
-slimbookbattery
 smplayer
+smplayer-skins
+smplayer-themes
 spectacle
 sudo
 tar
 telegram-desktop
 texinfo
 tmux
-tmux-bash-completion-git
-ttf-dejavu
-ttf-liberation
 ufw
 unrar
 unzip
@@ -107,7 +100,6 @@ vulkan-mesa-layers
 vulkan-tools
 wget
 xf86-input-libinput
-xf86-video-intell
 xorg-server
 xorg-xinput
 zip
@@ -119,16 +111,16 @@ zsh-history-substring-search
 zsh-syntax-highlighting
 zsh-theme-powerlevel10k
 ########
-lib32-libva-mesa-driver
-error: target not found: lib32-mesa
-error: target not found: lib32-mesa-vdpau
-error: target not found: lib32-nvidia-utils
-error: target not found: lib32-pipewire-jack
-error: target not found: lib32-vulkan-icd-loader
-error: target not found: lib32-vulkan-mesa-layers
-mkinitcpio-firmware
-slimbookbattery
-tmux-bash-completion-git
-xf86-video-intell
-xrander
-yay
+#lib32-libva-mesa-driver
+#lib32-mesa
+#lib32-mesa-vdpau
+#lib32-nvidia-utils
+#lib32-pipewire-jack
+#lib32-vulkan-icd-loader
+#lib32-vulkan-mesa-layers
+#mkinitcpio-firmware
+#slimbookbattery
+#tmux-bash-completion-git
+#xf86-video-intell
+#xrander
+#yay
