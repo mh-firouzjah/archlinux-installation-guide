@@ -1,0 +1,115 @@
+# Arch Install Cheat Sheet 
+
+```bash
+- 1- boot the bootable USB  
+- 2- ping -c 4 archlinux.org  
+- 3- timedatectl set-ntp true  
+- 4- pacman -Sy ntfs-3g btrfs-progs
+- 5- fdisk -l  
+- 6- fdisk /dev/nvme0n1  
+  - 6.1- create gpt partition table  
+  - 6.2- 1G     fat32  efi_system_partition (/boot)  
+  - 6.3- 175G   btrfs  Linux x86-64 root (/)  
+  - 6.5- XG     btrfs  Linux x86-64 (/ssd) 	Remainder of the device 
+- 7- mkfs.fat -F 32 -n EFI /dev/nvme0n1p1  
+- 8- mkfs.btrfs -f -L ROOT /dev/nvme0n1p2  
+- 9- mkfs.btrfs -f -L DATA /dev/nvme0n1p3  
+- 10- mount /dev/nvme0n1p2 /mnt  
+- 11- btrfs su cr /mnt/@  
+- 12- btrfs su cr /mnt/@home  
+- 13- btrfs su cr /mnt/@swap  
+- 14- mount -o defaults,noatime,noautodefrag,nobarrier,compress-force=zstd:8,commit=120,subvol=@ /dev/nvme0n1p2 /mnt  
+- 15- mkdir -p /mnt/{boot/efi,home,swap,hdd,ssd}
+- 16- mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@home   /dev/nvme0n1p2 /mnt/home  
+- 17- mount -o subvol=@swap /dev/nvme0n1p2 /mnt/swap  
+- 18- mount /dev/nvme0n1p1 /mnt/boot  
+- 19- mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120 /dev/nvme0n1p3 /mnt/ssd
+- 20- ntfs-3g -o defaults,noauto,x-systemd.automount,x-systemd.device-timeout=10,rw,uid=1000,gid=1000,umask=0022,inherit,permissions,streams_interface=windows,windows_names,compression,norecover,hide_dot_files,hide_hid_files,big_writes,nocompression /dev/sda1 /mnt/hdd  
+- 21- chattr +C /mnt/@swap  
+- 22- pacstrap -K /mnt base base-devel linux linux-firmware sof-firmware linux-headers linux-api-headers intel-ucode ntfs-3g btrfs-progs git reflector  
+- 23- genfstab -U /mnt >> /mnt/etc/fstab  
+- 24- arch-chroot /mnt  
+- 25- ln -sf /usr/share/zoneinfo/Asia/Tehran /etc/localtime  
+- 26- hwclock --systohc  
+- 27- sed -i '/en_US.UTF-8/s/^#\s*//g' /etc/locale.gen  
+- 28- locale-gen
+- 29- echo "LANGE=en_US.UTF-8" > /etc/locale.conf  
+- 30- hostname=""  
+- 31- echo "$hostname" > /etc/hostname  
+- 32- echo -e "127.0.0.1 localhost\n::1  localhost\n127.0.1.1 $hostname.localdomain $hostname" > /etc/hosts  
+- 33- bootctl --boot-path=/boot --esp-path=/boot/efi install  
+- 34- systemctl enable systemd-boot-update.service  
+- 35- sed -i '/#Color/s/$/\nILoveCandy/;/#Color/s/^#//;/#ParallelDownloads = 5/s/^#//' /etc/pacman.conf  
+- 36- passwd 
+- 37- username=""  
+- 38- useradd -m -G wheel,users $username  
+- 39- passwd $username  
+- 40- ln -s /usr/bin/vim /usr/bin/vi  
+- 41- visudo # /%wheel^x:wq  
+- 42- sed -i '/PermitRootLogin prohibit-password/s/^#\s*//;' /etc/ssh/sshd_config  
+- 43- cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup  
+- 44- reflector --country Germany,France,England,Nederland --protocol https --age 24 --sort rate --save /etc/pacman.d/mirrorlist  
+- 45- git clone https://gist.github.com/0f115956320945988351939780c16f4e.git /home/$username/tmp/  
+- 46- sed -i '/multilib\]/s/^#//;/multilib\]/{n; s/^#//}'  
+- 47- pacman -Syyuu --no-confirm && pacman -Sy --needed - < /home/$username/tmp/pkglist.txt && pacman -Rns $(pacman -Qtdq) && pacman-optimize  
+- 48- sed -i '/--country France,Germany/s/$/,England,Nederland/;/--country France,Germany/s/^#\s*//' /etc/xdg/reflector/reflector.conf  
+- 49- systemctl enable reflector.timer  
+- 50- systemctl enable firewalld.service ## read more at https://wiki.archlinux.org/title/List_of_applications#Anti_malware  
+- 51- systemctl enable sddm.service acpid.service nvidia-{suspend,hibernate}.service xdg-user-dirs-update.service thermald.service cpupower.service NetworkManager.service bluetooth.service irqbalance.service asd.service  
+- 52- systemctl enable --now power-profiles-daemon.service dbus.service  && systemctl mask power-profiles-daemon.service
+- 53- sed -i '/^MODULES=()/s/()/(i915 nvidia nvidia_modeset nvidia_uvm nvidia_drm)/;/^BINARIES=()/s/()/(btrfs)/;' /etc/mkinitcpio.conf
+- 54- sed -i '/^[^#\s*]*HOOKS=(base/s/ kms / /;/^[^#\s*]*HOOKS=(base/s/ udev / systemd /' /etc/mkinitcpio.conf  
+- 55- mkinitcpio -P  
+- 56- echo "options i915 enable_guc=0" > /etc/modprobe.d/i915.conf  
+- 57- echo -e "blacklist nouveau\noptions nouveau modeset=0" > /etc/modprobe.d/blacklist-nouveau.conf  
+- 58- btrfs filesystem mkswapfile /swap/swapfile
+- 59- swapon /swap/swapfile  
+- 60- echo "/swap/swapfile none swap defaults 0 0" >> /etc/fstab  
+- 61- vim /etc/pacman.d/hooks/nvidia.hook
+      [Trigger]
+      Operation=Install
+      Operation=Upgrade
+      Operation=Remove
+      Type=Package
+      Target=nvidia
+      Target=linux
+      # Change the linux part above and in the Exec line if a different kernel is used
+
+      [Action]
+      Description=Update NVIDIA module in initcpio
+      Depends=mkinitcpio
+      When=PostTransaction
+      NeedsTargets
+      Exec=/bin/sh -c 'while read -r trg; do case $trg in linux) exit 0; esac; done; /usr/bin/mkinitcpio -P'
+
+- 62- vim /etc/pacman.d/hooks/95-systemd-boot.hook
+      [Trigger]
+      Type = Package
+      Operation = Upgrade
+      Target = systemd
+
+      [Action]
+      Description = Gracefully upgrading systemd-boot...
+      When = PostTransaction
+      Exec = /usr/bin/systemctl restart systemd-boot-update.service
+
+- 63- vim /boot[/efi]/loader/loader.conf
+      default      arch.conf
+      timeout      0
+      editor       no
+      console-mode auto
+
+- 64- vim /boot[/efi]/loader/entries/arch.conf
+      title    Arch Linux
+      linux    /vmlinuz-linux
+      initrd   /intel-ucode.img
+      initrd   /initramfs-linux.img
+      options  root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ elevator=deadline add_efi_memmap rw quiet splash loglevel=3 vt.global_cursor_default=0 plymouth.ignore_serial_consoles rd.systemd.show_status=auto r.udev.log_priority=3 nowatchdog fbcon=nodefer i915 i915.fastboot=1 i915.enable_fbc=1 i915.invert_brightness=1 intel_iommu=on,igfx_off nvidia_drm.modeset=1
+
+- 65- vim /boot[/efi]/loader/entries/arch-fallback.conf
+      title    Arch Linux
+      linux    /vmlinuz-linux
+      initrd   /intel-ucode.img
+      initrd   /initramfs-linux.img
+      options  root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ rw quiet splash 
+```
