@@ -173,7 +173,7 @@ timedatectl set-ntp true
 ```bash
 cp /etc/pacman.d/mirrorlist  /etc/pacman.d/mirrorlist.bac
 pacman -Sy reflector
-reflector --country Germany,France,England,Nederland --protocol https --age 24 --sort rate --save /etc/pacman.d/mirrorlist
+reflector --latest 20 --country Germany,France,England,Nederland --protocol https --age 24 --sort rate --save /etc/pacman.d/mirrorlist
 ```
 
 </div>
