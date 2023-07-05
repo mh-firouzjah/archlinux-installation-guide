@@ -8,9 +8,6 @@
 
  - مدنظر داشته باشید که systemd-boot هرچند برای روش نصب انتخاب شده ولی این روش بهتر است برای وقتی که تنها یک سیستم‌عامل روی سیستم دارید استفاده بشود و برای دوآل بوت یا غیره 
  از گراب استفاده کنید. چرا که سیستم‌دی-بوت کل درایوی که برای efi انتخاب می‌کنید را اورراید می‌کند و مشکلاتی به همراه دارد. من چون فقط یک سیستم‌عامل دارم این را انتخاب کردم.
-
-سعی نمی‌کنم همه‌ی اصطلاحات رو ترجمه کنم و اکثرا کلمات انگلیسی رو فقط فارسی می‌نویسم تا دوستانی که با این کلمات آشنا نیستن هم خونده باشن، بعضی از این کلمات مثل `محیط اینتراکتیو` و موارد دیگه هم چون در عمل نشون داده میشه بهتر درک میشه و در آخر اینکه هرچی هم منابع فارسی پیدا کنید باز مجبورید یه روزی به سراغ منابع انگلیسی برید و خب آشنایی با کلمات انگلیسی اونجا کار رو ساده‌تر می‌کنه
-
 ---
 
 ## قدم اول تهیه فایل ISO و ساختن یک فلش bootable از آن
@@ -65,7 +62,7 @@ dd bs=4M if=path/to/archlinux-version-x86_64.iso of=/dev/sdx conv=fsync oflag=di
 
   ۳- خطای *No Bootable Device*  
   بعد از نصب سیستم و تموم شدن کار اگر ری‌استارت کردین و خطایی دیدن که سیستم نتونسته یک فایل بوت پیدا کنه بازم باید وارد منوی بایوس بشین و
-  از روی گزینه‌ای که برای انتخاب Trusted bootloaders هست وارد بشین و فایل بگردین فایل bootx64.efi رو انتخاب کنید براش یک اسم دلخواه بذارین و تنظمیات رو ذخیره کنید و ری‌استارت کنید
+  از روی گزینه‌ای که برای انتخاب Trusted bootloaders هست وارد بشین و فایل بگردین فایل `EFI/systemd/systemd-bootx64.efi` رو انتخاب کنید براش یک اسم دلخواه بذارین و تنظمیات رو ذخیره کنید و ری‌استارت کنید
 
 </details>
 
@@ -87,6 +84,19 @@ ls /sys/firmware/efi/efivars
 
 برای اتصال به اینرنت یا از کابل استفاده می‌کنید که خب نیاز به تنظیمات یا کارخاصی ندارید؛ یا از وای‌فای میخواین وصل بشین که روشی که توضیح میدم از ویکی آرچ اقتباس شده و همین رو پیش میریم
 
+راه ساده‌ش میتونید یکجا و در یک دستور بزنید:
+
+<div dir='ltr' align='left'>
+
+```bash
+iwctl --passphrase <wifi password> station <device e.g wlan0> connect <SSID means wifi-name>
+```
+
+</div>
+
+
+<details>
+ <summary>راه طولانی:</summary>
 دستور `ip link` رو بزنید تا ببینید دیوایس‌های سیستم شناخته شدن و فعال هستن
 
 <div dir='ltr' align='left'>
@@ -131,15 +141,8 @@ $ iwctl
 
 </div>
 
-اگر نیاز به پسورد برای وای‌فای باشه یک پرامپت باز میشه تا پسورد رو بگیره،‌ همچنین میتونید یکجا و در یک دستور بزنید(نیازی به گفتن نداره که `passphrase` دومی هم همون پسورد وای‌فای هست)  
-
-<div dir='ltr' align='left'>
-
-```bash
-iwctl --passphrase passphrase station device connect SSID
-```
-
-</div>
+اگر نیاز به پسورد برای وای‌فای باشه یک پرامپت باز میشه تا پسورد رو بگیره
+</details>
 
 برای اطلاعات بیشتر به [این لینک](https://wiki.archlinux.org/title/Iwd#iwctl) از ویکی آرچ مراجعه کنید
 
@@ -173,7 +176,7 @@ timedatectl set-ntp true
 ```bash
 cp /etc/pacman.d/mirrorlist  /etc/pacman.d/mirrorlist.bac
 pacman -Sy reflector
-reflector --latest 20 --country Germany,France,England,Nederland --protocol https --age 24 --sort rate --save /etc/pacman.d/mirrorlist
+reflector --country Germany,France,England,Nederland --protocol https --age 24 --sort rate --latest 20 --save /etc/pacman.d/mirrorlist
 ```
 
 </div>
@@ -190,8 +193,7 @@ reflector --latest 20 --country Germany,France,England,Nederland --protocol http
 
 | partition  |       size        | filesystem-type|  mount point  |         partition         |
 |   :---:    |       :---:       |     :---:      |     :---:     |           :---:           |
-| boot       |      512 MiB      |   EFI system   | /mnt/boot/efi | /dev/efi_system_partition |
-| [SWAP]     | More than 512 MiB |   Linux swap   |     swapon    | /dev/swap_partition       |
+| boot       |       1 GiB       |   EFI system   | /mnt/boot/efi | /dev/efi_system_partition |
 | root       |  remaining space  | Linux file sys |     /mnt      | /dev/root_partition       |
 
 ساختن پارتیشن `swap` الزامی نیست بعدا هم می‌تونید اضافه کنید! تصمیم گیری با خودتون
@@ -287,12 +289,6 @@ Last sector, +/-sectors or +/-size{K,M,G,T,P} (2048-15441886, default 15439871):
 #Created a new partition 1 of type 'Linux filesystem' and of size 512 MiB
 
 Command (m for help): n
-Partition number (2-128, default 2): # hit enter
-First sector (1050624-15441886, default 1050624): # hit enter
-Last sector, +/-sectors or +/-size{K,M,G,T,P} (1050624-15441886, default 15439871): +4G
-#Created a new partition 2 of type 'Linux filesystem' and of size 4 GiB.
-
-Command (m for help): n
 Partition number (3-128, default 3): # hit enter
 First sector (9439232-15441886, default 9439232): # hit enter
 Last sector, +/-sectors or +/-size{K,M,G,T,P} (9439232-15441886, default 15439871): # hit enter
@@ -302,25 +298,18 @@ Command (m for help): p
 # ...
 # Device          Start     End    Sectors  Size  Type
 # /dev/nvme0n1p1     2048  1050623 1048576  512M  Linux filesystem
-# /dev/nvme0n1p2  1050624  9439231 8388608    4G  Linux filesystem
-# /dev/nvme0n1p3  9439232 15439871 6000640  2.9G  Linux filesystem
+# /dev/nvme0n1p2  9439232 15439871 6000640  2.9G  Linux filesystem
 
 Command (m for help): t
 Partition number (1-3, default 3): 1
 Partition type or alias (type L to list all): 1
 #Changed type of partition 'Linux filesystem' to 'EFI System'.
 
-Command (m for help): t
-Partition number (1-3, default 3): 2
-Partition type or alias (type L to list all): 19
-#Changed type of partition 'Linux filesystem' to 'Linux swap'.
-
 Command (m for help): p
 # ...
 # Device           Start      End  Sectors  Size  Type
 # /dev/nvme0n1p1     2048  1050623 1048576  512M  EFI System
-# /dev/nvme0n1p2  1050624  9439231 8388608    4G  Linux swap
-# /dev/nvme0n1p3  9439232 15439871 6000640  2.9G  Linux filesystem
+# /dev/nvme0n1p2  9439232 15439871 6000640  2.9G  Linux filesystem
  
 Command (m for help): w
 # The partition table has been altered.
@@ -341,16 +330,6 @@ mkfs.fat -F 32 -n EFI /dev/efi_system_partition   # efi_system_partition = /dev/
 
 </div>
 
-برای پارتیشن swap دستور  
-
-<div dir='ltr' align='left'>
-
-```bash
-mkswap -L SWAP /dev/your_drive2  # your_drive2 = /dev/sda2 or /dev/nvme0n1p2
-```  
-
-</div>
-
 برای پارتیشن اصلی هم دستور زیر رو می‌زنیم. اما اگر یک پارتیشن ویندوزی دارین که میخواین به همون فرمت ویندوزی باقی بمونه و فرمتش نمی‌کنید یا فرمت می‌کنید ولی
 بازم میخواین که توی ویندوز قابل استفاده باشه نیازه پکیج ntfs-3g نصب کنید همچنین برای احتیاط یک پکیج برای btrfs هم چک می‌کنیم که نصب هست یا نه
 
@@ -358,12 +337,12 @@ mkswap -L SWAP /dev/your_drive2  # your_drive2 = /dev/sda2 or /dev/nvme0n1p2
 
 ```bash
 pacman -Sy ntfs-3g btrfs-progs
-mkfs.btrfs -f -L ROOT /dev/your_drive3 # your_drive3 = /dev/sda3 or /dev/nvme0n1p3
+mkfs.btrfs -f -L ROOT /dev/your_drive3 # your_drive3 = /dev/sda2 or /dev/nvme0n1p2
 ```  
 
 </div>
 
-از اینجا به بعد من از `nvme0n1p3` استفاده می‌کنم، حواستون باشه که `nvme0n1p3` رو باید با اسم درایو مربوطه روی سیستم خودتون جایگزین کنید
+از اینجا به بعد من از `nvme0n1p2` استفاده می‌کنم، حواستون باشه که `nvme0n1p2` رو باید با اسم درایو مربوطه روی سیستم خودتون جایگزین کنید
 
 <details>
   <summary>درباره‌ی فایل سیستم btrfs بخونیم</summary>
@@ -405,35 +384,14 @@ mount -o compress=zstd /dev/sdx /mnt
 <div dir='ltr' align='left'>
 
 ```bash
-mount /dev/nvme0n1p3 /mnt
+mount /dev/nvme0n1p2 /mnt
 ```
 
 </div>
 
 به این ساب‌ولیوم‌ها نیاز داریم
 
-> @, @home, @log, @pkg, @tmp, @snapshots
-
-<details>
-  <summary>ساب‌ولیوم‌ها</summary>
-
-<div dir='ltr' align='left'>
-
-`@` – This is the main root subvolume /.
-
-`@home` – This is the home directory. This consists of most of your data including Desktop and Downloads.
-
-`@log` – Contains logs, temp. files, caches, games, etc.
-
-`@pkg` – Contains all the pacman packages
-
-`@tmp` – Contains certain temporory files and caches
-
-`@snapshots` – Directory to store snapshots.
-
-</div>
-
-</details>
+> @, @home, @root
 
 این ها هم دستوراتی که استفاده می‌کنیم و اختصارشون
 
@@ -453,13 +411,7 @@ mount /dev/nvme0n1p3 /mnt
 btrfs su cr /mnt/@  
 btrfs su cr /mnt/@home  
 btrfs su cr /mnt/@root  
-btrfs su cr /mnt/@srv  
-btrfs su cr /mnt/@log  
-btrfs su cr /mnt/@cache  
-btrfs su cr /mnt/@tmp  
-btrfs su cr /mnt/@snapshots  
 btrfs su li /mnt  
-cd /  
 umount /mnt  
 ```
 
@@ -475,21 +427,15 @@ umount /mnt
 <div dir='ltr' align='left'>
 
 ```bash
-  mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@ /dev/nvme0n1p3 /mnt  
+  mount -o ssd,discard,noatime,compress=zstd:8,commit=30,space_cache=v2,autodefrag,max_inline=512k,inode_cache,subvol=@ /dev/nvme0n1p2 /mnt  
 
-  mkdir -p /mnt/{boot/efi,hdd,home,root,srv,snapshots,var/cache,var/log,var/tmp}
+  mkdir -p /mnt/{boot/efi,hdd,home,root}
 
-  mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@home   /dev/sda3 /mnt/home
-  mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@root   /dev/sda3 /mnt/root
-  mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@srv    /dev/sda3 /mnt/srv
-  mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@cache  /dev/sda3 /mnt/var/cache
-  mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@log    /dev/sda3 /mnt/var/log
-  mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@tmp    /dev/sda3 /mnt/var/tmp
-  mount -o defaults,noatime,noautodefrag,nobarrier,discard=async,compress-force=zstd:8,commit=120,subvol=@snapshots    /dev/sda3 /mnt/snapshots
-
+  mount -o ssd,discard,noatime,compress=zstd:8,commit=30,space_cache=v2,autodefrag,max_inline=512k,inode_cache,subvol=@home   /dev/sda3 /mnt/home
+  mount -o ssd,discard,noatime,compress=zstd:8,commit=30,space_cache=v2,autodefrag,max_inline=512k,inode_cache,subvol=@root   /dev/sda3 /mnt/root
+  
   mount /dev/nvme0n1p1 /mnt/boot
-  ntfs-3g -o defaults,noauto,x-systemd.automount,noatime,windows_names,permissions,streams_interface=windows,allow_other,users,hide_dot_files,hide_hid_files,inherit /dev/sda1 /mnt/hdd
-  swapon /dev/nvme0n1p2
+  mount -t ntfs-3g -o rw,uid=0,gid=0,umask=0000,nls=utf8,noatime,windows_names /dev/sda1 /mnt/hdd
 ```
 
 </div>
@@ -525,7 +471,7 @@ umount /mnt
 <div dir='ltr' align='left'>
 
 ```bash
-pacstrap /mnt base linux linux-firmware intel-ucode ntfs-3g btrfs-progs  
+pacstrap /mnt base base-devel linux-lts linux-firmware intel-ucode ntfs-3g btrfs-progs bash-completion dhcpcd iwd vim   
 
 genfstab -U /mnt >> /mnt/etc/fstab
 
@@ -550,12 +496,12 @@ locale-gen
 echo "LANGE=en_US.UTF-8" > /etc/locale.conf
 
 # config hostname
-echo "${what-ever-your-hostname}" > /etc/hostname
+echo "${custom-hostname}" > /etc/hostname
 
 # config hosts
 echo "127.0.0.1 localhost" > /etc/hosts
 echo "::1  localhost" >> /etc/hosts
-echo "127.0.1.1 ${what-ever-your-hostname}.localdomain ${what-ever-your-hostname}" >> /etc/hosts
+echo "127.0.1.1 ${custom-hostname}.localdomain ${custom-hostname}" >> /etc/hosts
 
 # bootloader as we are going to use systemd-boot
 bootctl  --boot-path=/boot --esp-path=/boot/efi install
@@ -617,7 +563,7 @@ title    Arch Linux
 linux    /vmlinuz-linux
 initrd   /intel-ucode.img
 initrd   /initramfs-linux.img
-options  root=/dev/nvme0n1p3 rootfstype=btrfs rootflags=subvol=@ elevator=deadline add_efi_memmap rw quiet splash loglevel=3 vt.global_cursor_default=0 plymouth.ignore_serial_consoles rd.systemd.show_status=auto r.udev.log_priority=3 nowatchdog fbcon=nodefer i915 i915.fastboot=1 i915.enable_fbc=1 i915.invert_brightness=1 intel_iommu=on,igfx_off nvidia_drm.modeset=1
+options  root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ elevator=deadline add_efi_memmap rw quiet splash loglevel=3 vt.global_cursor_default=0 plymouth.ignore_serial_consoles rd.systemd.show_status=auto r.udev.log_priority=3 nowatchdog fbcon=nodefer i915 i915.fastboot=1 i915.enable_fbc=1 i915.invert_brightness=1 intel_iommu=on,igfx_off nvidia_drm.modeset=1
 ```
 
 </div>
