@@ -192,11 +192,15 @@ reflector --country Germany,France,England,Nederland --protocol https --age 24 -
 حداقل دو تا پارتیشن لازم داریم:
 - یکی برای efi و بوت شدن سیستم. حجم ۵۱۲ مگ رو میشه برای حالت تک کرنل امن درنظر گرفت ولی برای امنیت بیشتر ۱ گیگ بدیم. 
 - و یکی هم برای خود سیستم‌عامل و درایوهای هوم و غیره،‌ از ابزار `cfdisk‍` یا `fdsik` برای پارتیشن بندی استفاده کنید. طرز کار ساده‌ای دارن، ابزارهای دیگه هم فرقی نداره استفاده بشن و مهم خروجی کار هست. نهایتا در خروجی کار همچین چیزی لازمه:
+  
+<div dir="ltr">
+ 
+| partition  |       size        | filesystem-type         | mount point   | partition                   |
+|   :---:    |       :---:       |     :---:               |     :---:     |           :---:             |
+| efi        |       1 GiB       |   EFI system            |   /mnt/efi    | /dev/efi_system_partition   |
+| root       |  remaining space  |   Linux file sys        |   /mnt        | /dev/root_partition         |
 
-| partition  |       size        | filesystem-type|  mount point  |         partition         |
-|   :---:    |       :---:       |     :---:      |     :---:     |           :---:           |
-| boot       |       1 GiB       |   EFI system   | /mnt/boot/efi | /dev/efi_system_partition |
-| root       |  remaining space  | Linux file sys |     /mnt      | /dev/root_partition       |
+</div>
 
 <details>
   <summary>اگر چندتا کرنل میخواین نصب کنید یا گراب استفاده می‌کنید</summary>
@@ -204,11 +208,15 @@ reflector --country Germany,France,England,Nederland --protocol https --age 24 -
 کرنل‌هایی که نصب می‌کنید و مثلا گراب و متعلقات گراب(مثل تم و این چیزای اضافیش - البته ما که گراب نمی‌زنیم) هم توی همین پارتیشن EFI قرار می‌گیرن پس حواستون باشه اگر قرار چندتا کرنل همزمان نصب کنید این پارتیشن رو باید بزرگتر درنظر بگیرید.
 البته یه راه دیگه‌ای هم وجود داره می‌تونید این پارتیشن رو کم حجم بسازید و فقط فایل‌های .efi که لودر هستن رو داخلش قرار بدین ولی باید یک پارتیشن /boot جداگانه درست کنید تا extended boot partition یا به اختصار XBOOTLDR باشه و اون رو جداگانه مانت کنید. در این صورت یعنی ما باید ۳ تا پارتیشن درست کنیم:
 
-| partition  |       size        | filesystem-type         | mount point   | partition                   |
-|   :---:    |       :---:       |     :---:               |     :---:     |           :---:             |
-| efi        |      512 MiB      |   EFI system            |   /mnt/efi    | /dev/efi_system_partition   |
-| boot       |       2 GiB       |   Linux extended boot   |   /mnt/boot   | /dev/efi_system_partition   |
-| root       |  remaining space  |   Linux file sys        |   /mnt        | /dev/root_partition         |
+<div dir="ltr">
+
+| partition  |       size        | filesystem-type         | mount point   | partition                      |
+|   :---:    |       :---:       |     :---:               |     :---:     |           :---:                |
+| efi        |      512 MiB      |   EFI system            |   /mnt/efi    | /dev/efi_system_partition      |
+| boot       |       2 GiB       |   Linux extended boot   |   /mnt/boot   | /dev/extended_boot_partition   |
+| root       |  remaining space  |   Linux file sys        |   /mnt        | /dev/root_partition            |
+
+</div>
 
 اون آخر کار هم باید از این دستور برای ایجاد سیستم‌دی بوت استفاده کنید:
 
