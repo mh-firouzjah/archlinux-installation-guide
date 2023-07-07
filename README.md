@@ -448,47 +448,44 @@ umount /mnt
 
   mkdir -p /mnt/{boot/efi,hdd,home,root}
 
-  mount -o ssd,discard,noatime,compress=zstd:8,commit=30,space_cache=v2,autodefrag,max_inline=512k,inode_cache,subvol=@home   /dev/sda3 /mnt/home
-  mount -o ssd,discard,noatime,compress=zstd:8,commit=30,space_cache=v2,autodefrag,max_inline=512k,inode_cache,subvol=@root   /dev/sda3 /mnt/root
+  mount -o ssd,discard,noatime,compress=zstd:8,commit=30,space_cache=v2,autodefrag,max_inline=512k,inode_cache,subvol=@home   /dev/nvme0n1p2 /mnt/home
+  mount -o ssd,discard,noatime,compress=zstd:8,commit=30,space_cache=v2,autodefrag,max_inline=512k,inode_cache,subvol=@root   /dev/nvme0n1p2 /mnt/root
   
   mount /dev/nvme0n1p1 /mnt/boot
   mount -t ntfs-3g -o rw,uid=0,gid=0,umask=0000,nls=utf8,noatime,windows_names /dev/sda1 /mnt/hdd
 ```
 
 </div>
-
-<details>
-  <summary> درمورد آپشن‌هایی که در مانت نوشتم </summary>
-
-  ۱- آپشن noatime – No access time. برای پرفورمنس بهتر سیستم هست این رو قرار بدیم چرا که درغیر این صورت به دیتای تایم هم نیاز داره که ضرورتی نداره
-  
-  ۲- آپشن commit – فاصله‌های زمانی که دیتا روی حافظه‌ی سخت نگاشته می‌شود، مقدار پیش‌فرض ۳۰ ثانیه هست درصورتی که این گپ رو خیلی زیاد بگیریم دیتایی زیادی رو تو صف قرار میدیم برای رایت شدن رو هارددیسک که ممکنه در اثر کرش شدن سیستم دیتا از دست بره
-  
-  ۳- آپشن compress – انتخاب یک الگوریتم برای فشرده سازی که من zstd رو انتخاب کردم و سطح ۸ از ۱۵ رو گرفتم و البته مطابق مستندات ویکی آرچ فورس کردنش باعث میشه قدری مصرف سی‌پی‌یو بیشتر بشه اما داده‌های بیشتری رو سعی می‌کنه فشرده کنه و برای ssd ها بودنش بهتر هست همچنین هرچه قدر لول فشرده سازی رو بیشتر بگیریم برای ssd بهتر هست چون دیتای کمتری نوشته و بعدا شاید پاکسازی بشه اما از ۸ به بعد فقط فشار زیادی به سی‌پی‌یو میاد و سرعت نوشتن کمتر میشه ولی مقدار فشردگی تغییر خیلی به سزایی نخواهد داشت
-  
-  ۴- آپشن subvol – این گزینه هم برای اینه که مشخص کنیم روی کدوم ساب‌ولیوم‌ها میخوایم مانت بشه
-
-  ۵- آپشن noautodefrag/autodefrag - این گزینه بسته به اینکه روی ssd هستین یا نه انتخاب میشه، به این صورت که برای ssd عمل fragmentation نه تنها خوب نیست بلکه باعث میشه یک عملیات خواندن و پاک‌کردن و نوشتن درجایی دیگر انجام بشه که خب برای ssd اینکار تاثیری روی سرعت خواندن یا بهینه‌سازی نداره که هیچ! تازه عملیات نوشتن و پاک‌کردن بی‌موردی انجام میده و برای ssd ضرر داره اینکار اما همین حالت برای hdd خوبه و یکپارچه‌سازی داده رو به همراه داره
-
-  ۶- آپشن discard=async - این گزینه هم بیشتر برای ssd ها مناسب هست. آزاد کردن بلاک‌هایی که تحت استفاده‌ی فایل سیستمی نیستند
-
-</details>
-
-</div>
-
 ---
 
 ## نصب پکیج‌های پایه
 
-در این مرحله حداقل‌هایی رو نصب می‌کنیم که میشه گفت روی سیستم مدنظر یک آرچ خیلی سبک و پایه رو داشته باشیم
-در ادامه پکیج‌های بیشتری رو نصب می‌کنیم تا یک سیستم قابل استفاده بدست بیاریم و بتونیم از روی همون سیستم و نه از روی این لایو مدیا کار رو ادامه بدیم
-بعد از نصب اینها حالا یک آرچ روی سیستم مدنظر داریم وارد محیط آن می‌شویم و باقی کارها را مستقیم از داخل همان ماشین ادامه می‌دهیم
-از آنجا که روی سیستم مقصد نیز باید از روی میرورها بیسته‌های جدید را نصب کنیم، پس لیست میرورهایی که تازه بروزرسانی کردیم به سیستم جدید منتقل می‌کنیم
+در این مرحله حداقل‌هایی رو نصب می‌کنیم که میشه گفت روی سیستم مدنظر یک آرچ خیلی سبک و پایه رو داشته باشیم که یک فایروال و یک ادیتور و همین طور اتصال به اینترنت داره و بعدش دیگه هرطور دلتون می‌خواد می‌تونید این سیستم رو شخصی‌سازیش کنید و کاملتر کنید.
+
+کدی که در ادامه اومده شامل مراحل زیر هست:
+- نصب پکیج‌های پایه و همین طور فریم‌ور لینوکس و میکروکد برای پردازند اینتل و پکیج‌های کمکی برای مانت کردن پارتیشن‌های ویندوزی یا همون ntfs و پارتیشن‌های btrfs به همره یک پکیج کمکی برای کامل کردن دستورات بش با زدن دکمه تب و فایروال و بسته‌های لازم برای اتصال به اینترنت و در آخر ادیتور ویم
+- ایجاد فایل fstab که نشون میده بعد از هر بار بوت شدن سیستم عامل، پارتیشن‌ها چطوری مانت بشن
+- چون یبار با رفلکتور میرورهای پکمن رو بر اساس سرعت دانلود کردن ازشون مرتب کردیم همین لیست رو میبریم رو سیستم مقصد
+- حالا با chroot میریم وارد سیستمی که نصب کردیم میشیم تا تنظیمات پایه‌ای رو انجام بدیم که بشه این سیستم رو بوت کرد و بهش لاگین کرد
+- لوکال تایم رو با توجه به منطقه زمانی ست میکنیم
+- ساعت سیستم رو هم تنظیم میکنیم
+- زبان سیستم و تنظیمات نمایش تاریخ و ساعت و غیره رو ایجاد میکنیم و از روش جنریت میکنیم
+- زبان کلی سیستم و کیبورد رو تنظیم میکنیم
+- هاست نیم یا هون اسمی که موقع اتصال بلوتوث، هات اسپات یا شبکه کردن چندتا سیستم و ... دیده میشه رو ست میکنیم
+- تنظیمات شبکه پایه رو انجام میدیم
+- سیستم‌دی بوت رو نصب میکنیم و بعدش بوت لودر رو مینویسیم
+- چون از سیستم‌دی برای بوت کردن سیستم استفاده کردیم mkinitpico رو باید آپدیت کنیم تا initramfs رو دوباره جنریت کنیم (این همون فایلی هست که سیستم‌دی موقع بوت ازش استفاده میکنه) 
+- برای یوزر روت یک پسورد میذاریم
+- یه یوزر جدید میسازیم عضو گروه wheel میکنیم و براش پسورد میذاریم و همین طور با visudo میریم به کل گروه wheel اجازه استفاده از سودو به شرط داشتن پسورد میدیم
+- فایروال رو تنظیم و بعدش فعال میکنیم
+- سرویسهای لازم برای ایجاد اتصال به اینترنت با کابل یا بی سیم رو فعال میکنیم
+
+
 
 <div dir='ltr' align='left'>
 
 ```bash
-pacstrap /mnt base base-devel linux-lts linux-firmware intel-ucode ntfs-3g btrfs-progs bash-completion dhcpcd iwd vim   
+pacstrap /mnt base base-devel linux-lts linux-firmware intel-ucode ntfs-3g btrfs-progs bash-completion ufw dhcpcd iwd vim   
 
 genfstab -U /mnt >> /mnt/etc/fstab
 
@@ -513,18 +510,64 @@ locale-gen
 echo "LANGE=en_US.UTF-8" > /etc/locale.conf
 
 # config hostname
-echo "${custom-hostname}" > /etc/hostname
+echo "${hostname}" > /etc/hostname
 
 # config hosts
 echo "127.0.0.1 localhost" > /etc/hosts
 echo "::1  localhost" >> /etc/hosts
-echo "127.0.1.1 ${custom-hostname}.localdomain ${custom-hostname}" >> /etc/hosts
+echo "127.0.1.1 ${hostname}.localdomain ${hostname}" >> /etc/hosts
 
-# bootloader as we are going to use systemd-boot
-bootctl  --boot-path=/boot --esp-path=/boot/efi install
+# initiate bootloader
+bootctl  --boot-path=/boot --esp-path=/boot install
+
+# set a loader for boot
+vim /boot/loader/loader.conf
+---------------------
+default      arch.conf
+timeout      0
+editor       no
+console-mode max
+
+# edit `/boot/loader/entries/arch.conf` config the loader entery and set some kernel parameters
+---------------------
+title    Arch Linux LTS
+linux    /vmlinuz-linux-lts
+initrd   /intel-ucode.img
+initrd   /initramfs-linux-lts.img
+options  root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ elevator=deadline add_efi_memmap rw quiet loglevel=3 vt.global_cursor_default=0 rd.systemd.show_status=auto r.udev.log_priority=3 nowatchdog fbcon=nodefer
+
+# let systemd check the root filesystem by replacing `udev` hook with `systemd`. edit `/etc/mkinitcpio.conf` at `HOOKS=`
+
+HOOKS=( base udev[systemd] fsck ...)
+
+# regenerate initramfs
+mkinitcpio -P
+
+# set password for root user
+passwd
+
+# create another user
+useradd -m -G wheel -s /bin/bash <your username>
+passwd <your username>
+cp ~/.bash_profile /home/<your username>/.bash_profile
+
+# inorder to give new user sudo access
+visudo
+## type /%wheel hit enter to find the line %wheel ALL=(ALL) ALL type ^ then hit x then type :wq
+
+# network and firewall
+ufw default deny incoming
+ufw default allow outgoing
+ufw enable
+systemctl enable ufw.service
+sudo systemctl enable dhcpcd.service
+sudo systemctl enable iwd.service
+
 ```
 
 </div>
+
+
 
 یک لیست از پکیج‌هایی که برای یک دسکتاپ حداقلی لازم هست تهیه کردم که ضمیمه‌هست اونها رو یکجا نصب میکنیم ولی در ادامه توی توضیحات درموردشون می‌خونیم که چی هستن و چرا نصب شدن
 بجز در قسمت زیری باقی جاهایی که از پکمن استفاده شده نیازی نیست استفاده بشه چون پکیج‌های اون قسمت‌ها رو اینجا داره نصب می کنه
@@ -532,17 +575,9 @@ bootctl  --boot-path=/boot --esp-path=/boot/efi install
 <div dir='ltr' align='left'>
 
 ```bash
-# enabling chaotic-aur
-pacman-key --recv-key FBA220DFC880C036 --keyserver keyserver.ubuntu.com
-pacman-key --lsign-key FBA220DFC880C036
-pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
-
-echo "[chaotic-aur]" >> /etc/pacman.conf
-echo "Include = /etc/pacman.d/chaotic-mirrorlist" >> /etc/pacman.conf
- 
 echo "Color" >> /etc/pacman.conf
 echo "ILoveCandy" >> /etc/pacman.conf
-echo "ParallelDownloads = 5" >> /etc/pacman.conf
+echo "ParallelDownloads = 3" >> /etc/pacman.conf
 
 pacman -Sy --needed - < pkg-list.out
 
@@ -624,36 +659,6 @@ echo "[[ $(fgconsole 2>/dev/null) == 1 ]] && exec startx -- vt1 &> /dev/null" >>
 ```
 
 </div>
-
-در فایل زیر هم باید udev را با systemd در هوک‌ها عوض کنیم و برای گرافیک اینتل هم intel_agp و i915 رو اضافه کردم
-برای گرافیک‌های انویدیا یا ای‌ام‌دی هم همینکار رو بکنید.
-
-<div dir='ltr' align='left'>
-
-```bash
-# To hide fsck messages during boot, let systemd check the root filesystem. For this, replace udev hook with systemd
-vim /etc/mkinitcpio.conf
-
-HOOKS=( base udev[systemd] fsck [intel_agp i915] ...)
-
-mkinitcpio -P
-
-# set password for root user
-passwd
-
-# create another user
-useradd -m -G wheel -s /bin/bash <your username>
-passwd <your username>
-cp ~/.bash_profile /home/<your username>/.bash_profile
-
-# inorder to give new user sudo access
-visudo
-## type /%wheel hit enter to find the line %wheel ALL=(ALL) ALL type ^ then hit x then type :wq
-```
-
-</div>
-
-برای یوزر جدید با استفاده از visudo وارد تنظمیات sudo بشین و خط %wheel ALL=(ALL) AL رو از کامنت دربیارین (هشتگ سر خط رو پاک کنید)
 
 ---
 
