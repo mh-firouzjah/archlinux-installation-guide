@@ -1,6 +1,6 @@
 # راهنمای نصب آرچ
 
-<div dir='rtl' align='right'>
+<div dir="rtl" align='right'>
 
 این مطلب در راستای کمک به نصب آرچ لینوکس تهیه شده
 
@@ -16,7 +16,7 @@
 
 سپس با استفاده از [GnuPG](https://wiki.archlinux.org/title/GnuPG) فایل ایزوی دانلود شده رو با این روش `تائید امضا` بررسی کنید
 
-<div dir='ltr' align='left'>
+<div dir="ltr">
 
 ```bash
 gpg --keyserver-options auto-key-retrieve --verify archlinux-version-x86_64.iso.sig
@@ -42,7 +42,7 @@ gpg --keyserver-options auto-key-retrieve --verify archlinux-version-x86_64.iso.
 
 برای اینکار روشهای زیادی وجود داره و برنامه‌های گرافیکی هم هستن که کار رو ساده‌تر کردن اما روش ترمینالی اینکار استفاده از دستور زیر هست  
 
-<div dir='ltr' align='left'>
+<div dir="ltr">
 
 ```bash
 dd bs=4M if=path/to/archlinux-version-x86_64.iso of=/dev/sdx conv=fsync oflag=direct status=progress
@@ -68,7 +68,7 @@ dd bs=4M if=path/to/archlinux-version-x86_64.iso of=/dev/sdx conv=fsync oflag=di
 
 برای اینکه مطمئن بشیم فلش ما به صورت efi بوت شده دستور زیر رو میزنیم
 
-<div dir='ltr' align='left'>
+<div dir="ltr">
 
 ```bash
 ls /sys/firmware/efi/efivars
@@ -86,7 +86,7 @@ ls /sys/firmware/efi/efivars
 
 راه ساده‌ش میتونید یکجا و در یک دستور بزنید:
 
-<div dir='ltr' align='left'>
+<div dir="ltr">
 
 ```bash
 iwctl --passphrase <wifi password> station <device e.g wlan0> connect <SSID means wifi-name>
@@ -99,7 +99,7 @@ iwctl --passphrase <wifi password> station <device e.g wlan0> connect <SSID mean
  <summary>راه طولانی:</summary>
 دستور `ip link` رو بزنید تا ببینید دیوایس‌های سیستم شناخته شدن و فعال هستن
 
-<div dir='ltr' align='left'>
+<div dir="ltr">
 
 ```bash
 ip link
@@ -109,7 +109,7 @@ ip link
 
 دستور ‍`iwctl` رو بزنید تا وارد محیط اینتراکتیوش بشید. بعد از اینکه وارد محیط اینتراکتیوش بشین یک تغییر کوچیک توی ترمینال می‌بینید به این شکل
 
-<div dir='ltr' align='left'>
+<div dir="ltr">
 
 ```bash
 $ iwctl
@@ -129,7 +129,7 @@ $ iwctl
 
 حالا با دستور `station device connect SSID` می‌تونید به وای‌فای مدنظرتون وصل بشین.(SSID = اسم وای‌فای، برای اسم وای‌فای چند کاراکتر اول رو بنویسید و دکمه تب کیبورد رو بزنید.)
 
-<div dir='ltr' align='left'>
+<div dir="ltr">
 
 ```bash
 [iwd]$ help
@@ -148,7 +148,7 @@ $ iwctl
 
 با دستور پینگ چک کنید که به اینترنت وصل شدین یا نه
 
-<div dir='ltr' align='left'>
+<div dir="ltr">
 
 ```bash
 ping -c 4 archlinux.org
@@ -158,7 +158,7 @@ ping -c 4 archlinux.org
 
 ساعت سیستم رو تنظیم کنید
 
-<div dir='ltr' align='left'>
+<div dir="ltr">
 
 ```bash
 timedatectl set-ntp true
@@ -171,7 +171,7 @@ timedatectl set-ntp true
 برای اینکه در ادامه و برای نصب بسته‌های لازم کمی سرعت دانلود از اینترنت بهتری داشته باشم لازم است تا لیست میرورهای مخازن را بروزرسانی کنیم. برای این کار از
 بسته‌ی reflector استفاده می‌کنیم. ابتدا باید آن را نصب کنیم و سپس لیست میرورها را آپدیت کنیم. قبل از آپدیت کردن از لیست فعلی یک بک‌آپ تهیه می‌کنیم برای احتیاط
 
-<div dir='ltr' align='left'>
+<div dir="ltr">
 
 ```bash
 cp /etc/pacman.d/mirrorlist  /etc/pacman.d/mirrorlist.bac
@@ -296,7 +296,7 @@ reflector --country Germany,France,England,Nederland --protocol https --age 24 -
 
 </details>
 
-<div dir='ltr' align='left'>
+<div dir="ltr">
 
 ```bash
 $ fdisk -l
@@ -349,7 +349,7 @@ $
 
 اول پارتیشن بوت منیجر رو فرمت می‌کنیم، دستور زیر رو بزنید
 
-<div dir='ltr' align='left'>
+<div dir="ltr">
 
 ```bash
 mkfs.fat -F 32 -n EFI /dev/efi_system_partition   # efi_system_partition = /dev/sda1 or /dev/nvme0n1p1
@@ -360,7 +360,7 @@ mkfs.fat -F 32 -n EFI /dev/efi_system_partition   # efi_system_partition = /dev/
 برای پارتیشن اصلی هم دستور زیر رو می‌زنیم. اما اگر یک پارتیشن ویندوزی دارین که میخواین به همون فرمت ویندوزی باقی بمونه و فرمتش نمی‌کنید یا فرمت می‌کنید ولی
 بازم میخواین که توی ویندوز قابل استفاده باشه نیازه پکیج ntfs-3g نصب کنید همچنین برای احتیاط یک پکیج برای btrfs هم چک می‌کنیم که نصب هست یا نه
 
-<div dir='ltr' align='left'>
+<div dir="ltr">
 
 ```bash
 pacman -Sy ntfs-3g btrfs-progs
@@ -391,7 +391,7 @@ mkfs.btrfs -f -L ROOT /dev/your_drive3 # your_drive3 = /dev/sda2 or /dev/nvme0n1
 
   در فایل سیستم BtrFS یا ‌B-Tree File System می‌توان بدون فشرده‌سازی یا با یکی از سه الگوریتم مختلف برای فشرده‌سازی دیتا استفاده کرد، ZLIB، LZO و ZSTD که مطابق با بنچمارک‌ها ZLIB پرفورمنس و سرعت عمل کمتری داشته و ZSTD در چند مورد از LZO بهتر بوده است. اما برای مثال توزیع مانجارو در نصب به صورت BTRFS از الگوریتم LZO استفاده کرده است(ممکن است در نسخه‌های دیگرش این الگوریتم را عوض کند). اما من تصمیم گرفتم درمورد الگوریتم ZSTD بنویسم. این الگوریتم دارای چندین سطح فشرده سازی هست که مطابق با مستنداتش از سطح ۱-۳ فشرده‌سازی سبک‌تر و کمتری انجام می‌دهد و به اصطلاح real-time هست، این یعنی سرعت عمل بیشتر و همین طور فشار کمتری به پردازنده(cpu) و از سطح ۴-۹ که فشرده‌سازی جدی‌تری انجام می‌دهد و طبعا کمی سرعت کمتر و همچنین سربار بیشتر برای پردازنده و از سطح ۱۰-۱۵ هم جهت تلاش بر نهایت توان فشرده‌سازی که البته شاید تاثیری به‌سزایی در خروجی نداشته باشد ولی قطعا افت سرعت و همچین لود سنگین‌تری روی پردازنده خواهد داشت. به صورت پیش‌فرض درصورتی که خاصیت فشرده‌سازی zstd برای این فایل سیستم فعال کنیم در سطح ۳ از آن استفاده می‌کند. ولی خب من ترجیح می‌دهم سطح ۸ را انتخاب کنم، همانطور که پیشتر اشاره کردم فشرده کردن دیتا در عمل نوشتن و پاک‌کردن از روی هارددیسک تاثیر مفیدی دارد و برداشت من از مستندات این الگوریتم این است که انتخاب سطح ۹ حد وسط هست. همچنین مطابق اطلاعاتی که از ویکی آرچ بدست آوردم اعمال فشرده سازی اجباری هرچند قدری پردازنده باز اضافی تحمیل می‌کند اما در نهایت برای فشرده‌سازی بهینه‌تر خواهد بود چرا که درحالت عادی ممکن است برای بعضی از داده‌ها فشرده‌سازی صرف‌نظر شود و سیستم با تشخصی خود از اینها بگذرد. به صورت پیش فرض و فقط برای فعال کردن فشرده سازی کافی‌است پاریتشن مدنظر را با دستوری مشابه دستوری زیر مانت کنیم  
 
-<div dir='ltr' align='left'>
+<div dir="ltr">
 
 ```bash
 mount -o compress=zstd /dev/sdx /mnt
@@ -408,7 +408,7 @@ mount -o compress=zstd /dev/sdx /mnt
 
 بریم سراغ ساختن ساب‌ولیوم‌ها، اول باید پارتیشن روت رو مانت کنیم و بعد ساب‌ولیوم‌ها رو روش بسازیم
 
-<div dir='ltr' align='left'>
+<div dir="ltr">
 
 ```bash
 mount /dev/nvme0n1p2 /mnt
@@ -422,7 +422,7 @@ mount /dev/nvme0n1p2 /mnt
 
 این ها هم دستوراتی که استفاده می‌کنیم و اختصارشون
 
-<div dir='ltr' align='left'>
+<div dir="ltr">
 
 > su = subvolume
 > cr = create
@@ -432,7 +432,7 @@ mount /dev/nvme0n1p2 /mnt
 
 ساختن ساب‌ولیوم‌ها  
 
-<div dir='ltr' align='left'>
+<div dir="ltr">
 
 ```bash
 btrfs su cr /mnt/@  
@@ -449,7 +449,7 @@ umount /mnt
 هرچند توی راهنمای نصب و پارتیشن بندی برای uefi سیستم گفته که پارتیشن efi رو توی /boot/efi مانت کنیم
 اما چون ما قصد داریم از systemd-boot استفاده کنیم پارتیشن مدنظر را در /boot مانت می‌کنیم
 
-<div dir='ltr' align='left'>
+<div dir="ltr">
 
 ```bash
   mount -o ssd,discard,noatime,compress=zstd:8,commit=30,space_cache=v2,autodefrag,max_inline=512k,inode_cache,subvol=@ /dev/nvme0n1p2 /mnt  
@@ -484,13 +484,14 @@ umount /mnt
 - سیستم‌دی بوت رو نصب میکنیم و بعدش بوت لودر رو مینویسیم
 - چون از سیستم‌دی برای بوت کردن سیستم استفاده کردیم mkinitpico رو باید آپدیت کنیم تا initramfs رو دوباره جنریت کنیم (این همون فایلی هست که سیستم‌دی موقع بوت ازش استفاده میکنه) 
 - برای یوزر روت یک پسورد میذاریم
+- چون ادیتور vim رو نصب کردیم همین رو به صورت سمبلیک لینک میکنیم به vi که اگر برنامه‌ای به صورت پیشفرض دنبال vi رفت از همین vim  استفاده بشه(vi محیطش با vim یکم فرق داره!)
 - یه یوزر جدید میسازیم عضو گروه wheel میکنیم و براش پسورد میذاریم و همین طور با visudo میریم به کل گروه wheel اجازه استفاده از سودو به شرط داشتن پسورد میدیم
 - فایروال رو تنظیم و بعدش فعال میکنیم
 - سرویسهای لازم برای ایجاد اتصال به اینترنت با کابل یا بی سیم رو فعال میکنیم
 
 
 
-<div dir='ltr' align='left'>
+<div dir="ltr">
 
 ```bash
 pacstrap /mnt base base-devel linux-lts linux-firmware intel-ucode ntfs-3g btrfs-progs bash-completion ufw dhcpcd iwd vim   
@@ -526,10 +527,9 @@ echo "::1  localhost" >> /etc/hosts
 echo "127.0.1.1 ${hostname}.localdomain ${hostname}" >> /etc/hosts
 
 # initiate bootloader
-bootctl  --boot-path=/boot --esp-path=/boot install
+bootctl --boot-path=/boot --esp-path=/boot install
 
-# set a loader for boot
-vim /boot/loader/loader.conf
+# to set a loader edit `/boot/loader/loader.conf` and define a default entry
 ---------------------
 default      arch.conf
 timeout      0
@@ -544,9 +544,11 @@ initrd   /intel-ucode.img
 initrd   /initramfs-linux-lts.img
 options  root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ elevator=deadline add_efi_memmap rw quiet loglevel=3 vt.global_cursor_default=0 rd.systemd.show_status=auto r.udev.log_priority=3 nowatchdog fbcon=nodefer
 
-# let systemd check the root filesystem by replacing `udev` hook with `systemd`. edit `/etc/mkinitcpio.conf` at `HOOKS=`
+# check if boot entry is recognized and has no errors
+bootctl list
 
-HOOKS=( base udev[systemd] fsck ...)
+# let systemd check the root filesystem by replacing `udev` hook with `systemd`. edit `/etc/mkinitcpio.conf` at `HOOKS=`
+HOOKS=(base udev[systemd] fsck ...)
 
 # regenerate initramfs
 mkinitcpio -P
@@ -557,7 +559,9 @@ passwd
 # create another user
 useradd -m -G wheel -s /bin/bash <your username>
 passwd <your username>
-cp ~/.bash_profile /home/<your username>/.bash_profile
+
+# create a simbolic link from vim to vi, so whenever a program calls vi, vim will be used
+sudo ln -s /usr/bin/vim /usr/bin/vi
 
 # inorder to give new user sudo access
 visudo
@@ -571,16 +575,26 @@ systemctl enable ufw.service
 sudo systemctl enable dhcpcd.service
 sudo systemctl enable iwd.service
 
+# exit from chroot
+exit
+
+# un mount partitions
+umount /mnt/boot
+umount /mnt
+
+# reboot and remove the live media (USB flash)
+reboot
 ```
 
 </div>
 
+تا اینجا شما یک آرچ مستقل رو روی سیستم مقصد نصب کردین. الان میتونید اون رو بوت کنید و دیگه از روی این سیستم جدید شروع کنید کاملش کنید.
 
 
 یک لیست از پکیج‌هایی که برای یک دسکتاپ حداقلی لازم هست تهیه کردم که ضمیمه‌هست اونها رو یکجا نصب میکنیم ولی در ادامه توی توضیحات درموردشون می‌خونیم که چی هستن و چرا نصب شدن
 بجز در قسمت زیری باقی جاهایی که از پکمن استفاده شده نیازی نیست استفاده بشه چون پکیج‌های اون قسمت‌ها رو اینجا داره نصب می کنه
 
-<div dir='ltr' align='left'>
+<div dir="ltr">
 
 ```bash
 echo "Color" >> /etc/pacman.conf
@@ -589,13 +603,10 @@ echo "ParallelDownloads = 3" >> /etc/pacman.conf
 
 pacman -Sy --needed - < pkg-list.out
 
-# network and firewall
-ufw enable
-systemctl enable ufw.service
 systemctl enable NetworkManager
 systemctl enable bluetooth.service
 systemctl enable acpid.service
-sudo ln -s /usr/bin/vim /usr/bin/vi
+
 pacman -Rns $(pacman -Qtdq)
 pacman-optimize
 ```
@@ -604,7 +615,7 @@ pacman-optimize
 
 در این قسمت باید بوت‌بولدر سیستم‌دی را کانفیگ کنیم
 
-<div dir='ltr' align='left'>
+<div dir="ltr">
 
 ```bash
 # set a loader for boot
@@ -630,7 +641,7 @@ options  root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ elevator=deadli
 
 درصورتی که فقط گرافیک nvidia دارین در قسمت options  و اونهایی که با i915 شروع شدن رو پاک کنید. اون برای کسایی هست که گرافیک اینتل داشته باشند(چه دوآل چه تکی) این چندتا آپشن رو وارد کنید
 
-<div dir='ltr' align='left'>
+<div dir="ltr">
 
 ```bash
 nvidia nvidia_modeset nvidia_uvm nvidia_drm
@@ -642,7 +653,7 @@ nvidia nvidia_modeset nvidia_uvm nvidia_drm
  اینها ضروری نیستن و ممکنه در گذر زمان عوض بشن ولی درحال حاضر
 توی ویکی آرچ هستن و برای کمی دستکاری بیشتر استفاده کردم.
 
-<div dir='ltr' align='left'>
+<div dir="ltr">
 
 ```bash
 # pacman hook to automate the bootloader update after kernel update
@@ -676,7 +687,7 @@ echo "[[ $(fgconsole 2>/dev/null) == 1 ]] && exec startx -- vt1 &> /dev/null" >>
 پکیج‌هایی که لازم داریم و تنظیماتی که باید بعد از نسب آن‌ها انجام بشن رو به همراه توضیح مختصری می‌نویسم
 برای شناسایی کارت گرافیکی که روی سیستم دارین دستور زیر رو بزنید و بعد هم با پکمن سرچ کنید ببینید بسته‌ی مناسب سخت‌افزار شما کدوم هست
 
-<div dir='ltr' align='left'>
+<div dir="ltr">
 
 ```bash
 lspci -v | grep -A1 -e VGA -e 3D
@@ -712,7 +723,7 @@ nvidia_drm.modeset=1
 
 </div>
 
-<div dir='ltr' align='left'>
+<div dir="ltr">
 
 ```bash
 pacman -S xorg plasma-desktop plasma-pa sddm sddm-kcm nm-connection-editor network-manager-applet
