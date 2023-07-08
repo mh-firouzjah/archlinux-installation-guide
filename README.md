@@ -2,15 +2,28 @@
 
 <div dir="rtl">
 
-این مطلب در راستای کمک به نصب آرچ لینوکس تهیه شده
-
 در این روش آرچ را به صورت `efi` و با `systemd-boot` نصب و از فایل سیستم `btrfs` استفاده می‌کنیم
 
- - مدنظر داشته باشید که `systemd-boot` هرچند برای روش نصب انتخاب شده ولی این روش بهتر است برای وقتی که تنها یک سیستم‌عامل روی سیستم دارید استفاده بشود و برای دوآل بوت یا غیره 
- از گراب استفاده کنید. چرا که سیستم‌دی-بوت کل درایوی که برای efi انتخاب می‌کنید را اورراید می‌کند و مشکلاتی به همراه دارد. من چون فقط یک سیستم‌عامل دارم این را انتخاب کردم.
+**  **مدنظر داشته باشید** 
+`systemd-boot`
+هرچند برای روش نصب انتخاب شده
+ولی اگر فقط یک سیستم‌عامل دارید از این روش استفاده کنید
+و برای دوآل بوت یا غیره از گراب استفاده کنید.  
+چون سیستم‌دی-بوت کل درایوی که برای
+efi
+انتخاب می‌کنید را اورراید می‌کنه و مشکلاتی به همراه داره که 
+حداقل روشی که اینجا برای نصب استفاده شده پاسخگوی اونها نیست 
+***و خلاصه از ما گفتن بود***.  
+من چون فقط یک سیستم‌عامل دارم این را انتخاب کردم.
+
 ---
 
 ## قدم اول تهیه فایل ISO و ساختن یک فلش bootable از آن
+
+**
+بهتره از نسخه
+Torrnet
+برای دانلود استفاده کنید
 
 ابتدا به [صفحه‌ی دانلود آرچ](https://archlinux.org/download/) مراجعه کنید و فایل ایزو را به همراه `signature` مربوطه دانلود کنید
 
@@ -38,6 +51,8 @@ gpg --keyserver-options auto-key-retrieve --verify archlinux-version-x86_64.iso.
 
 </details>
 
+<br/>
+
 ### بوت‌ایبل کرن فلش  
 
 برای اینکار روشهای زیادی وجود داره و برنامه‌های گرافیکی هم هستن که کار رو ساده‌تر کردن اما روش ترمینالی اینکار استفاده از دستور زیر هست  
@@ -51,20 +66,24 @@ dd bs=4M if=path/to/archlinux-version-x86_64.iso of=/dev/sdx conv=fsync oflag=di
 </div>
 
 برای اطلاعات بیشتر می‌تونید [این لینک](https://wiki.archlinux.org/title/USB_flash_installation_medium#Using_the_ISO_as_is_(BIOS_and_UEFI)) رو مطالعه کنید
-  
-<details>
-  <summary>خطاها‌ی زمان بوت شدن</summary>  
 
-  ۱- ممکنه سیستم شما به Secure Boot حساس باشه و در نتیجه نتونه از روش فلش بوت بشه پس باید این وضعیت رو از منوی بایوس خاموش کنید
+
+<details>
+
+  <summary>خطاها‌ی زمان بوت شدن</summary>
+
+۱. ممکنه سیستم شما به Secure Boot حساس باشه و در نتیجه نتونه از روش فلش بوت بشه پس باید این وضعیت رو از منوی بایوس خاموش کنید
   برای اینکار سیستم رو ری‌استارت کنید و دکمه‌ی f12 یا f8 یا f2 رو بزنید تا وارد منوی بایوس بشین بین تب‌های موجود حرکت کنید و این وضعیت رو خاموش کنید
 
-  ۲- ممکنه سیستم شما روی حالت uefi قرار نداشته باشه و درنتیجه بازم نمیتونه از روی فلش بوت بشه پس از منوی بایوس این حالت رو فعال کنید
+۲. ممکنه سیستم شما روی حالت uefi قرار نداشته باشه و درنتیجه بازم نمیتونه از روی فلش بوت بشه پس از منوی بایوس این حالت رو فعال کنید
 
-  ۳- خطای *No Bootable Device*  
+۳. خطای *No Bootable Device*  
   بعد از نصب سیستم و تموم شدن کار اگر ری‌استارت کردین و خطایی دیدن که سیستم نتونسته یک فایل بوت پیدا کنه بازم باید وارد منوی بایوس بشین و
   از روی گزینه‌ای که برای انتخاب Trusted bootloaders هست وارد بشین و فایل بگردین فایل `EFI/systemd/systemd-bootx64.efi` رو انتخاب کنید براش یک اسم دلخواه بذارین و تنظمیات رو ذخیره کنید و ری‌استارت کنید
 
 </details>
+
+<br/>
 
 برای اینکه مطمئن بشیم فلش ما به صورت efi بوت شده دستور زیر رو میزنیم
 
@@ -96,7 +115,7 @@ iwctl --passphrase <wifi password> station <device e.g wlan0> connect <SSID mean
 
 
 <details>
- <summary>راه طولانی:</summary>
+ <summary>راه طولانی، اگر اسم وای‌فای یادتون رفته یا روش قبلی کار نکرد:</summary>
 دستور `ip link` رو بزنید تا ببینید دیوایس‌های سیستم شناخته شدن و فعال هستن
 
 <div dir="ltr" align="left">
@@ -144,6 +163,8 @@ $ iwctl
 اگر نیاز به پسورد برای وای‌فای باشه یک پرامپت باز میشه تا پسورد رو بگیره
 </details>
 
+<br/>
+
 برای اطلاعات بیشتر به [این لینک](https://wiki.archlinux.org/title/Iwd#iwctl) از ویکی آرچ مراجعه کنید
 
 با دستور پینگ چک کنید که به اینترنت وصل شدین یا نه
@@ -175,7 +196,9 @@ timedatectl set-ntp true
 
 ```bash
 cp /etc/pacman.d/mirrorlist  /etc/pacman.d/mirrorlist.bac
+
 pacman -Sy reflector
+
 reflector --country Germany,France,England,Netherland --protocol https --age 24 --sort rate --latest 20 --save /etc/pacman.d/mirrorlist
 ```
 
@@ -195,10 +218,10 @@ reflector --country Germany,France,England,Netherland --protocol https --age 24 
 
 <div dir="ltr" align="left">
 
-| partition  |       size        | filesystem-type         | mount point   | partition                   |
-|   :---:    |       :---:       |     :---:               |     :---:     |           :---:             |
-| efi        |       1 GiB       |   EFI system            |   /mnt/efi    | /dev/efi_system_partition   |
-| root       |  remaining space  |   Linux file sys        |   /mnt        | /dev/root_partition         |
+| partition | size            | fs-type        | mount point | partition                 |
+| :---:     | :---:           | :---:          | :---:       | :---:                     |
+| efi       | 1 GiB           | EFI system     | /mnt/efi    | /dev/efi_partition |
+| root      | remaining space | Linux file sys | /mnt        | /dev/root_partition       |
 
 </div>
 
@@ -212,7 +235,7 @@ reflector --country Germany,France,England,Netherland --protocol https --age 24 
 
 | partition  |       size        | filesystem-type         | mount point   | partition                      |
 |   :---:    |       :---:       |     :---:               |     :---:     |           :---:                |
-| efi        |      512 MiB      |   EFI system            |   /mnt/efi    | /dev/efi_system_partition      |
+| efi        |      512 MiB      |   EFI system            |   /mnt/efi    | /dev/efi_partition      |
 | boot       |       2 GiB       |   Linux extended boot   |   /mnt/boot   | /dev/extended_boot_partition   |
 | root       |  remaining space  |   Linux file sys        |   /mnt        | /dev/root_partition            |
 
@@ -223,6 +246,8 @@ reflector --country Germany,France,England,Netherland --protocol https --age 24 
 `bootctl --esp-path=/mnt/efi --boot-path=/mnt/boot install`
 
 </details>
+
+<br/>
 ساختن پارتیشن `swap` الزامی نیست بعدا هم می‌تونید اضافه کنید! تصمیم گیری با خودتون
 
 <details>
@@ -261,6 +286,8 @@ reflector --country Germany,France,England,Netherland --protocol https --age 24 
   
 </details>
 
+<br/>
+
 <details>
   <summary>برای پارتیشن بندی من از fdisk استفاده می‌کنم </summary>  
 
@@ -295,6 +322,8 @@ reflector --country Germany,France,England,Netherland --protocol https --age 24 
 دستور `w` رو می‌زنیم تا تغییرات روی دیسک رایت بشه و از fdisk خارج بشیم
 
 </details>
+
+<br/>
 
 <div dir="ltr" align="left">
 
@@ -363,7 +392,8 @@ mkfs.fat -F 32 -n EFI /dev/efi_system_partition   # efi_system_partition = /dev/
 <div dir="ltr" align="left">
 
 ```bash
-pacman -Sy ntfs-3g btrfs-progs
+pacman -S ntfs-3g btrfs-progs
+
 mkfs.btrfs -f -L ROOT /dev/your_drive3 # your_drive3 = /dev/sda2 or /dev/nvme0n1p2
 ```
 
@@ -379,12 +409,16 @@ mkfs.btrfs -f -L ROOT /dev/your_drive3 # your_drive3 = /dev/sda2 or /dev/nvme0n1
 
 </details>
 
+<br/>
+
 <details>
   <summary>درباره‌ی LVM بخونیم</summary>
 
   مفهومی به اسم LVM یا Logical Volume Management در نیای کامپیوتر وجود دارد، قبل از این مفهوم سیستم عامل دیسک‌های حافظه را به صورت یک بسته‌ی مستقل که روی آن پارتیشن‌هایی وجود داشت یا خود سیستم‌عامل روی آن ایجاد می‌کرد می‌شناخت؛ در این صورت ما در آخرین لایه‌ی سیستمی در فضای پارتیشن‌های به ظرفیت هاردیسک فیزیکی محدود بودیم و حداکثر فضایی که برای یک پارتیشن میشد متصور بود برابر با حداکثر ظریفیت یک هارد دیسک بود. اما LVM این محدودیت را از بین می‌برد، به این صورت که هارددیسک‌های فیزیکی که به صورت خلاصه PV(Physical Volume) نامیده می‌شوند در یک گروه قرار می‌گیرند و تشکیل یک Volume Group یا به اختصار VG می‌دهند. هر VG به صورت یک دیسک درنظر گرفته می‌شود درحالیکه خود ممکن است از یک یا چند PV یعنی دیسک‌های فیزیکی تشکیل شده باشد. بر روی یک VG که از نظر سیستم‌عامل حالا یک دیسک حافظه هست(`/dev/sda`) گروه‌هایی از Logical Volume ها ایجاد می‌شود. به Logical Volume اختصارا LV گفته می‌شود و می‌توان آن را مشابه با `/dev/sda1` فرض کرد که ما می‌توانیم فایل‌سیستم‌های خود مثل ext4, ntfs و... را روی آن‌ها ایجاد کنیم و داده‌هایمان را روی آنها بریزیم. LVM درواقع مثل یک پرده‌ی پوشاننده روی هارددیسک‌های فیزیکی قرار می‌گیرد و آنها را از دید سیستم‌عامل مخفی می‌کند و VG را به عنوان هارددیسک جا می‌زند درنتیجه می‌توان تعداد هاردیسک‌های فیزیکی سیستم را کم یا زیاد کرد ولی سیستم‌عامل از این تغییر آگاه نباشد، یا حافظه‌های اختصاص یافته به VG ها یا LV ها را به صورت داینامیک و پویاتری تغییر داد و در مدیریت حافظه بسیار دست بازی‌تری به ما می‌دهد.
 
 </details>
+
+<br/>
 
 <details>
   <summary>درباره‌ی Compression بخونیم</summary>
@@ -405,6 +439,8 @@ mount -o compress=zstd /dev/sdx /mnt
 ![Screenshot_20220822_003822](https://user-images.githubusercontent.com/44068054/185809006-1012ca80-f0ef-4661-b073-da02fac4d513.png)
   
 </details>
+
+<br/>
 
 بریم سراغ ساختن ساب‌ولیوم‌ها، اول باید پارتیشن روت رو مانت کنیم و بعد ساب‌ولیوم‌ها رو روش بسازیم
 
@@ -435,11 +471,15 @@ mount /dev/nvme0n1p2 /mnt
 <div dir="ltr" align="left">
 
 ```bash
-btrfs su cr /mnt/@  
-btrfs su cr /mnt/@home  
-btrfs su cr /mnt/@root  
-btrfs su li /mnt  
-umount /mnt  
+btrfs su cr /mnt/@
+
+btrfs su cr /mnt/@home
+
+btrfs su cr /mnt/@root
+
+btrfs su li /mnt
+
+umount /mnt
 ```
 
 </div>
@@ -453,11 +493,16 @@ umount /mnt
 
 ```bash
 mount -o ssd,discard,noatime,compress=zstd:8,commit=30,space_cache=v2,autodefrag,max_inline=512k,inode_cache,subvol=@ /dev/nvme0n1p2 /mnt  
+
 mkdir -p /mnt/{boot/efi,hdd,home,root}
+
 mount -o ssd,discard,noatime,compress=zstd:8,commit=30,space_cache=v2,autodefrag,max_inline=512k,inode_cache,subvol=@home   /dev/nvme0n1p2 /mnt/home
+
 mount -o ssd,discard,noatime,compress=zstd:8,commit=30,space_cache=v2,autodefrag,max_inline=512k,inode_cache,subvol=@root   /dev/nvme0n1p2 /mnt/root
+
 mount /dev/nvme0n1p1 /mnt/boot
-mount -t ntfs-3g -o rw,uid=0,gid=0,umask=000,nls=utf8,noatime,windows_names /dev/sda1 /mnt/hdd
+
+ntfs-3g -o rw,uid=0,gid=0,umask=000,nls=utf8,noatime,windows_names /dev/sda1 /mnt/hdd
 ```
 
 </div>
@@ -491,7 +536,7 @@ mount -t ntfs-3g -o rw,uid=0,gid=0,umask=000,nls=utf8,noatime,windows_names /dev
 <div dir="ltr" align="left">
 
 ```bash
-pacstrap /mnt base base-devel linux-lts linux-firmware intel-ucode ntfs-3g btrfs-progs bash-completion ufw dhcpcd iwd vim   
+pacstrap /mnt base base-devel linux-lts linux-firmware intel-ucode ntfs-3g btrfs-progs bash-completion ufw dhcpcd iwd vim
 
 genfstab -U /mnt >> /mnt/etc/fstab
 
@@ -508,20 +553,22 @@ ln -sf /usr/share/zoneinfo/Asia/Tehran /etc/localtime
 hwclock --systohc
 
 # generate locale
-echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+printf "en_US.UTF-8 UTF-8\n" | tee -a /etc/locale.gen > /dev/null
 
 locale-gen
 
 # generate language locale.conf
-echo "LANGE=en_US.UTF-8" > /etc/locale.conf
+printf "LANGE=en_US.UTF-8\n" > /etc/locale.conf
+
+# set consolefont
+printf "FONT=LatArCyrHeb-16+\nFONT_MAP=UTF-8\n" > /etc/vconsole.conf
 
 # config hostname
-echo "${hostname}" > /etc/hostname
+printf "${hostname}" > /etc/hostname
 
 # config hosts
-echo "127.0.0.1 localhost" > /etc/hosts
-echo "::1  localhost" >> /etc/hosts
-echo "127.0.1.1 ${hostname}.localdomain ${hostname}" >> /etc/hosts
+printf "127.0.0.1 localhost\n::1  localhost\n" > /etc/hosts
+printf "127.0.1.1 ${hostname}.localdomain ${hostname}" | tee -a /etc/hosts > /dev/null
 
 # initiate bootloader
 bootctl --boot-path=/boot --esp-path=/boot install
@@ -539,7 +586,9 @@ title    Arch Linux LTS
 linux    /vmlinuz-linux-lts
 initrd   /intel-ucode.img
 initrd   /initramfs-linux-lts.img
-options  root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ elevator=deadline add_efi_memmap rw quiet loglevel=3 vt.global_cursor_default=0 rd.systemd.show_status=auto r.udev.log_priority=3 nowatchdog fbcon=nodefer
+options  root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ elevator=deadline add_efi_memmap rw quiet
+
+# loglevel=3 vt.global_cursor_default=0 rd.systemd.show_status=auto r.udev.log_priority=3 nowatchdog fbcon=nodefer
 
 # check if boot entry is recognized and has no errors
 bootctl list
@@ -587,16 +636,20 @@ reboot
 
 تا اینجا شما یک آرچ مستقل رو روی سیستم مقصد نصب کردین. الان میتونید اون رو بوت کنید و دیگه از روی این سیستم جدید شروع کنید کاملش کنید.
 
+---
 
-یک لیست از پکیج‌هایی که برای یک دسکتاپ حداقلی لازم هست تهیه کردم که ضمیمه‌هست اونها رو یکجا نصب میکنیم ولی در ادامه توی توضیحات درموردشون می‌خونیم که چی هستن و چرا نصب شدن
-بجز در قسمت زیری باقی جاهایی که از پکمن استفاده شده نیازی نیست استفاده بشه چون پکیج‌های اون قسمت‌ها رو اینجا داره نصب می کنه
+## بعد از نصب
+
+خب الان دیگه باید موفق شده باشین به سیستم تازه نصب شده خودتون لاگین کنید.  
+از اینجا به بعد اختیاری هست منتهی بعضی از کارهایی که میخوام بگم خیلی خیلی بهتره که انجام بدین و بعضیای دیگه هم دیگه سلیقه خودتون هست.  
+برای مثال اینکه درایورهای کارت گرافیک یا کارت صدا و این جور چیزا رو نصب کنید خب مشخصه که ضروری هست، ولی اینکه از دسکتاپ پلاسما استفاده کنید یا کلا دسکتاپ نزنید یا دسکتاپ دیگری انتخاب کنید سلیقه خودتون باشه.
+
+### شخصی سازی آرچ و نصب دسکتاپ پلاسما
 
 <div dir="ltr" align="left">
 
 ```bash
-echo "Color" >> /etc/pacman.conf
-echo "ILoveCandy" >> /etc/pacman.conf
-echo "ParallelDownloads = 3" >> /etc/pacman.conf
+printf "Color\nILoveCandy\nParallelDownloads = 3" | tee -a /etc/pacman.conf >/dev/null
 
 pacman -Sy --needed - < pkg-list.out
 
@@ -604,7 +657,7 @@ systemctl enable NetworkManager
 systemctl enable bluetooth.service
 systemctl enable acpid.service
 
-pacman -Rns $(pacman -Qtdq)
+pacman -Rnsuc $(pacman -Qtdq)
 pacman-optimize
 ```
 
