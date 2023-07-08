@@ -546,7 +546,7 @@ useradd -m -G wheel -s /bin/bash <your username>
 passwd <your username>
 
 # use vim as vi
-sudo ln -s /usr/bin/vim /usr/bin/vi
+ln -s /usr/bin/vim /usr/bin/vi
 
 # inorder to give new user sudo access
 visudo
@@ -557,8 +557,8 @@ ufw default deny incoming
 ufw default allow outgoing
 ufw enable
 systemctl enable ufw.service
-sudo systemctl enable dhcpcd.service
-sudo systemctl enable iwd.service
+systemctl enable dhcpcd.service
+systemctl enable iwd.service
 
 # exit from chroot
 exit
