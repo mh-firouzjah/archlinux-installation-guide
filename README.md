@@ -1,6 +1,6 @@
 # راهنمای نصب آرچ
 
-<div dir="rtl" align='right'>
+<div dir="rtl">
 
 این مطلب در راستای کمک به نصب آرچ لینوکس تهیه شده
 
@@ -16,11 +16,11 @@
 
 سپس با استفاده از [GnuPG](https://wiki.archlinux.org/title/GnuPG) فایل ایزوی دانلود شده رو با این روش `تائید امضا` بررسی کنید
 
-<div dir="ltr">
+<div dir="ltr" align="left">
 
 ```bash
 gpg --keyserver-options auto-key-retrieve --verify archlinux-version-x86_64.iso.sig
-```  
+```
 
 </div>
 
@@ -42,7 +42,7 @@ gpg --keyserver-options auto-key-retrieve --verify archlinux-version-x86_64.iso.
 
 برای اینکار روشهای زیادی وجود داره و برنامه‌های گرافیکی هم هستن که کار رو ساده‌تر کردن اما روش ترمینالی اینکار استفاده از دستور زیر هست  
 
-<div dir="ltr">
+<div dir="ltr" align="left">
 
 ```bash
 dd bs=4M if=path/to/archlinux-version-x86_64.iso of=/dev/sdx conv=fsync oflag=direct status=progress
@@ -68,7 +68,7 @@ dd bs=4M if=path/to/archlinux-version-x86_64.iso of=/dev/sdx conv=fsync oflag=di
 
 برای اینکه مطمئن بشیم فلش ما به صورت efi بوت شده دستور زیر رو میزنیم
 
-<div dir="ltr">
+<div dir="ltr" align="left">
 
 ```bash
 ls /sys/firmware/efi/efivars
@@ -86,7 +86,7 @@ ls /sys/firmware/efi/efivars
 
 راه ساده‌ش میتونید یکجا و در یک دستور بزنید:
 
-<div dir="ltr">
+<div dir="ltr" align="left">
 
 ```bash
 iwctl --passphrase <wifi password> station <device e.g wlan0> connect <SSID means wifi-name>
@@ -99,7 +99,7 @@ iwctl --passphrase <wifi password> station <device e.g wlan0> connect <SSID mean
  <summary>راه طولانی:</summary>
 دستور `ip link` رو بزنید تا ببینید دیوایس‌های سیستم شناخته شدن و فعال هستن
 
-<div dir="ltr">
+<div dir="ltr" align="left">
 
 ```bash
 ip link
@@ -109,7 +109,7 @@ ip link
 
 دستور ‍`iwctl` رو بزنید تا وارد محیط اینتراکتیوش بشید. بعد از اینکه وارد محیط اینتراکتیوش بشین یک تغییر کوچیک توی ترمینال می‌بینید به این شکل
 
-<div dir="ltr">
+<div dir="ltr" align="left">
 
 ```bash
 $ iwctl
@@ -129,7 +129,7 @@ $ iwctl
 
 حالا با دستور `station device connect SSID` می‌تونید به وای‌فای مدنظرتون وصل بشین.(SSID = اسم وای‌فای، برای اسم وای‌فای چند کاراکتر اول رو بنویسید و دکمه تب کیبورد رو بزنید.)
 
-<div dir="ltr">
+<div dir="ltr" align="left">
 
 ```bash
 [iwd]$ help
@@ -148,7 +148,7 @@ $ iwctl
 
 با دستور پینگ چک کنید که به اینترنت وصل شدین یا نه
 
-<div dir="ltr">
+<div dir="ltr" align="left">
 
 ```bash
 ping -c 4 archlinux.org
@@ -158,7 +158,7 @@ ping -c 4 archlinux.org
 
 ساعت سیستم رو تنظیم کنید
 
-<div dir="ltr">
+<div dir="ltr" align="left">
 
 ```bash
 timedatectl set-ntp true
@@ -171,12 +171,12 @@ timedatectl set-ntp true
 برای اینکه در ادامه و برای نصب بسته‌های لازم کمی سرعت دانلود از اینترنت بهتری داشته باشم لازم است تا لیست میرورهای مخازن را بروزرسانی کنیم. برای این کار از
 بسته‌ی reflector استفاده می‌کنیم. ابتدا باید آن را نصب کنیم و سپس لیست میرورها را آپدیت کنیم. قبل از آپدیت کردن از لیست فعلی یک بک‌آپ تهیه می‌کنیم برای احتیاط
 
-<div dir="ltr">
+<div dir="ltr" align="left">
 
 ```bash
 cp /etc/pacman.d/mirrorlist  /etc/pacman.d/mirrorlist.bac
 pacman -Sy reflector
-reflector --country Germany,France,England,Nederland --protocol https --age 24 --sort rate --latest 20 --save /etc/pacman.d/mirrorlist
+reflector --country Germany,France,England,Netherland --protocol https --age 24 --sort rate --latest 20 --save /etc/pacman.d/mirrorlist
 ```
 
 </div>
@@ -192,9 +192,9 @@ reflector --country Germany,France,England,Nederland --protocol https --age 24 -
 حداقل دو تا پارتیشن لازم داریم:
 - یکی برای efi و بوت شدن سیستم. حجم ۵۱۲ مگ رو میشه برای حالت تک کرنل امن درنظر گرفت ولی برای امنیت بیشتر ۱ گیگ بدیم. 
 - و یکی هم برای خود سیستم‌عامل و درایوهای هوم و غیره،‌ از ابزار `cfdisk‍` یا `fdsik` برای پارتیشن بندی استفاده کنید. طرز کار ساده‌ای دارن، ابزارهای دیگه هم فرقی نداره استفاده بشن و مهم خروجی کار هست. نهایتا در خروجی کار همچین چیزی لازمه:
-  
-<div dir="ltr">
- 
+
+<div dir="ltr" align="left">
+
 | partition  |       size        | filesystem-type         | mount point   | partition                   |
 |   :---:    |       :---:       |     :---:               |     :---:     |           :---:             |
 | efi        |       1 GiB       |   EFI system            |   /mnt/efi    | /dev/efi_system_partition   |
@@ -208,7 +208,7 @@ reflector --country Germany,France,England,Nederland --protocol https --age 24 -
 کرنل‌هایی که نصب می‌کنید و مثلا گراب و متعلقات گراب(مثل تم و این چیزای اضافیش - البته ما که گراب نمی‌زنیم) هم توی همین پارتیشن EFI قرار می‌گیرن پس حواستون باشه اگر قرار چندتا کرنل همزمان نصب کنید این پارتیشن رو باید بزرگتر درنظر بگیرید.
 البته یه راه دیگه‌ای هم وجود داره می‌تونید این پارتیشن رو کم حجم بسازید و فقط فایل‌های .efi که لودر هستن رو داخلش قرار بدین ولی باید یک پارتیشن /boot جداگانه درست کنید تا extended boot partition یا به اختصار XBOOTLDR باشه و اون رو جداگانه مانت کنید. در این صورت یعنی ما باید ۳ تا پارتیشن درست کنیم:
 
-<div dir="ltr">
+<div dir="ltr" align="left">
 
 | partition  |       size        | filesystem-type         | mount point   | partition                      |
 |   :---:    |       :---:       |     :---:               |     :---:     |           :---:                |
@@ -220,7 +220,7 @@ reflector --country Germany,France,England,Nederland --protocol https --age 24 -
 
 اون آخر کار هم باید از این دستور برای ایجاد سیستم‌دی بوت استفاده کنید:
 
- ‍`bootctl --esp-path=/mnt/efi --boot-path=/mnt/boot install`
+`bootctl --esp-path=/mnt/efi --boot-path=/mnt/boot install`
 
 </details>
 ساختن پارتیشن `swap` الزامی نیست بعدا هم می‌تونید اضافه کنید! تصمیم گیری با خودتون
@@ -296,7 +296,7 @@ reflector --country Germany,France,England,Nederland --protocol https --age 24 -
 
 </details>
 
-<div dir="ltr">
+<div dir="ltr" align="left">
 
 ```bash
 $ fdisk -l
@@ -312,7 +312,7 @@ Command (m for help): g
 Command (m for help):  n
 Partition number (1-128, default 1): # hit enter
 First sector (2048-15441886, default 2048): # hit enter
-Last sector, +/-sectors or +/-size{K,M,G,T,P} (2048-15441886, default 15439871): +512M
+Last sector, +/-sectors or +/-size{K,M,G,T,P} (2048-15441886, default 15439871): +1G
 #Created a new partition 1 of type 'Linux filesystem' and of size 512 MiB
 
 Command (m for help): n
@@ -337,7 +337,7 @@ Command (m for help): p
 # Device           Start      End  Sectors  Size  Type
 # /dev/nvme0n1p1     2048  1050623 1048576  512M  EFI System
 # /dev/nvme0n1p2  9439232 15439871 6000640  2.9G  Linux filesystem
- 
+
 Command (m for help): w
 # The partition table has been altered.
 $
@@ -349,7 +349,7 @@ $
 
 اول پارتیشن بوت منیجر رو فرمت می‌کنیم، دستور زیر رو بزنید
 
-<div dir="ltr">
+<div dir="ltr" align="left">
 
 ```bash
 mkfs.fat -F 32 -n EFI /dev/efi_system_partition   # efi_system_partition = /dev/sda1 or /dev/nvme0n1p1
@@ -360,12 +360,12 @@ mkfs.fat -F 32 -n EFI /dev/efi_system_partition   # efi_system_partition = /dev/
 برای پارتیشن اصلی هم دستور زیر رو می‌زنیم. اما اگر یک پارتیشن ویندوزی دارین که میخواین به همون فرمت ویندوزی باقی بمونه و فرمتش نمی‌کنید یا فرمت می‌کنید ولی
 بازم میخواین که توی ویندوز قابل استفاده باشه نیازه پکیج ntfs-3g نصب کنید همچنین برای احتیاط یک پکیج برای btrfs هم چک می‌کنیم که نصب هست یا نه
 
-<div dir="ltr">
+<div dir="ltr" align="left">
 
 ```bash
 pacman -Sy ntfs-3g btrfs-progs
 mkfs.btrfs -f -L ROOT /dev/your_drive3 # your_drive3 = /dev/sda2 or /dev/nvme0n1p2
-```  
+```
 
 </div>
 
@@ -391,7 +391,7 @@ mkfs.btrfs -f -L ROOT /dev/your_drive3 # your_drive3 = /dev/sda2 or /dev/nvme0n1
 
   در فایل سیستم BtrFS یا ‌B-Tree File System می‌توان بدون فشرده‌سازی یا با یکی از سه الگوریتم مختلف برای فشرده‌سازی دیتا استفاده کرد، ZLIB، LZO و ZSTD که مطابق با بنچمارک‌ها ZLIB پرفورمنس و سرعت عمل کمتری داشته و ZSTD در چند مورد از LZO بهتر بوده است. اما برای مثال توزیع مانجارو در نصب به صورت BTRFS از الگوریتم LZO استفاده کرده است(ممکن است در نسخه‌های دیگرش این الگوریتم را عوض کند). اما من تصمیم گرفتم درمورد الگوریتم ZSTD بنویسم. این الگوریتم دارای چندین سطح فشرده سازی هست که مطابق با مستنداتش از سطح ۱-۳ فشرده‌سازی سبک‌تر و کمتری انجام می‌دهد و به اصطلاح real-time هست، این یعنی سرعت عمل بیشتر و همین طور فشار کمتری به پردازنده(cpu) و از سطح ۴-۹ که فشرده‌سازی جدی‌تری انجام می‌دهد و طبعا کمی سرعت کمتر و همچنین سربار بیشتر برای پردازنده و از سطح ۱۰-۱۵ هم جهت تلاش بر نهایت توان فشرده‌سازی که البته شاید تاثیری به‌سزایی در خروجی نداشته باشد ولی قطعا افت سرعت و همچین لود سنگین‌تری روی پردازنده خواهد داشت. به صورت پیش‌فرض درصورتی که خاصیت فشرده‌سازی zstd برای این فایل سیستم فعال کنیم در سطح ۳ از آن استفاده می‌کند. ولی خب من ترجیح می‌دهم سطح ۸ را انتخاب کنم، همانطور که پیشتر اشاره کردم فشرده کردن دیتا در عمل نوشتن و پاک‌کردن از روی هارددیسک تاثیر مفیدی دارد و برداشت من از مستندات این الگوریتم این است که انتخاب سطح ۹ حد وسط هست. همچنین مطابق اطلاعاتی که از ویکی آرچ بدست آوردم اعمال فشرده سازی اجباری هرچند قدری پردازنده باز اضافی تحمیل می‌کند اما در نهایت برای فشرده‌سازی بهینه‌تر خواهد بود چرا که درحالت عادی ممکن است برای بعضی از داده‌ها فشرده‌سازی صرف‌نظر شود و سیستم با تشخصی خود از اینها بگذرد. به صورت پیش فرض و فقط برای فعال کردن فشرده سازی کافی‌است پاریتشن مدنظر را با دستوری مشابه دستوری زیر مانت کنیم  
 
-<div dir="ltr">
+<div dir="ltr" align="left">
 
 ```bash
 mount -o compress=zstd /dev/sdx /mnt
@@ -408,7 +408,7 @@ mount -o compress=zstd /dev/sdx /mnt
 
 بریم سراغ ساختن ساب‌ولیوم‌ها، اول باید پارتیشن روت رو مانت کنیم و بعد ساب‌ولیوم‌ها رو روش بسازیم
 
-<div dir="ltr">
+<div dir="ltr" align="left">
 
 ```bash
 mount /dev/nvme0n1p2 /mnt
@@ -422,7 +422,7 @@ mount /dev/nvme0n1p2 /mnt
 
 این ها هم دستوراتی که استفاده می‌کنیم و اختصارشون
 
-<div dir="ltr">
+<div dir="ltr" align="left">
 
 > su = subvolume
 > cr = create
@@ -432,7 +432,7 @@ mount /dev/nvme0n1p2 /mnt
 
 ساختن ساب‌ولیوم‌ها  
 
-<div dir="ltr">
+<div dir="ltr" align="left">
 
 ```bash
 btrfs su cr /mnt/@  
@@ -449,18 +449,15 @@ umount /mnt
 هرچند توی راهنمای نصب و پارتیشن بندی برای uefi سیستم گفته که پارتیشن efi رو توی /boot/efi مانت کنیم
 اما چون ما قصد داریم از systemd-boot استفاده کنیم پارتیشن مدنظر را در /boot مانت می‌کنیم
 
-<div dir="ltr">
+<div dir="ltr" align="left">
 
 ```bash
-  mount -o ssd,discard,noatime,compress=zstd:8,commit=30,space_cache=v2,autodefrag,max_inline=512k,inode_cache,subvol=@ /dev/nvme0n1p2 /mnt  
-
-  mkdir -p /mnt/{boot/efi,hdd,home,root}
-
-  mount -o ssd,discard,noatime,compress=zstd:8,commit=30,space_cache=v2,autodefrag,max_inline=512k,inode_cache,subvol=@home   /dev/nvme0n1p2 /mnt/home
-  mount -o ssd,discard,noatime,compress=zstd:8,commit=30,space_cache=v2,autodefrag,max_inline=512k,inode_cache,subvol=@root   /dev/nvme0n1p2 /mnt/root
-  
-  mount /dev/nvme0n1p1 /mnt/boot
-  mount -t ntfs-3g -o rw,uid=0,gid=0,umask=0000,nls=utf8,noatime,windows_names /dev/sda1 /mnt/hdd
+mount -o ssd,discard,noatime,compress=zstd:8,commit=30,space_cache=v2,autodefrag,max_inline=512k,inode_cache,subvol=@ /dev/nvme0n1p2 /mnt  
+mkdir -p /mnt/{boot/efi,hdd,home,root}
+mount -o ssd,discard,noatime,compress=zstd:8,commit=30,space_cache=v2,autodefrag,max_inline=512k,inode_cache,subvol=@home   /dev/nvme0n1p2 /mnt/home
+mount -o ssd,discard,noatime,compress=zstd:8,commit=30,space_cache=v2,autodefrag,max_inline=512k,inode_cache,subvol=@root   /dev/nvme0n1p2 /mnt/root
+mount /dev/nvme0n1p1 /mnt/boot
+mount -t ntfs-3g -o rw,uid=0,gid=0,umask=000,nls=utf8,noatime,windows_names /dev/sda1 /mnt/hdd
 ```
 
 </div>
@@ -491,7 +488,7 @@ umount /mnt
 
 
 
-<div dir="ltr">
+<div dir="ltr" align="left">
 
 ```bash
 pacstrap /mnt base base-devel linux-lts linux-firmware intel-ucode ntfs-3g btrfs-progs bash-completion ufw dhcpcd iwd vim   
@@ -594,7 +591,7 @@ reboot
 یک لیست از پکیج‌هایی که برای یک دسکتاپ حداقلی لازم هست تهیه کردم که ضمیمه‌هست اونها رو یکجا نصب میکنیم ولی در ادامه توی توضیحات درموردشون می‌خونیم که چی هستن و چرا نصب شدن
 بجز در قسمت زیری باقی جاهایی که از پکمن استفاده شده نیازی نیست استفاده بشه چون پکیج‌های اون قسمت‌ها رو اینجا داره نصب می کنه
 
-<div dir="ltr">
+<div dir="ltr" align="left">
 
 ```bash
 echo "Color" >> /etc/pacman.conf
@@ -615,7 +612,7 @@ pacman-optimize
 
 در این قسمت باید بوت‌بولدر سیستم‌دی را کانفیگ کنیم
 
-<div dir="ltr">
+<div dir="ltr" align="left">
 
 ```bash
 # set a loader for boot
@@ -641,7 +638,7 @@ options  root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ elevator=deadli
 
 درصورتی که فقط گرافیک nvidia دارین در قسمت options  و اونهایی که با i915 شروع شدن رو پاک کنید. اون برای کسایی هست که گرافیک اینتل داشته باشند(چه دوآل چه تکی) این چندتا آپشن رو وارد کنید
 
-<div dir="ltr">
+<div dir="ltr" align="left">
 
 ```bash
 nvidia nvidia_modeset nvidia_uvm nvidia_drm
@@ -653,7 +650,7 @@ nvidia nvidia_modeset nvidia_uvm nvidia_drm
  اینها ضروری نیستن و ممکنه در گذر زمان عوض بشن ولی درحال حاضر
 توی ویکی آرچ هستن و برای کمی دستکاری بیشتر استفاده کردم.
 
-<div dir="ltr">
+<div dir="ltr" align="left">
 
 ```bash
 # pacman hook to automate the bootloader update after kernel update
@@ -687,7 +684,7 @@ echo "[[ $(fgconsole 2>/dev/null) == 1 ]] && exec startx -- vt1 &> /dev/null" >>
 پکیج‌هایی که لازم داریم و تنظیماتی که باید بعد از نسب آن‌ها انجام بشن رو به همراه توضیح مختصری می‌نویسم
 برای شناسایی کارت گرافیکی که روی سیستم دارین دستور زیر رو بزنید و بعد هم با پکمن سرچ کنید ببینید بسته‌ی مناسب سخت‌افزار شما کدوم هست
 
-<div dir="ltr">
+<div dir="ltr" align="left">
 
 ```bash
 lspci -v | grep -A1 -e VGA -e 3D
@@ -723,7 +720,7 @@ nvidia_drm.modeset=1
 
 </div>
 
-<div dir="ltr">
+<div dir="ltr" align="left">
 
 ```bash
 pacman -S xorg plasma-desktop plasma-pa sddm sddm-kcm nm-connection-editor network-manager-applet
