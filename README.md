@@ -488,7 +488,7 @@ ln -sf /usr/share/zoneinfo/Asia/Tehran /etc/localtime
 hwclock --systohc
 
 # generate locale
-printf "en_US.UTF-8 UTF-8\n" | tee -a /etc/locale.gen > /dev/null
+sed -i '/en_US.UTF-8/s/^#\s*//g' /etc/locale.gen
 
 locale-gen
 
@@ -509,11 +509,11 @@ printf "127.0.1.1 ${hostname}.localdomain ${hostname}" | tee -a /etc/hosts > /de
 bootctl --boot-path=/boot --esp-path=/boot install
 
 # to set a loader edit `/boot/loader/loader.conf` and define a default entry
-printf "default arch.conf\ntimeout 0\neditor no\nconsole-mode max\n" | tee -a /boot/loader/loader.conf > /dev/null
+printf "default arch-lts.conf\ntimeout 0\neditor no\nconsole-mode max\n" | tee -a /boot/loader/loader.conf > /dev/null
 
 # edit `/boot/loader/entries/arch-lts.conf` config the loader entery and set some kernel parameters
 printf "title Arch Linux LTS\nlinux /vmlinuz-linux-lts\ninitrd /intel-ucode.img\ninitrd /initramfs-linux-lts.img" | tee -a /boot/loader/entries/arch-lts.conf > /dev/null
-printf "options root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ elevator=deadline add_efi_memmap rw quiet" | tee -a /boot/loader/entries/arch-lts.conf >> /dev/null
+printf "options root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ elevator=deadline add_efi_memmap rw quiet" | tee -a /boot/loader/entries/arch-lts.conf > /dev/null
 
 # cat /boot/loader/entries/arch.conf
 ---------------------

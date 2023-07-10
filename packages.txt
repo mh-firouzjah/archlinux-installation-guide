@@ -1,273 +1,28 @@
-bluedevil
-breeze
-breeze-gtk
-# breeze-plymouth
-# discover
-drkonqi
-# flatpak-kcm
-kactivitymanagerd
-kde-cli-tools
-kde-gtk-config
-kdecoration
-kdeplasma-addons
-kgamma5
-khotkeys
-kinfocenter
-kmenuedit
-kpipewire
-kscreen
-kscreenlocker
-ksshaskpass
-ksystemstats
-kwallet-pam
-# kwayland-integration
-kwin
-kwrited
-layer-shell-qt
-libkscreen
-libksysguard
-milou
-oxygen
-oxygen-sounds
-plasma-browser-integration
-plasma-desktop
-plasma-disks
-plasma-firewall
-plasma-integration
-plasma-nm
-plasma-pa
-plasma-sdk
-plasma-systemmonitor
-# plasma-thunderbolt
-# plasma-vault
-# plasma-wayland-session
-# plasma-welcome
-plasma-workspace
-# plasma-workspace-wallpapers
-# plymouth-kcm
-polkit-kde-agent
-powerdevil
-qt5-imageformats
-qt6-imageformats
-sddm
-sddm-kcm
-systemsettings
-udisks2
-xdg-desktop-portal-kde
-dkms
-nvidia-lts
-nvidia-utils
-nvidia-settings
-nvidia-prime
-xorg-server-devel
-opencl-nvidia
-# akonadi-calendar-tools
-# akonadi-import-wizard
-# akonadiconsole
-# akregator
-# alligator
-# angelfish
-ark
-# artikulate
-audiocd-kio
-# audiotube
-# blinken
-# bomber
-# bovo
-# cantor
-# cervisia
-colord-kde
-dolphin
-dolphin-plugins
-# dragon
-# elisa
-falkon
-ffmpegthumbs
-# filelight
-# ghostwriter
-# granatier
-# grantlee-editor
-gwenview
-# itinerary
-# juk
-# k3b
-kaccounts-providers
-# kaddressbook
-# kajongg
-# kalarm
-# kalendar
-# kalgebra
-# kalk
-# kalzium
-# kamera
-# kamoso
-# kanagram
-# kapman
-# kapptemplate
-# kasts
-kate
-# katomic
-# kbackup
-# kblackbox
-# kblocks
-# kbounce
-# kbreakout
-# kbruch
-# kcachegrind
-kcalc
-# kcharselect
-# kclock
-# kcolorchooser
-# kcron
-# kde-dev-scripts
-# kde-dev-utils
-# kde-inotify-survey
-# kdebugsettings
-# kdeconnect
-kdegraphics-thumbnailers
-# kdenetwork-filesharing
-# kdenlive
-# kdepim-addons
-# kdesdk-kio
-# kdesdk-thumbnailers
-# kdevelop
-# kdevelop-php
-# kdevelop-python
-# kdf
-kdialog
-# kdiamond
-# keditbookmarks
-# keysmith
-# kfind
-# kfloppy
-# kfourinline
-# kgeography
-# kget
-# kgoldrunner
-# kgpg
-# khangman
-# khelpcenter
-# kig
-# kigo
-# killbots
-kimageformats
-kimagemapeditor
-# kio-admin
-kio-extras
-kio-fuse
-# kio-gdrive
-kio-zeroconf
-kinit
-# kirigami-gallery
-# kiriki
-# kiten
-kjournald
-# kjumpingcube
-# kleopatra
-# klettres
-# klickety
-# klines
-# kmag
-# kmahjongg
-# kmail
-# kmail-account-wizard
-# kmines
-# kmix
-# kmousetool
-# kmouth
-# kmplot
-# knavalbattle
-# knetwalk
-# knights
-knotes
-# koko
-# kolf
-# kollision
-# kolourpaint
-kompare
-# kongress
-# konqueror
-# konquest
-konsole
-# kontact
-kontrast
-# konversation
-# kopete
-# korganizer
-kpat
-# krdc
-# krecorder
-# kreversi
-# krfb
-# kruler
-# kshisen
-# ksirk
-# ksnakeduel
-# kspaceduel
-# ksquares
-# ksudoku
-ksystemlog
-# kteatime
-# ktimer
-# ktorrent
-# ktouch
-# ktrip
-# ktuberling
-# kturtle
-# kubrick
-# kwalletmanager
-# kwave
-# kweather
-# kwordquiz
-# lokalize
-# lskat
-# marble
-markdownpart
-# mbox-importer
-# minuet
-# neochat
-okular
-# palapeli
-# parley
-partitionmanager
-# picmi
-# pim-data-exporter
-# pim-sieve-editor
-# plasmatube
-# poxml
-# print-manager
-# rocs
-# signon-kwallet-extension
-# skanlite
-# skanpage
-spectacle
-# step
-# svgpart
-# sweeper
-# telepathy-kde-accounts-kcm
-# telepathy-kde-approver
-# telepathy-kde-auth-handler
-# telepathy-kde-call-ui
-# telepathy-kde-common-internals
-# telepathy-kde-contact-list
-# telepathy-kde-contact-runner
-# telepathy-kde-desktop-applets
-# telepathy-kde-filetransfer-handler
-# telepathy-kde-integration-module
-# telepathy-kde-send-file
-# telepathy-kde-text-ui
-# telly-skout
-# tokodon
-# umbrello
-# yakuake
-# zanshin
+acpi
+acpid
 anything-sync-daemon
 appmenu-gtk-module
+ark
+audiocd-kio
 autorandr
+bash-completion
 bat
+bluedevil
+bluez
+bluez-utils
+breeze
+breeze-gtk
 brightnessctl
+colord-kde
+cpupower
+dkms
+dolphin
+dolphin-plugins
+drkonqi
 duf
 exa
+falkon
+ffmpegthumbs
 fwupd
 git
 github-cli
@@ -281,81 +36,157 @@ gst-plugins-good
 gst-plugins-ugly
 gstreamer
 gstreamer-vaapi
+gwenview
 htop
+intel-gpu-tools
+intel-media-driver
 inxi
+kaccounts-providers
+kactivitymanagerd
+kate
+kcalc
+kde-cli-tools
+kde-gtk-config
+kdecoration
+kdegraphics-thumbnailers
+kdeplasma-addons
+kdialog
+kgamma5
+khotkeys
+kimageformats
+kimagemapeditor
+kinfocenter
+kinit
+kio-extras
+kio-fuse
+kio-zeroconf
+kjournald
+kmenuedit
+knotes
+kompare
+konsole
+kontrast
+kpat
+kpipewire
+kscreen
+kscreenlocker
+ksshaskpass
+ksystemlog
+ksystemstats
+kwallet-pam
+kwin
+kwrited
+layer-shell-qt
 libcanberra
 libcanberra-pulse
+libkscreen
+libksysguard
+libva
+libva-intel-driver
+libva-mesa-driver
+libva-utils
+libvdpau-va-gl
 linux-firmware-qlogic
+linux-lts-headers
 man-pages
+markdownpart
+mesa
+mesa-demos
+mesa-utils
+mesa-vdpau
+milou
 modemmanager
 mtpfs
 networkmanager
 noto-fonts-emoji
+nvidia-lts
+nvidia-prime
+nvidia-settings
+nvidia-utils
+okular
+opencl-nvidia
 openresolv
 openssh
 otf-ipafont
+oxygen
+oxygen-sounds
 packagekit
-packagekit-qt6
 packagekit-qt5
+packagekit-qt6
+partitionmanager
 perl-file-mimeinfo
 persepolis
 pipewire
 pipewire-alsa
+pipewire-pulse
 pipewire-v4l2
+plasma-browser-integration
+plasma-desktop
+plasma-disks
+plasma-firewall
+plasma-integration
+plasma-nm
+plasma-pa
+plasma-sdk
+plasma-systemmonitor
+plasma-workspace
 plocate
+polkit-kde-agent
+power-profiles-daemon
+powerdevil
+powertop
 python-pysmbc
-resvg
+qt5-imageformats
+qt6-imageformats
 rsync
 samba
+sddm
+sddm-kcm
 smplayer
 smplayer-skins
 smplayer-themes
 sof-firmware
 solid
+spectacle
 sshfs
-thermald
+systemsettings
 telegram-desktop
 terminus-font
+thermald
 tmux
 torsocks
 ttf-cascadia-code-nerd
 ttf-hack-nerd
 turbostat
 udiskie
+udisks2
+ufw
 unrar
 unzip
 usbutils
 vdpauinfo
+vulkan-intel
 vulkan-tools
 wget
 wireplumber
-## Xorg Input Drivers
+xdg-desktop-portal
+xdg-desktop-portal-kde
+xdg-utils
 xf86-input-elographics
 xf86-input-evdev
 xf86-input-libinput
 xf86-input-void
-xdg-desktop-portal
-xdg-utils
-xorg
+xf86-video-intel
+xorg-server
+xorg-server-devel
+xorg-xhost
 xorg-xinit
+xorg-xinput
 xsettingsd
 zip
-acpi
-acpid
-cpupower
-intel-gpu-tools
-intel-media-driver
-libva
-libva-intel-driver
-libva-mesa-driver
-libva-utils
-libvdpau-va-gl
-linux-lts-headers
-mesa
-mesa-demos
-mesa-utils
-mesa-vdpau
-power-profiles-daemon
-powertop
-xf86-video-intel
-vulkan-intel
+zsh
+zsh-autosuggestions
+zsh-completions
+zsh-history-substring-search
+zsh-syntax-highlighting
+zsh-theme-powerlevel10k
