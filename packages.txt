@@ -1,0 +1,361 @@
+bluedevil
+breeze
+breeze-gtk
+# breeze-plymouth
+# discover
+drkonqi
+# flatpak-kcm
+kactivitymanagerd
+kde-cli-tools
+kde-gtk-config
+kdecoration
+kdeplasma-addons
+kgamma5
+khotkeys
+kinfocenter
+kmenuedit
+kpipewire
+kscreen
+kscreenlocker
+ksshaskpass
+ksystemstats
+kwallet-pam
+# kwayland-integration
+kwin
+kwrited
+layer-shell-qt
+libkscreen
+libksysguard
+milou
+oxygen
+oxygen-sounds
+plasma-browser-integration
+plasma-desktop
+plasma-disks
+plasma-firewall
+plasma-integration
+plasma-nm
+plasma-pa
+plasma-sdk
+plasma-systemmonitor
+# plasma-thunderbolt
+# plasma-vault
+# plasma-wayland-session
+# plasma-welcome
+plasma-workspace
+# plasma-workspace-wallpapers
+# plymouth-kcm
+polkit-kde-agent
+powerdevil
+qt5-imageformats
+qt6-imageformats
+sddm
+sddm-kcm
+systemsettings
+udisks2
+xdg-desktop-portal-kde
+dkms
+nvidia-lts
+nvidia-utils
+nvidia-settings
+nvidia-prime
+xorg-server-devel
+opencl-nvidia
+# akonadi-calendar-tools
+# akonadi-import-wizard
+# akonadiconsole
+# akregator
+# alligator
+# angelfish
+ark
+# artikulate
+audiocd-kio
+# audiotube
+# blinken
+# bomber
+# bovo
+# cantor
+# cervisia
+colord-kde
+dolphin
+dolphin-plugins
+# dragon
+# elisa
+falkon
+ffmpegthumbs
+# filelight
+# ghostwriter
+# granatier
+# grantlee-editor
+gwenview
+# itinerary
+# juk
+# k3b
+kaccounts-providers
+# kaddressbook
+# kajongg
+# kalarm
+# kalendar
+# kalgebra
+# kalk
+# kalzium
+# kamera
+# kamoso
+# kanagram
+# kapman
+# kapptemplate
+# kasts
+kate
+# katomic
+# kbackup
+# kblackbox
+# kblocks
+# kbounce
+# kbreakout
+# kbruch
+# kcachegrind
+kcalc
+# kcharselect
+# kclock
+# kcolorchooser
+# kcron
+# kde-dev-scripts
+# kde-dev-utils
+# kde-inotify-survey
+# kdebugsettings
+# kdeconnect
+kdegraphics-thumbnailers
+# kdenetwork-filesharing
+# kdenlive
+# kdepim-addons
+# kdesdk-kio
+# kdesdk-thumbnailers
+# kdevelop
+# kdevelop-php
+# kdevelop-python
+# kdf
+kdialog
+# kdiamond
+# keditbookmarks
+# keysmith
+# kfind
+# kfloppy
+# kfourinline
+# kgeography
+# kget
+# kgoldrunner
+# kgpg
+# khangman
+# khelpcenter
+# kig
+# kigo
+# killbots
+kimageformats
+kimagemapeditor
+# kio-admin
+kio-extras
+kio-fuse
+# kio-gdrive
+kio-zeroconf
+kinit
+# kirigami-gallery
+# kiriki
+# kiten
+kjournald
+# kjumpingcube
+# kleopatra
+# klettres
+# klickety
+# klines
+# kmag
+# kmahjongg
+# kmail
+# kmail-account-wizard
+# kmines
+# kmix
+# kmousetool
+# kmouth
+# kmplot
+# knavalbattle
+# knetwalk
+# knights
+knotes
+# koko
+# kolf
+# kollision
+# kolourpaint
+kompare
+# kongress
+# konqueror
+# konquest
+konsole
+# kontact
+kontrast
+# konversation
+# kopete
+# korganizer
+kpat
+# krdc
+# krecorder
+# kreversi
+# krfb
+# kruler
+# kshisen
+# ksirk
+# ksnakeduel
+# kspaceduel
+# ksquares
+# ksudoku
+ksystemlog
+# kteatime
+# ktimer
+# ktorrent
+# ktouch
+# ktrip
+# ktuberling
+# kturtle
+# kubrick
+# kwalletmanager
+# kwave
+# kweather
+# kwordquiz
+# lokalize
+# lskat
+# marble
+markdownpart
+# mbox-importer
+# minuet
+# neochat
+okular
+# palapeli
+# parley
+partitionmanager
+# picmi
+# pim-data-exporter
+# pim-sieve-editor
+# plasmatube
+# poxml
+# print-manager
+# rocs
+# signon-kwallet-extension
+# skanlite
+# skanpage
+spectacle
+# step
+# svgpart
+# sweeper
+# telepathy-kde-accounts-kcm
+# telepathy-kde-approver
+# telepathy-kde-auth-handler
+# telepathy-kde-call-ui
+# telepathy-kde-common-internals
+# telepathy-kde-contact-list
+# telepathy-kde-contact-runner
+# telepathy-kde-desktop-applets
+# telepathy-kde-filetransfer-handler
+# telepathy-kde-integration-module
+# telepathy-kde-send-file
+# telepathy-kde-text-ui
+# telly-skout
+# tokodon
+# umbrello
+# yakuake
+# zanshin
+anything-sync-daemon
+appmenu-gtk-module
+autorandr
+bat
+brightnessctl
+duf
+exa
+fwupd
+git
+github-cli
+gnome-multi-writer
+gst-libav
+gst-plugin-pipewire
+gst-plugins-bad
+gst-plugins-base
+gst-plugins-base-libs
+gst-plugins-good
+gst-plugins-ugly
+gstreamer
+gstreamer-vaapi
+htop
+inxi
+libcanberra
+libcanberra-pulse
+linux-firmware-qlogic
+man-pages
+modemmanager
+mtpfs
+networkmanager
+noto-fonts-emoji
+openresolv
+openssh
+otf-ipafont
+packagekit
+packagekit-qt6
+packagekit-qt5
+perl-file-mimeinfo
+persepolis
+pipewire
+pipewire-alsa
+pipewire-v4l2
+plocate
+python-pysmbc
+resvg
+rsync
+samba
+smplayer
+smplayer-skins
+smplayer-themes
+sof-firmware
+solid
+sshfs
+thermald
+telegram-desktop
+terminus-font
+tmux
+torsocks
+ttf-cascadia-code-nerd
+ttf-hack-nerd
+turbostat
+udiskie
+unrar
+unzip
+usbutils
+vdpauinfo
+vulkan-tools
+wget
+wireplumber
+## Xorg Input Drivers
+xf86-input-elographics
+xf86-input-evdev
+xf86-input-libinput
+xf86-input-void
+xdg-desktop-portal
+xdg-utils
+xorg
+xorg-xinit
+xsettingsd
+zip
+acpi
+acpid
+cpupower
+intel-gpu-tools
+intel-media-driver
+libva
+libva-intel-driver
+libva-mesa-driver
+libva-utils
+libvdpau-va-gl
+linux-lts-headers
+mesa
+mesa-demos
+mesa-utils
+mesa-vdpau
+power-profiles-daemon
+powertop
+xf86-video-intel
+vulkan-intel
