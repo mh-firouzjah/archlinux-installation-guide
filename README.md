@@ -471,7 +471,7 @@ ntfs-3g -o rw,uid=0,gid=0,umask=000,nls=utf8,noatime,windows_names /dev/sda1 /mn
 <div dir="ltr" align="left">
 
 ```bash
-pacstrap /mnt base base-devel linux-lts linux-firmware intel-ucode ntfs-3g btrfs-progs bash-completion ufw dhcpcd iwd vim
+pacstrap /mnt base base-devel linux-lts linux-firmware intel-ucode ntfs-3g btrfs-progs zram-generator ufw dhcpcd iwd vim
 
 genfstab -U /mnt >> /mnt/etc/fstab
 
@@ -493,44 +493,55 @@ sed -i '/en_US.UTF-8/s/^#\s*//g' /etc/locale.gen
 locale-gen
 
 # generate language locale.conf
-printf "LANGE=en_US.UTF-8\n" > /etc/locale.conf
+printf "LANGE=en_US.UTF-8" > /etc/locale.conf
 
 # set consolefont
-printf "FONT=LatArCyrHeb-16+\nFONT_MAP=UTF-8\n" > /etc/vconsole.conf
+printf "FONT=LatArCyrHeb-14\nFONT_MAP=UTF-8" > /etc/vconsole.conf
 
 # set hostname
+hostname=my_bluetooth_name
+
 printf "${hostname}" > /etc/hostname
 
 # set hosts
-printf "127.0.0.1 localhost\n::1  localhost\n" > /etc/hosts
-printf "127.0.1.1 ${hostname}.localdomain ${hostname}" | tee -a /etc/hosts > /dev/null
+printf "127.0.0.1 localhost\n::1  localhost" > /etc/hosts
+printf "127.0.1.1 ${hostname}.localdomain ${hostname}" >> /etc/hosts
 
 # initiate bootloader
-bootctl --boot-path=/boot --esp-path=/boot install
+bootctl install
 
 # to set a loader edit `/boot/loader/loader.conf` and define a default entry
-printf "default arch-lts.conf\ntimeout 0\neditor no\nconsole-mode max\n" | tee -a /boot/loader/loader.conf > /dev/null
-
-# edit `/boot/loader/entries/arch-lts.conf` config the loader entery and set some kernel parameters
-printf "title Arch Linux LTS\nlinux /vmlinuz-linux-lts\ninitrd /intel-ucode.img\ninitrd /initramfs-linux-lts.img" | tee -a /boot/loader/entries/arch-lts.conf > /dev/null
-printf "options root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ elevator=deadline add_efi_memmap rw quiet" | tee -a /boot/loader/entries/arch-lts.conf > /dev/null
-
-# cat /boot/loader/entries/arch.conf
+vim /boot/loader/loader.conf
 ---------------------
-title    Arch Linux LTS
-linux    /vmlinuz-linux-lts
-initrd   /intel-ucode.img
-initrd   /initramfs-linux-lts.img
-options  root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ elevator=deadline add_efi_memmap rw quiet
+default arch-lts.conf
+timeout 0
+editor no
+console-mode max
 
-# loglevel=3 vt.global_cursor_default=0 rd.systemd.show_status=auto r.udev.log_priority=3 nowatchdog fbcon=nodefer
+vim /boot/loader/entries/arch-lts.conf
+---------------------
+title Arch Linux LTS
+linux /vmlinuz-linux-lts
+initrd /intel-ucode.img
+initrd /initramfs-linux-lts.img
+options root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ rw quiet splash nowatchdog add_efi_memmap elevator=deadline loglevel=3 fbcon=nodefer acpi_osi=Linux
 
-# There should be a fallback loader named /boot/loader/entries/arch-lts-fallback.conf which have to use initramfs-linux-lts-fallback.img
-cp /boot/loader/entries/arch.conf /boot/loader/entries/arch-lts-fallback.conf
-sed -i 's/initramfs-linux-lts/&-fallback/' /boot/loader/entries/arch-lts-fallback.conf
+vim /boot/loader/entries/fallback.conf
+---------------------
+title Fallback
+linux /vmlinuz-linux-lts
+initrd /intel-ucode.img
+initrd /initramfs-linux-lts-fallback.img
+options root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ rw quiet splash nowatchdog add_efi_memmap elevator=deadline loglevel=3 fbcon=nodefer acpi_osi=Linux
 
 # check if boot entry is recognized and has no errors
 bootctl list
+
+# add intel graphics kernel parameters
+printf "options i915 enable_rc6=1 enable_fbc=1 fastboot=1 enable_psr=0" > /etc/modprobe.d/intel.conf
+
+# disabling zswap, zram will be enabled later
+printf "blacklist zswap" > /etc/modprobe.d/disable-zswap.conf
 
 # edit `/etc/mkinitcpio.conf` at `HOOKS=` replace `udev` hook with `systemd`.
 HOOKS=(base udev[systemd] fsck ...)
@@ -551,6 +562,22 @@ ln -s /usr/bin/vim /usr/bin/vi
 # inorder to give new user sudo access
 visudo
 ## type /%wheel hit enter to find the line %wheel ALL=(ALL) ALL type ^ then hit x then type :wq
+
+vim /etc/systemd/zram-generator.conf
+---------------------
+[zram0]
+zram-size = ram / 2
+compression-algorithm = zstd
+swap-priority = 100
+fs-type = swap
+
+vim /etc/sysctl.d/99-vm-zram-parameters.conf
+---------------------
+vm.swappiness = 180
+vm.watermark_boost_factor = 0
+vm.watermark_scale_factor = 125
+vm.page-cluster = 0
+
 
 # network and firewall
 ufw default deny incoming
@@ -602,89 +629,82 @@ pacman -Rnsuc $(pacman -Qtdq)
 
 </div>
 
-در این مرحله یک سری تنظمیات برای بهینه‌سازی و شخصی‌سازی بیشتر انجام میدم.
- اینها ضروری نیستن و ممکنه در گذر زمان عوض بشن ولی درحال حاضر
-توی ویکی آرچ هستن و برای کمی دستکاری بیشتر استفاده کردم.
 
-<div dir="ltr" align="left">
+استفاده tlp هم پیشنهاد میشه. برای کنترل بیشتر روی مصرف باتری مناسب هست.
+میتونید کنترل اتو ساسپند(اتوماتیک غیرفعال شدن پورتهای یواس‌بی یا سایر چیزها) کنترل بیشتری داشته باشید
+حتی درصورتی که سیستم شما ساپورت کنه میتونید مشخص کنید باتری کجا شروع به شارژ شدن کنه و کجا متوقف بشه و...
 
 ```bash
-# pacman hook to automate the bootloader update after kernel update
-mkdir /etc/pacman.d/hooks/
-vim /etc/pacman.d/hooks/100-systemd-boot.hook
----------------------
-[Trigger]
-Type=Package
-Operation=Upgrade
-Target=systemd
-
-[Action]
-Description=Updating systemd-boot
-When=PostTransaction
-Exec=/usr/bin/bootctl update
-
-# enabling silent boot
-echo "kernel.printk = 3 3 3 3" > /etc/sysctl.d/20-quiet-printk.conf
-
-# hide startx messages
-echo "[[ $(fgconsole 2>/dev/null) == 1 ]] && exec startx -- vt1 &> /dev/null" >> .bash_profile
+tlp start
 ```
 
-</div>
+```sh
+printf "on" > /sys/bus/usb/devices/1-3/power/control
+```
+
+در صورت استفاده از دو مانیتور این اسکریپت کمک میکنه تا تصویر روی مانیتور اکسترنال بیاد، البته که این مشکل رو داشتین که مانیتور اکسترنال تصویر نداشت.
+
+edit `/usr/share/sddm/scripts/Xsetup` and add:
+run xrandr to see which monitors you have
+
+```sh
+#!/bin/sh
+
+intern=eDP1
+extern=HDMI1
+if xrandr | grep "$extern disconnected"; then
+    xrandr --output "$extern" --off --output "$intern" --auto
+else
+    xrandr --output "$intern" --off --output "$extern" --auto
+    ## To leave the default monitor enabled when an external monitor is connected, replace the else clause with
+    # xrandr --output "$intern" --primary --auto --output "$extern" --right-of "$intern" --auto
+fi
+```
+
+برای شناسایی ماوس و تاچ پد در صفحه SDDM این تغییرات رو لازم داشتم:
+
+edit/create `/etc/X11/xorg.conf.d/20-touchpad.conf`
+
+```bash
+Section "InputClass"
+        Identifier "libinput touchpad catchall"
+        MatchIsTouchpad "on"
+        MatchDevicePath "/dev/input/event*"
+        Driver "libinput"
+
+        Option "Tapping" "on"
+        Option "NaturalScrolling" "on"
+        Option "MiddleEmulation" "on"
+        Option "DisableWhileTyping" "on"
+EndSection
+```
+
+edit/create `/etc/X11/xorg.conf.d/20-mouse.conf`
+
+```bash
+Section "InputClass"
+        Identifier "libinput mouse catchall"
+        MatchIsPointer "on"
+        MatchDevicePath "/dev/input/event*"
+        Driver "libinput"
+
+        Option "MiddleEmulation" "on"
+        Option "DisableWhileTyping" "on"
+EndSection
+```
+
+این دوتا هم برای اینکه درست سینک باشه
+
+edit/create `/etc/sddm.conf.d/kde_settings.conf`
+
+```bash
+[General]
+Session=plasma.desktop
+
+[Wayland]
+Enable=false
+```
 
 ---
-
-## بخش گرافیکی
-
-در این بخش من قصد دارم دسکتاپ کی‌دی‌ای و پلاسما را نصب و کانفیگ کنم
-پکیج‌هایی که لازم داریم و تنظیماتی که باید بعد از نسب آن‌ها انجام بشن رو به همراه توضیح مختصری می‌نویسم
-برای شناسایی کارت گرافیکی که روی سیستم دارین دستور زیر رو بزنید و بعد هم با پکمن سرچ کنید ببینید بسته‌ی مناسب سخت‌افزار شما کدوم هست
-
-<div dir="ltr" align="left">
-
-```bash
-lspci -v | grep -A1 -e VGA -e 3D
-
-pacman -Ss xf86-video
-
-pacman -S xf86-video-intel1 mesa lib32-mesa
-pacman -S nvidia linux-headers nvidia-utils lib32-nvidia-utils nvidia-settings
-pacman -S vulkan-icd-loader vulkan-intel lib32-vulkan-icd-loader
-
-# pacman hook to automate initcpio update after nvidia update
-vim /etc/pacman.d/hooks/nvidia.hook
----------------------
-[Trigger]
-Operation=Install
-Operation=Upgrade
-Operation=Remove
-Type=Package
-Target=nvidia
-Target=linux
-# Change the linux part above and in the Exec line if a different kernel is used
-
-[Action]
-Description=Update NVIDIA module in initcpio
-Depends=mkinitcpio
-When=PostTransaction
-NeedsTargets
-Exec=/bin/sh -c 'while read -r trg; do case $trg in linux) exit 0; esac; done; /usr/bin/mkinitcpio -P'
-
-# added this line to kernel parameters
-nvidia_drm.modeset=1
-```
-
-</div>
-
-<div dir="ltr" align="left">
-
-```bash
-pacman -S xorg plasma-desktop plasma-pa sddm sddm-kcm nm-connection-editor network-manager-applet
-pacman -S kdegraphics-thumbnailers ffmpegthumbs powerdevil power-profiles-daemon bluez bluez-utils bluedevil
-pacman -S smplayer kde-gtk-config baloo kscreen colord-kde ttf-dejavu ttf-liberation
-
-systemctl enable display-manager.service
-
-```
 
 برای کانفیگ کردن ادیتور ویم من از روشی که در [این لینک](https://www.freecodecamp.org/news/vimrc-configuration-guide-customize-your-vim-editor/) گفته شده استفاده کردم. البته روشهای خیلی زیادی وجود داره برای شروع یه نگاهی بهش بندازین

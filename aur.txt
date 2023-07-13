@@ -1,0 +1,16 @@
+auto-cpufreq
+kcm-polkit-kde-git
+mediawriter
+mkinitcpio-firmware
+slimbookbattery
+systemd-kcm
+tmux-bash-completion-git
+firedragon
+firedragon-extension-plasma-integration
+kde-servicemenus-rootactions
+kwin-scripts-forceblur
+libinput_gestures_qt
+aic94xx-firmware
+ast-firmware
+upd72020x-fw
+wd719x-firmware
