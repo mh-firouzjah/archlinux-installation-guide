@@ -3,20 +3,17 @@
 
 ## List of required packages
 
-- `dkms`
 - `nvidia-lts`
 - `nvidia-utils`
-- `nvidia-settings`
 - `nvidia-prime`
-- `xorg-server-devel`
+- `nvidia-settings`
 - `opencl-nvidia`
 
 
 ## Configure kernel modules options
 
 ```bash
-printf "options nomodeset i915.modeset=0 nouveau.modeset=0 nvidia-drm.modeset=1" > /etc/modprobe.d/nvidia.conf
-printf "blacklist nouveau" > /etc/modprobe.d/blacklist-nouveau.conf
+print "options nomodeset i915.modeset=0 nouveau.modeset=0 nvidia-drm.modeset=1" > /etc/modprobe.d/nvidia.conf
 ```
 
 ## Configure initramfs modules for Early loading
