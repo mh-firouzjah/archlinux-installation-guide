@@ -1,0 +1,103 @@
+# >Base
+base
+base-devel
+linux-lts
+linux-firmware
+intel-ucode
+ntfs-3g
+btrfs-progs
+zram-generator
+
+# >Networking
+dhcpcd
+iwd
+openresolv
+rsync
+sshfs
+tor
+torsocks
+
+# >Bluetooth
+bluez
+bluez-utils
+
+# >Firewall
+ufw
+
+# >DownloadManager
+curl
+wget
+reflector
+
+# >Editor
+vimrc
+
+# >Power Management
+acpi
+acpid
+cpupower
+power-profiles-daemon
+powertop
+thermald
+turbostat
+
+# >Audio
+alsa-firmware
+alsa-topology-conf
+alsa-ucm-conf
+alsa-utils
+pipewire
+pipewire-alsa
+pipewire-audio
+pipewire-jack
+pipewire-pulse
+sof-firmware
+wireplumber
+
+# >Development Tools
+git
+
+# >Compression
+gzip
+p7zip
+pigz
+tar
+unrar
+unzip
+zip
+
+# >Fonts
+noto-fonts-emoji
+otf-ipafont
+ttf-cascadia-code-nerd
+ttf-hack-nerd
+
+# >Utilities
+anything-sync-daemon
+bash-completion
+bat
+duf
+fwupd
+htop
+icu
+inxi
+irqbalance
+man-pages
+plocate
+realtime-privileges
+sg3_utils
+systemd-sysvcompat
+tmux
+udisks2
+usbutils
+
+# >Webcam
+v4l-utils
+
+##>Zsh Add-ons
+zsh
+zsh-autosuggestions
+zsh-completions
+zsh-history-substring-search
+zsh-syntax-highlighting
+zsh-theme-powerlevel10k

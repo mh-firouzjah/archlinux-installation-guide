@@ -1,0 +1,16 @@
+iwd
+dhcpcd
+acpid
+power-profiles-daemon
+powertop
+bluetooth
+pipewire-pulse
+asd
+accounts-daemon
+cpupower
+fwupd
+irqbalance
+systemd-oomd
+systemd-zram-setup@zramN.service
+thermald
+upower

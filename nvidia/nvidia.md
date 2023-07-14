@@ -58,3 +58,5 @@ Exec=/bin/sh -c 'while read -r trg; do case $trg in linux-lts) exit 0; esac; don
 follow: https://linrunner.de/tlp/faq/powercon.html#hybrid-graphics
 
 aur: optimus-manager
+
+also see [Fully power down discrete GPU](Fully%20power%20down%20discrete%20GPU.md)

@@ -1,0 +1,72 @@
+# >Desktop Utilities
+appmenu-gtk-module
+xdg-utils
+xdg-desktop-portal
+
+# > Download managers
+persepolis
+
+# >Graphics Drivers and Tools
+## > Intel
+intel-gpu-tools
+intel-media-driver
+libva
+libva-intel-driver
+libva-mesa-driver
+libva-utils
+libvdpau-va-gl
+linux-lts-headers
+#mesa # uncomment and comment mesa-amber if your cpu gen > 7
+mesa-amber
+mesa-demos
+mesa-utils
+mesa-vdpau
+vulkan-intel
+xf86-video-intel
+
+# >Networking
+avahi
+networkmanager
+nmap
+python-pysmbc
+samba
+smbclient
+udiskie
+
+
+# >System Utilities
+brightnessctl
+gnome-multi-writer
+libinput
+xcalib
+xorg-server
+xorg-xhost
+xorg-xinit
+xorg-xinput
+
+# >Video Codecs
+gst-libav
+gst-plugin-pipewire
+gst-plugins-bad
+gst-plugins-base
+gst-plugins-good
+gst-plugins-ugly
+gstreamer
+gstreamer-vaapi
+
+# >Video Player
+smplayer
+smplayer-skins
+smplayer-themes
+
+# >Social media
+telegram-desktop
+
+# >Other Tools
+linux-api-headers
+linux-firmware-qlogic
+linux-lts-headers
+perl-file-mimeinfo
+
+# >Display Manager
+sddm

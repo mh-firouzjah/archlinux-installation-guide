@@ -1,0 +1,61 @@
+# >File Management
+ark
+dolphin-plugins
+
+# >File browser
+dolphin
+
+# >User Interface
+breeze-gtk
+kde-gtk-config
+kdegraphics-thumbnailers
+plasma-pa
+qtxdg-tools
+
+# >Networking
+bluedevil
+kdenetwork-filesharing
+kio-fuse
+kio-zeroconf
+plasma-nm
+
+# >Graphics
+ffmpegthumbs
+gwenview
+kimageformats
+spectacle
+qt5-imageformats
+
+# >Productivity
+kate
+knotes
+okular
+
+# >Control Tools
+kcalc
+kdialog
+khotkeys
+kpat
+kscreen
+kwrited
+plasma-firewall
+
+# >System
+drkonqi
+kdeplasma-addons
+kgamma5
+kinit
+kjournald
+konsole
+libksysguard
+partitionmanager
+plasma-desktop
+plasma-disks
+plasma-systemmonitor
+sddm-kcm
+solid
+qt6-shadertools
+
+
+# >Web browser
+falkon

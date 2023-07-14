@@ -459,7 +459,7 @@ ntfs-3g -o rw,uid=0,gid=0,umask=000,nls=utf8,noatime,windows_names /dev/sda1 /mn
 - هاست نیم یا هون اسمی که موقع اتصال بلوتوث، هات اسپات یا شبکه کردن چندتا سیستم و ... دیده میشه رو ست میکنیم
 - تنظیمات شبکه پایه رو انجام میدیم
 - سیستم‌دی بوت رو نصب میکنیم و بعدش بوت لودر رو مینویسیم
-- چون از سیستم‌دی برای بوت کردن سیستم استفاده کردیم mkinitpico رو باید آپدیت کنیم تا initramfs رو دوباره جنریت کنیم (این همون فایلی هست که سیستم‌دی موقع بوت ازش استفاده میکنه) 
+- چون از سیستم‌دی برای بوت کردن سیستم استفاده کردیم mkinitcpio رو باید آپدیت کنیم تا initramfs رو دوباره جنریت کنیم (این همون فایلی هست که سیستم‌دی موقع بوت ازش استفاده میکنه) 
 - برای یوزر روت یک پسورد میذاریم
 - چون ادیتور vim رو نصب کردیم همین رو به صورت سمبلیک لینک میکنیم به vi که اگر برنامه‌ای به صورت پیشفرض دنبال vi رفت از همین vim  استفاده بشه(vi محیطش با vim یکم فرق داره!)
 - یه یوزر جدید میسازیم عضو گروه wheel میکنیم و براش پسورد میذاریم و همین طور با visudo میریم به کل گروه wheel اجازه استفاده از سودو به شرط داشتن پسورد میدیم
@@ -493,30 +493,25 @@ sed -i '/en_US.UTF-8/s/^#\s*//g' /etc/locale.gen
 locale-gen
 
 # generate language locale.conf
-printf "LANGE=en_US.UTF-8" > /etc/locale.conf
+print "LANGE=en_US.UTF-8" > /etc/locale.conf
 
 # set consolefont
-printf "FONT=LatArCyrHeb-14\nFONT_MAP=UTF-8" > /etc/vconsole.conf
+print "FONT=LatArCyrHeb-14\nFONT_MAP=UTF-8" > /etc/vconsole.conf
 
 # set hostname
 hostname=my_bluetooth_name
 
-printf "${hostname}" > /etc/hostname
+print "${hostname}" > /etc/hostname
 
 # set hosts
-printf "127.0.0.1 localhost\n::1  localhost" > /etc/hosts
-printf "127.0.1.1 ${hostname}.localdomain ${hostname}" >> /etc/hosts
+print "127.0.0.1 localhost\n::1  localhost" > /etc/hosts
+print "127.0.1.1 ${hostname}.localdomain ${hostname}" >> /etc/hosts
 
 # initiate bootloader
 bootctl install
 
 # to set a loader edit `/boot/loader/loader.conf` and define a default entry
-vim /boot/loader/loader.conf
----------------------
-default arch-lts.conf
-timeout 0
-editor no
-console-mode max
+print "default arch-lts.conf\ntimeout 0\neditor no\nconsole-mode max" > /boot/loader/loader.conf
 
 vim /boot/loader/entries/arch-lts.conf
 ---------------------
@@ -524,7 +519,7 @@ title Arch Linux LTS
 linux /vmlinuz-linux-lts
 initrd /intel-ucode.img
 initrd /initramfs-linux-lts.img
-options root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ rw quiet splash nowatchdog add_efi_memmap elevator=deadline loglevel=3 fbcon=nodefer acpi_osi=Linux
+options root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ rw quiet nowatchdog add_efi_memmap acpi_osi=Linux
 
 vim /boot/loader/entries/fallback.conf
 ---------------------
@@ -532,16 +527,13 @@ title Fallback
 linux /vmlinuz-linux-lts
 initrd /intel-ucode.img
 initrd /initramfs-linux-lts-fallback.img
-options root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ rw quiet splash nowatchdog add_efi_memmap elevator=deadline loglevel=3 fbcon=nodefer acpi_osi=Linux
+options root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ rw quiet nowatchdog add_efi_memmap acpi_osi=Linux
 
 # check if boot entry is recognized and has no errors
 bootctl list
 
-# add intel graphics kernel parameters
-printf "options i915 enable_rc6=1 enable_fbc=1 fastboot=1 enable_psr=0" > /etc/modprobe.d/intel.conf
-
 # disabling zswap, zram will be enabled later
-printf "blacklist zswap" > /etc/modprobe.d/disable-zswap.conf
+print "blacklist zswap" > /etc/modprobe.d/disable-zswap.conf
 
 # edit `/etc/mkinitcpio.conf` at `HOOKS=` replace `udev` hook with `systemd`.
 HOOKS=(base udev[systemd] fsck ...)
@@ -610,12 +602,21 @@ reboot
 از اینجا به بعد اختیاری هست منتهی بعضی از کارهایی که میخوام بگم خیلی خیلی بهتره که انجام بدین و بعضیای دیگه هم دیگه سلیقه خودتون هست.  
 برای مثال اینکه درایورهای کارت گرافیک یا کارت صدا و این جور چیزا رو نصب کنید خب مشخصه که ضروری هست، ولی اینکه از دسکتاپ پلاسما استفاده کنید یا کلا دسکتاپ نزنید یا دسکتاپ دیگری انتخاب کنید سلیقه خودتون باشه.
 
+
+### add intel graphics kernel parameters
+
+```bash
+print "options i915 enable_rc6=1 enable_fbc=1 fastboot=1" > /etc/modprobe.d/intel.conf
+
+mkinitcpio -P
+```
+
 ### شخصی سازی آرچ و نصب دسکتاپ پلاسما
 
 <div dir="ltr" align="left">
 
 ```bash
-printf "Color\nILoveCandy\nParallelDownloads = 3" | tee -a /etc/pacman.conf >/dev/null
+print "Color\nILoveCandy\nParallelDownloads = 3" | tee -a /etc/pacman.conf >/dev/null
 
 pacman -S --needed - < pkg-list.out
 
@@ -629,29 +630,20 @@ pacman -Rnsuc $(pacman -Qtdq)
 
 </div>
 
-
-استفاده tlp هم پیشنهاد میشه. برای کنترل بیشتر روی مصرف باتری مناسب هست.
-میتونید کنترل اتو ساسپند(اتوماتیک غیرفعال شدن پورتهای یواس‌بی یا سایر چیزها) کنترل بیشتری داشته باشید
-حتی درصورتی که سیستم شما ساپورت کنه میتونید مشخص کنید باتری کجا شروع به شارژ شدن کنه و کجا متوقف بشه و...
-
-```bash
-tlp start
-```
-
-```sh
-printf "on" > /sys/bus/usb/devices/1-3/power/control
-```
+## حالتهای خاص
 
 در صورت استفاده از دو مانیتور این اسکریپت کمک میکنه تا تصویر روی مانیتور اکسترنال بیاد، البته که این مشکل رو داشتین که مانیتور اکسترنال تصویر نداشت.
 
 edit `/usr/share/sddm/scripts/Xsetup` and add:
-run xrandr to see which monitors you have
 
+---------------------
 ```sh
 #!/bin/sh
 
+# run xrandr to see which monitors you have
 intern=eDP1
 extern=HDMI1
+
 if xrandr | grep "$extern disconnected"; then
     xrandr --output "$extern" --off --output "$intern" --auto
 else
@@ -664,7 +656,7 @@ fi
 برای شناسایی ماوس و تاچ پد در صفحه SDDM این تغییرات رو لازم داشتم:
 
 edit/create `/etc/X11/xorg.conf.d/20-touchpad.conf`
-
+---------------------
 ```bash
 Section "InputClass"
         Identifier "libinput touchpad catchall"
@@ -680,7 +672,7 @@ EndSection
 ```
 
 edit/create `/etc/X11/xorg.conf.d/20-mouse.conf`
-
+---------------------
 ```bash
 Section "InputClass"
         Identifier "libinput mouse catchall"
@@ -696,13 +688,22 @@ EndSection
 این دوتا هم برای اینکه درست سینک باشه
 
 edit/create `/etc/sddm.conf.d/kde_settings.conf`
-
+---------------------
 ```bash
 [General]
 Session=plasma.desktop
 
 [Wayland]
 Enable=false
+```
+
+edit/create `/etc/X11/xorg.conf.d/20-intel.conf`
+---------------------
+```bash
+Section "Device"
+   Identifier  "Intel Graphics"
+   Driver      "intel"
+EndSection
 ```
 
 ---
