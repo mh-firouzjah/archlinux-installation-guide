@@ -618,13 +618,12 @@ mkinitcpio -P
 ```bash
 print "Color\nILoveCandy\nParallelDownloads = 3" | tee -a /etc/pacman.conf >/dev/null
 
-pacman -S --needed - < pkg-list.out
+pacman -S --needed $(comm -12 <(pacman -Slq | sort) <(sort pkgs.txt))
 
-systemctl enable NetworkManager
-systemctl enable bluetooth.service
-systemctl enable acpid.service
 
-pacman -Rnsuc $(pacman -Qtdq)
+systemctl enable $(cat services.txt)
+
+pacman -Rnscu $(pacman -Qtdq)
 
 ```
 
