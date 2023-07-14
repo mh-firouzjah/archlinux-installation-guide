@@ -625,6 +625,12 @@ systemctl enable $(cat services.txt)
 
 pacman -Rnscu $(pacman -Qtdq)
 
+cp ./fonts.conf ~/.config/fontconfig/
+
+fc-cache -f -v
+
+sudo fc-cache -f -v
+
 ```
 
 </div>
