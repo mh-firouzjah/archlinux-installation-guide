@@ -90,6 +90,7 @@ nvidia-utils
 okular
 opencl-nvidiaark
 openresolv
+openssh
 otf-ipafont
 p7zip
 partitionmanager
@@ -146,7 +147,7 @@ unrar
 unzip
 usbutils
 v4l-utils
-vimrc
+vim
 vulkan-intel
 wget
 wireplumber
