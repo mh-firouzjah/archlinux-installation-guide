@@ -22,6 +22,7 @@ dolphin
 dolphin-plugins
 drkonqi
 duf
+ffmpeg
 ffmpegthumbs
 fwupd
 git
@@ -79,10 +80,19 @@ man-pages
 mesa-demos
 mesa-utils
 mesa-vdpau
+mobile-broadband-provider-info
+modemmanager
 networkmanager
+networkmanager-l2tp
+networkmanager-openconnect
+networkmanager-openvpn
+networkmanager-pptp
+networkmanager-vpnc
 nmap
 noto-fonts-emoji
+nss-mdns # NSS support for mDNS (optdepend for avahi)
 ntfs-3g
+ntp
 nvidia-lts
 nvidia-prime
 nvidia-settings
@@ -140,11 +150,13 @@ torsocks
 ttf-cascadia-code-nerd
 ttf-hack-nerd
 turbostat
+udiskie
 udiskiebrightnessctl
 udisks2
 ufw
 unrar
 unzip
+usb_modeswitch
 usbutils
 v4l-utils
 vim

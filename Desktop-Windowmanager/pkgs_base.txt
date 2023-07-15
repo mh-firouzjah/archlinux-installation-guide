@@ -26,13 +26,24 @@ xf86-video-intel
 
 # >Networking
 avahi
+mobile-broadband-provider-info
+modemmanager
 networkmanager
+networkmanager-l2tp
+networkmanager-openconnect
+networkmanager-openvpn
+networkmanager-pptp
+networkmanager-vpnc
 nmap
+nss-mdns # NSS support for mDNS (optdepend for avahi)
+ntp
+openresolv
+openssh
 python-pysmbc
 samba
 smbclient
 udiskie
-
+usb_modeswitch
 
 # >System Utilities
 brightnessctl
@@ -45,6 +56,7 @@ xorg-xinit
 xorg-xinput
 
 # >Video Codecs
+ffmpeg
 gst-libav
 gst-plugin-pipewire
 gst-plugins-bad
