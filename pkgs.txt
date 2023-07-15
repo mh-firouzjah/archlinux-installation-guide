@@ -24,8 +24,10 @@ drkonqi
 duf
 ffmpeg
 ffmpegthumbs
+firewalld
 fwupd
 git
+github-cli
 gnome-multi-writer
 gst-libav
 gst-plugin-pipewire
@@ -153,7 +155,6 @@ turbostat
 udiskie
 udiskiebrightnessctl
 udisks2
-ufw
 unrar
 unzip
 usb_modeswitch

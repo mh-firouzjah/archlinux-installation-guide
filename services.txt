@@ -4,6 +4,7 @@ asd
 avahi-daemon
 bluetooth
 cpupower
+firewalld
 fwupd
 irqbalance
 NetworkManager
