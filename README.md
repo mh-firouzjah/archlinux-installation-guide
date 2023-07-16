@@ -389,7 +389,7 @@ umount /mnt
 <div dir="ltr" align="left">
 
 ```bash
-bop=ssd,discard,noatime,compress-force=zstd:8,commit=30,space_cache=v2,autodefrag,max_inline=512k,inode_cache,subvol=@
+bop=ssd,discard,noatime,nodiratime,compress-force=zstd:8,commit=30,space_cache=v2,autodefrag,max_inline=512k,inode_cache,subvol=@
 
 mount -o ${bop} /dev/nvme0n1p2 /mnt
 
