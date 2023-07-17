@@ -1,28 +1,26 @@
 # راهنمای نصب آرچ
 
-<div dir="rtl">
-
 در این روش آرچ را به صورت `efi` و با `systemd-boot` نصب و از فایل سیستم `btrfs` استفاده می‌کنیم
 
-**  **مدنظر داشته باشید** 
+**  **مدنظر داشته باشید**
 `systemd-boot`
 هرچند برای روش نصب انتخاب شده
 ولی اگر فقط یک سیستم‌عامل دارید از این روش استفاده کنید
-و برای دوآل بوت یا غیره از گراب استفاده کنید.  
+و برای دوآل بوت یا غیره از گراب استفاده کنید.
 چون سیستم‌دی-بوت کل درایوی که برای
 efi
-انتخاب می‌کنید را اورراید می‌کنه و مشکلاتی به همراه داره که 
-حداقل روشی که اینجا برای نصب استفاده شده پاسخگوی اونها نیست 
-***و خلاصه از ما گفتن بود***.  
+انتخاب می‌کنید را اورراید می‌کنه و مشکلاتی به همراه داره که
+حداقل روشی که اینجا برای نصب استفاده شده پاسخگوی اونها نیست
+***و خلاصه از ما گفتن بود***.
 من چون فقط یک سیستم‌عامل دارم این را انتخاب کردم.
 
 ---
 
-## قدم اول تهیه فایل ISO و ساختن یک فلش bootable از آن
+## قدم اول تهیه فایل ISO و ساختن یک فلش Bootable از آن
 
 **
 بهتره از نسخه
-Torrnet
+`Torrnet`
 برای دانلود استفاده کنید
 
 ابتدا به [صفحه‌ی دانلود آرچ](https://archlinux.org/download/) مراجعه کنید و فایل ایزو را به همراه `signature` مربوطه دانلود کنید
@@ -45,7 +43,7 @@ gpg --keyserver-options auto-key-retrieve --verify archlinux-version-x86_64.iso.
   بدین جهت پکیج‌مینجرها طوری طراحی شدند تا پکیج‌ها(بسته‌ها) را به صورت خودکار بروزرسانی کنند
   اما در صورتی که خود این پکیج‌منیجرها از قبل آلوده باشند امکان اینکه مجددا بسته‌های آلوده به سیستم اضافه کنند یا بسته‌های آلوده‌ی قدیمی را درست بروزرسانی نکنند وجود خواهد داشت.
   پکیج‌منیجرها معمولا با دسترسی‌های بالا و بدون محدودیت اجرا می‌شوند تا قادر به اعمال تغییرات و بروزرسانی در سطوح مختلف سیستم باشند؛
-  بنابراین، اقدامات مدیر بسته بر کل سیستم تأثیر می گذارد  
+  بنابراین، اقدامات مدیر بسته بر کل سیستم تأثیر می گذارد
   تکنیک‌های مثل man in the middle یا سایر روش‌ها ممکنه استفاده شده باشن و برای مثال وب سایت توزیع مینت در سالهای دورتر مورد چنین حمله‌های قرار گرفته بود و فایل ایزو که روی سایت
   بود و ملت دانلود می‌کردن درواقع آلوده بود و خب مدتی بعد گندش در اومد. خلاصه اینکه این مرحله رو یکم جدی بگیرید به نفع خودتون هست
 
@@ -53,9 +51,11 @@ gpg --keyserver-options auto-key-retrieve --verify archlinux-version-x86_64.iso.
 
 <br/>
 
-### بوت‌ایبل کردن فلش  
+### بوت‌ایبل کردن فلش
 
-برای اینکار روشهای زیادی وجود داره و برنامه‌های گرافیکی هم هستن که کار رو ساده‌تر کردن اما روش ترمینالی اینکار استفاده از دستور زیر هست  
+برای اینکار روشهای زیادی وجود داره و برنامه‌های گرافیکی هم هستن که کار رو ساده‌تر کردن اما روش ترمینالی اینکار استفاده از دستور زیر هست
+- درصورتی  که نیاز به برنامه گرافیکی دارید توی ویکی اکثر توزیع‌ها به برنامه `Etcher`
+اشاره شده و برنامه ساده‌ای هست
 
 <div dir="ltr" align="left">
 
@@ -77,7 +77,7 @@ dd bs=4M if=path/to/archlinux-version-x86_64.iso of=/dev/sdx conv=fsync oflag=di
 
 ۲. ممکنه سیستم شما روی حالت uefi قرار نداشته باشه و درنتیجه بازم نمیتونه از روی فلش بوت بشه پس از منوی بایوس این حالت رو فعال کنید
 
-۳. خطای *No Bootable Device*  
+۳. خطای *No Bootable Device*
   بعد از نصب سیستم و تموم شدن کار اگر ری‌استارت کردین و خطایی دیدن که سیستم نتونسته یک فایل بوت پیدا کنه بازم باید وارد منوی بایوس بشین و
   از روی گزینه‌ای که برای انتخاب Trusted bootloaders هست وارد بشین و فایل بگردین فایل `EFI/systemd/systemd-bootx64.efi` رو انتخاب کنید براش یک اسم دلخواه بذارین و تنظمیات رو ذخیره کنید و ری‌استارت کنید
 
@@ -177,7 +177,7 @@ ping -c 4 archlinux.org
 
 </div>
 
-ساعت سیستم رو تنظیم کنید
+## تنظیم ساعت سیستم
 
 <div dir="ltr" align="left">
 
@@ -187,10 +187,13 @@ timedatectl set-ntp true
 
 </div>
 
-## بروزرسانی میرورهای مدیر بسته
+## بروزرسانی میرورهای پکیج منیجر
 
-برای اینکه در ادامه و برای نصب بسته‌های لازم کمی سرعت دانلود از اینترنت بهتری داشته باشم لازم است تا لیست میرورهای مخازن را بروزرسانی کنیم. برای این کار از
-بسته‌ی reflector استفاده می‌کنیم. ابتدا باید آن را نصب کنیم و سپس لیست میرورها را آپدیت کنیم. قبل از آپدیت کردن از لیست فعلی یک بک‌آپ تهیه می‌کنیم برای احتیاط
+برای اینکه در ادامه و برای نصب بسته‌های لازم کمی سرعت دانلود از اینترنت بهتری داشته باشیم
+لازمه تا لیست میرورهای مخازن را بروزرسانی کنیم. برای این کار از بسته‌ی reflector استفاده می‌کنیم.
+ابتدا باید آن را نصب کنیم و سپس لیست میرورها را آپدیت کنیم.
+برای احتیاط قبل از آپدیت کردن از لیست فعلی یک بک‌آپ تهیه می‌کنیم
+(من از میرورهای آلمان، فرانسه، انگلیس و هلند استفاده کردم).
 
 <div dir="ltr" align="left">
 
@@ -209,27 +212,30 @@ reflector -c DE,FR,GB,NL -p https -a 24 --sort rate -l 20 -f 10 --save /etc/pacm
 
 ## پارتیشن بندی دیسک
 
-این قسمت شاید یکم با بقیه‌ی راهنماهای نصب آرچ فرق کنه و البته پارتیشن بندی یکم حواس جمع میخواد، که یهو نزنید دیسک رو فرمت کنید و فایلهاتون رو پاک کنید!  
+این قسمت شاید یکم با بقیه‌ی راهنماهای نصب آرچ فرق کنه و البته پارتیشن بندی یکم حواس جمع میخواد، که یهو نزنید دیسک رو فرمت کنید و فایلهاتون رو پاک کنید!
 
 دستور `fdisk -l‍` یا `lsblk` برای شناسایی درایوهای سیستم بزنید
 
 حداقل دو تا پارتیشن لازم داریم:
-- یکی برای efi و بوت شدن سیستم. حجم ۵۱۲ مگ رو میشه برای حالت تک کردنل امن درنظر گرفت ولی برای امنیت بیشتر ۱ گیگ بدیم. 
-- و یکی هم برای خود سیستم‌عامل و درایوهای هوم و غیره،‌ از ابزار `cfdisk‍` یا `fdsik` برای پارتیشن بندی استفاده کنید. طرز کار ساده‌ای دارن، ابزارهای دیگه هم فرقی نداره استفاده بشن و مهم خروجی کار هست. نهایتا در خروجی کار همچین چیزی لازمه:
+- یکی برای efi و بوت شدن سیستم. حجم ۵۱۲ مگ رو میشه برای حالت تک کرنل امن درنظر گرفت  
+  - ولی برای امنیت بیشتر ۱ گیگ بدین
+- و یکی هم برای خود سیستم‌عامل و درایوهای هوم و غیره
+
+از ابزار `cfdisk‍` یا `fdsik` برای پارتیشن بندی استفاده کنید. طرز کار ساده‌ای دارن، ابزارهای دیگه هم فرقی نداره استفاده بشن و مهم خروجی کار هست. نهایتا در خروجی کار همچین چیزی لازمه:
 
 <div dir="ltr" align="left">
 
 | partition | size            | fs-type        | mount point | partition                 |
 | :---:     | :---:           | :---:          | :---:       | :---:                     |
-| efi       | 1 GiB           | EFI system     | /mnt/efi    | /dev/efi_partition |
+| efi       | 1 GiB           | EFI system     | /mnt/boot    | /dev/efi_partition |
 | root      | remaining space | Linux file sys | /mnt        | /dev/root_partition       |
 
 </div>
 
 <details>
-  <summary>اگر چندتا کردنل میخواین نصب کنید یا گراب استفاده می‌کنید</summary>
+  <summary>اگر چندتا کرنل میخواین نصب کنید یا گراب استفاده می‌کنید</summary>
 
-کردنل‌هایی که نصب می‌کنید و مثلا گراب و متعلقات گراب(مثل تم و این چیزای اضافیش - البته ما که گراب نمی‌زنیم) هم توی همین پارتیشن EFI قرار می‌گیرن پس حواستون باشه اگر قرار چندتا کردنل همزمان نصب کنید این پارتیشن رو باید بزرگتر درنظر بگیرید.
+کرنل‌هایی که نصب می‌کنید و مثلا گراب و متعلقات گراب(مثل تم و این چیزای اضافیش - البته ما که گراب نمی‌زنیم) هم توی همین پارتیشن EFI قرار می‌گیرن پس حواستون باشه اگر قرار چندتا کرنل همزمان نصب کنید این پارتیشن رو باید بزرگتر درنظر بگیرید.
 البته یه راه دیگه‌ای هم وجود داره می‌تونید این پارتیشن رو کم حجم بسازید و فقط فایل‌های .efi که لودر هستن رو داخلش قرار بدین ولی باید یک پارتیشن /boot جداگانه درست کنید تا extended boot partition یا به اختصار XBOOTLDR باشه و اون رو جداگانه مانت کنید. در این صورت یعنی ما باید ۳ تا پارتیشن درست کنیم:
 
 <div dir="ltr" align="left">
@@ -250,7 +256,7 @@ reflector -c DE,FR,GB,NL -p https -a 24 --sort rate -l 20 -f 10 --save /etc/pacm
 
 <br/>
 
-ساختن پارتیشن `swap` الزامی نیست بعدا هم می‌تونید اضافه کنید! تصمیم گیری با خودتون ولی اگر تصمیم گرفتین از zswap که 
+ساختن پارتیشن `swap` الزامی نیست بعدا هم می‌تونید اضافه کنید! تصمیم گیری با خودتون ولی اگر تصمیم گرفتین از zswap که
 به صورت پیشفرض در لینوکس فعال هست استفاده کنید پس حتما باید یه پارتیشن سوآپ یا یک سوآپفایل ایجاد کنید.
 
 <br/>
@@ -266,19 +272,19 @@ $ fdisk -w /dev/nvme0n1
 # Be careful before using the write command.
 
 Command (m for help): g
-#Created a new GPT disklabel (GUID: 8B0BD377-21F7-5242-9338-AD62411BA6FE).
+# Created a new GPT disklabel (GUID: 8B0BD377-21F7-5242-9338-AD62411BA6FE).
 
 Command (m for help):  n
 Partition number (1-128, default 1): # hit enter
 First sector (2048-15441886, default 2048): # hit enter
 Last sector, +/-sectors or +/-size{K,M,G,T,P} (2048-15441886, default 15439871): +1G
-#Created a new partition 1 of type 'Linux filesystem' and of size 512 MiB
+# Created a new partition 1 of type 'Linux filesystem' and of size 1 GiB
 
 Command (m for help): n
 Partition number (3-128, default 3): # hit enter
 First sector (9439232-15441886, default 9439232): # hit enter
 Last sector, +/-sectors or +/-size{K,M,G,T,P} (9439232-15441886, default 15439871): # hit enter
-#Created a new partition 3 of type 'Linux filesystem' and of size 2.9 GiB.
+# Created a new partition 3 of type 'Linux filesystem' and of size 2.9 GiB
 
 Command (m for help): p
 # ...
@@ -289,7 +295,7 @@ Command (m for help): p
 Command (m for help): t
 Partition number (1-2, default 2): 1
 Partition type or alias (type L to list all): 1
-#Changed type of partition 'Linux filesystem' to 'EFI System'.
+#Changed type of partition 'Linux filesystem' to 'EFI System'
 
 Command (m for help): p
 # ...
@@ -298,7 +304,7 @@ Command (m for help): p
 # /dev/nvme0n1p2  9439232 15439871 6000640  2.9G  Linux filesystem
 
 Command (m for help): w
-# The partition table has been altered.
+# The partition table has been altered
 
 ```
 
@@ -313,6 +319,8 @@ Command (m for help): w
 ```bash
 mkfs.fat -F 32 -n EFI /dev/nvme0n1p1
 ```
+
+- فلگ n توی این مورد برای لیبل دادن به پارتیشن استفاده شده و آپشنال(اختیاری) هست
 
 </div>
 
@@ -333,10 +341,10 @@ mkfs.btrfs -f -L ROOT /dev/nvme0n1p2
 
 </div>
 
-از اینجا به بعد من از 
-`nvme0n1p2` 
-استفاده می‌کنم، حواستون باشه که 
-`nvme0n1p2` 
+از اینجا به بعد من از
+`nvme0n1p2`
+استفاده می‌کنم، حواستون باشه که
+`nvme0n1p2`
 رو باید با اسم درایو مربوطه روی سیستم خودتون جایگزین کنید
 
 بریم سراغ ساختن ساب‌ولیوم‌ها، اول باید پارتیشن روت رو مانت کنیم و بعد ساب‌ولیوم‌ها رو روش بسازیم
@@ -357,13 +365,13 @@ mount /dev/nvme0n1p2 /mnt
 
 <div dir="ltr" align="left">
 
-> su = subvolume
-> cr = create
+> su = subvolume,
+> cr = create,
 > li = list
 
 </div>
 
-ساختن ساب‌ولیوم‌ها  
+ساختن ساب‌ولیوم‌ها
 
 <div dir="ltr" align="left">
 
@@ -385,6 +393,34 @@ umount /mnt
 
 هرچند توی راهنمای نصب و پارتیشن بندی برای uefi سیستم گفته که پارتیشن efi رو توی /boot/efi مانت کنیم
 اما چون ما قصد داریم از systemd-boot استفاده کنیم پارتیشن مدنظر را در /boot مانت می‌کنیم
+
+<details>
+  <summary>چرا توی اسلش بوت مانتش کردم و یک گیگ فضا بهش دادم - بازم فضا کمه؟</summary>
+
+در اصل توی پارتیشن efi قراره چندتا فایل کوچیک و کم حجم که پسوند efi دارن قرار بگیره
+و این فایلها توسط بایوس در لحظه روشن شدن سیستم استفاده میشن تا درنهایت کل سیستم رو استارت کنن. 
+برای همین شاید ببینید موقع نصب سایر توزیع‌ها وقتی حالت اتوماتیک پارتیشن بندی رو انتخاب می‌کنید اونا شاید ۳۰۰ مگ فضا برای این پارتیشن درنظر بگیرن.
+درواقع اگه فقط همون چندتا فایل efi که برای بایوس لازم داریم بخوان توی اون پارتیشن باشن همون ۳۰۰ مگ هم زیاده 
+ولی ما چون سیستم‌دی-بوت میزنیم وقتی داریم Entry برای بوت لودر میسازیم مجبوریم که 
+فایل انتری و فایلهای کرنل و initramfs رو یکجا و داخل دایرکتوری esp یا همون پارتیشنی که برای بوت میسازیم قرار بدیم.
+
+راه ساده و بی‌دردسرش این بود که بیایم و پارتیشن رو یکم بزرگتر و با حجم بیشتر بگیریم و کرنل و همه چیزش رو هم بذاریم همین جا 
+بوت لودر و انتری پوینت‌هاش هم همین جا باشن.
+
+البته یه نکته‌ی دیگه هم وجود داره و اون اینکه اگر بازم دیدین فضایی که جدا کردین داره کم میاد میتونید از قابلیت کمپرس کردن 
+توی mkinitcpio استفاده کنید تا initramfs و فال‌بکش رو براتون فشرده کنه!
+درحالت عادی فشرده سازی انجام میشه ولی لول فشرده کردنش زیاد نیست. میتونید عدد بالاتری بهش بدین و بیشتر فشرده کنید تا خروجی خیلی کم حجم‌تر بشه ولی طبعا 
+انتظار اینم داشته باشید که زمان بیشتری طول میکشه تا دستور mkinitcpio کارش رو تموم بکنه!
+
+```bash
+COMPRESSION_OPTIONS=(-9) #=> this will be considred as Max level for each algorithm
+or
+COMPRESSION_OPTIONS=(-v -5 --long) #=> to save space for custom kernels (especially with a dual boot setup)
+```
+
+</details>
+
+<br />
 
 <div dir="ltr" align="left">
 
@@ -424,7 +460,7 @@ ntfs-3g -o rw,nls=utf8,noatime,windows_names /dev/sda1 /mnt/hdd
 - هاست نیم یا هون اسمی که موقع اتصال بلوتوث، هات اسپات یا شبکه کردن چندتا سیستم و ... دیده میشه رو ست میکنیم
 - تنظیمات شبکه پایه رو انجام میدیم
 - سیستم‌دی بوت رو نصب میکنیم و بعدش بوت لودر رو مینویسیم
-- چون از سیستم‌دی برای بوت کردن سیستم استفاده کردیم mkinitcpio رو باید آپدیت کنیم تا initramfs رو دوباره جنریت کنیم (این همون فایلی هست که سیستم‌دی موقع بوت ازش استفاده میکنه) 
+- چون از سیستم‌دی برای بوت کردن سیستم استفاده کردیم mkinitcpio رو باید آپدیت کنیم تا initramfs رو دوباره جنریت کنیم (این همون فایلی هست که سیستم‌دی موقع بوت ازش استفاده میکنه)
 - برای یوزر روت یک پسورد میذاریم
 - چون ادیتور vim رو نصب کردیم همین رو به صورت سمبلیک لینک میکنیم به vi که اگر برنامه‌ای به صورت پیشفرض دنبال vi رفت از همین vim  استفاده بشه(vi محیطش با vim یکم فرق داره!)
 - یه یوزر جدید میسازیم عضو گروه wheel میکنیم و براش پسورد میذاریم و همین طور با visudo میریم به کل گروه wheel اجازه استفاده از سودو به شرط داشتن پسورد میدیم
@@ -458,26 +494,38 @@ sed -i '/en_US.UTF-8/s/^#\s*//g' /etc/locale.gen
 locale-gen
 
 # generate language locale.conf
-print "LANGE=en_US.UTF-8" > /etc/locale.conf
+echo "LANGE=en_US.UTF-8" > /etc/locale.conf
 
 # set consolefont
-print "FONT=LatArCyrHeb-14\nFONT_MAP=UTF-8" > /etc/vconsole.conf
+echo -e "FONT=LatArCyrHeb-14\nFONT_MAP=UTF-8" > /etc/vconsole.conf
 
 # set hostname
 hostname=my_bluetooth_name
 
-print "${hostname}" > /etc/hostname
+echo "${hostname}" > /etc/hostname
 
 # set hosts
-print "127.0.0.1 localhost\n::1  localhost" > /etc/hosts
-print "127.0.1.1 ${hostname}.localdomain ${hostname}" >> /etc/hosts
+echo -e "127.0.0.1 localhost\n::1  localhost" > /etc/hosts
+echo "127.0.1.1 ${hostname}.localdomain ${hostname}" >> /etc/hosts
 
 # initiate bootloader
 bootctl install
 
 # to set a loader edit `/boot/loader/loader.conf` and define a default entry
-print "default arch-lts.conf\ntimeout 0\neditor no\nconsole-mode max" > /boot/loader/loader.conf
+vim /boot/loader/loader.conf
+---------------------
+default arch-lts.conf
+timeout 0
+editor no
+console-mode max
+```
+***  اینجا رو حواستون باشه! ***
+ مخصوصا تو قسمت آپشن‌ها اگر چیزی رو اشتباه تایپی داشته باشین بعدا سیستم بوت نمیشه و پیدا کردن ارور هم خیلی سخت میشه! ولی اگر موقع بوت مشکل سوئیچ به روت داشت یا کلا بوت نمیشد و به منوی بایوس برمی‌گشت ممکنه
+توی نوشتن این قسمت اشتباهی انجام داده باشین پس میتونید با
+chroot
+شدن یبارم اینها رو چک کنید(کافیه پارتیشن بوت رو مانت کنید توی mnt و محتوای این فایلها رو بررسی کنید)
 
+```bash
 vim /boot/loader/entries/arch-lts.conf
 ---------------------
 title Arch Linux LTS
@@ -496,9 +544,6 @@ options root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ rw quiet nowatch
 
 # check if boot entry is recognized and has no errors
 bootctl list
-
-# disabling zswap, zram will be enabled later
-print "blacklist zswap" > /etc/modprobe.d/disable-zswap.conf
 
 # edit `/etc/mkinitcpio.conf` at `HOOKS=` replace `udev` hook with `systemd`.
 HOOKS=(base udev[systemd] fsck ...)
@@ -520,27 +565,8 @@ ln -s /usr/bin/vim /usr/bin/vi
 visudo
 ## type /%wheel hit enter to find the line %wheel ALL=(ALL) ALL type ^ then hit x then type :wq
 
-vim /etc/systemd/zram-generator.conf
----------------------
-[zram0]
-zram-size = ram / 2
-compression-algorithm = zstd
-swap-priority = 100
-fs-type = swap
-
-vim /etc/sysctl.d/99-vm-zram-parameters.conf
----------------------
-vm.swappiness = 180
-vm.watermark_boost_factor = 0
-vm.watermark_scale_factor = 125
-vm.page-cluster = 0
-
-
 # network and firewall
-systemctl enable --now firewalld.service
-firewall-cmd --set-default-zone=drop
-firewall-cmd --set-log-denied=all
-firewall-cmd --reload
+systemctl enable firewalld.service
 systemctl enable dhcpcd.service
 systemctl enable iwd.service
 
@@ -563,15 +589,36 @@ reboot
 
 ## بعد از نصب
 
-خب الان دیگه باید موفق شده باشین به سیستم تازه نصب شده خودتون لاگین کنید.  
-از اینجا به بعد اختیاری هست منتهی بعضی از کارهایی که میخوام بگم خیلی خیلی بهتره که انجام بدین و بعضیای دیگه هم دیگه سلیقه خودتون هست.  
+خب الان دیگه باید موفق شده باشین به سیستم تازه نصب شده خودتون لاگین کنید.
+از اینجا به بعد اختیاری هست منتهی بعضی از کارهایی که میخوام بگم خیلی خیلی بهتره که انجام بدین و بعضیای دیگه هم دیگه سلیقه خودتون هست.
 برای مثال اینکه درایورهای کارت گرافیک یا کارت صدا و این جور چیزا رو نصب کنید خب مشخصه که ضروری هست، ولی اینکه از دسکتاپ پلاسما استفاده کنید یا کلا دسکتاپ نزنید یا دسکتاپ دیگری انتخاب کنید سلیقه خودتون باشه.
 
 
-### add intel graphics kernel parameters
+### Replacing ZSWAP with ZRAM
 
 ```bash
-print "options i915 enable_rc6=1 enable_fbc=1 fastboot=1" > /etc/modprobe.d/intel.conf
+echo "blacklist zswap" > /etc/modprobe.d/disable-zswap.conf
+
+vim /etc/systemd/zram-generator.conf
+---------------------
+[zram0]
+zram-size = ram / 2
+compression-algorithm = zstd
+swap-priority = 100
+fs-type = swap
+
+vim /etc/sysctl.d/99-vm-zram-parameters.conf
+---------------------
+vm.swappiness = 180
+vm.watermark_boost_factor = 0
+vm.watermark_scale_factor = 125
+vm.page-cluster = 0
+```
+
+### Add intel graphics kernel parameters
+
+```bash
+echo "options i915 enable_rc6=1 enable_fbc=1 fastboot=1" > /etc/modprobe.d/intel.conf
 
 mkinitcpio -P
 ```
@@ -581,9 +628,9 @@ mkinitcpio -P
 <div dir="ltr" align="left">
 
 ```bash
-print "Color\nILoveCandy\nParallelDownloads = 3" | tee -a /etc/pacman.conf >/dev/null
+echo -e "Color\nILoveCandy\nParallelDownloads = 3" | tee -a /etc/pacman.conf >/dev/null
 
-pacman -S --needed $(comm -12 <(pacman -Slq | sort) <(sort pkgs.txt))
+pacman -S --needed - < pkgs.txt
 
 systemctl enable $(cat services.txt)
 
@@ -593,7 +640,7 @@ git clone https://aur.archlinux.org/pikaur.git /tmp
 cd /tmp/pikaur
 makepkg -fsri
 
-pikaur -S vazirmatn-fonts $(cat aur.txt)
+pikaur -S - < aur.txt
 
 cp ./fonts.conf ~/.config/fontconfig/
 
@@ -606,7 +653,8 @@ pacman -Rnscu $(pacman -Qtdq)
 
 ## حالتهای خاص
 
-در صورت استفاده از دو مانیتور این اسکریپت کمک میکنه تا تصویر روی مانیتور اکسترنال بیاد، البته که این مشکل رو داشتین که مانیتور اکسترنال تصویر نداشت.
+در صورت استفاده از دو مانیتور این اسکریپت کمک میکنه تا تصویر روی مانیتور اکسترنال بیاد،
+البته که این مشکل رو داشتین که مانیتور اکسترنال تصویر نداشت.
 
 edit `/usr/share/sddm/scripts/Xsetup` and add:
 

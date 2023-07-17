@@ -1,8 +1,8 @@
 auto-cpufreq
 systemd-kcm
 kde-servicemenus-rootactions
-kwin-scripts-forceblur
 aic94xx-firmware
 ast-firmware
 upd72020x-fw
 wd719x-firmware
+vazirmatn-fonts

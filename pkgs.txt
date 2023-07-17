@@ -41,6 +41,7 @@ gwenview
 gzip
 htop
 icu
+intel-gpu-tools
 intel-media-driver
 intel-ucode
 inxi
@@ -77,8 +78,8 @@ linux-firmware
 linux-firmware-qlogic
 linux-lts
 linux-lts-headers
-linux-lts-headersmesa-amber
 man-pages
+mesa-amber
 mesa-demos
 mesa-utils
 mesa-vdpau
@@ -92,7 +93,7 @@ networkmanager-pptp
 networkmanager-vpnc
 nmap
 noto-fonts-emoji
-nss-mdns # NSS support for mDNS (optdepend for avahi)
+nss-mdns
 ntfs-3g
 ntp
 nvidia-lts
@@ -107,7 +108,7 @@ otf-ipafont
 p7zip
 partitionmanager
 perl-file-mimeinfo
-persepolisintel-gpu-tools
+persepolis
 pigz
 pipewire
 pipewire-alsa
@@ -125,7 +126,9 @@ power-profiles-daemon
 powertop
 python-pysmbc
 qt5-imageformats
-qt6-shadertoolsfalkonappmenu-gtk-module
+qt6-shadertools
+falkon
+appmenu-gtk-module
 qtxdg-tools
 realtime-privileges
 reflector
@@ -153,7 +156,7 @@ ttf-cascadia-code-nerd
 ttf-hack-nerd
 turbostat
 udiskie
-udiskiebrightnessctl
+brightnessctl
 udisks2
 unrar
 unzip
