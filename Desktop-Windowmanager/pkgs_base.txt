@@ -1,7 +1,6 @@
 # >Desktop Utilities
 appmenu-gtk-module
 xdg-utils
-xdg-desktop-portal
 
 # > Download managers
 persepolis

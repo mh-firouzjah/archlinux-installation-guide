@@ -4,7 +4,6 @@ alsa-firmware
 alsa-topology-conf
 alsa-ucm-conf
 alsa-utils
-anything-sync-daemon
 avahi
 base
 base-devel
@@ -101,7 +100,8 @@ nvidia-prime
 nvidia-settings
 nvidia-utils
 okular
-opencl-nvidiaark
+opencl-nvidia
+ark
 openresolv
 openssh
 otf-ipafont
@@ -168,7 +168,6 @@ vulkan-intel
 wget
 wireplumber
 xcalib
-xdg-desktop-portal
 xdg-utils
 xf86-video-intel
 xorg-server
