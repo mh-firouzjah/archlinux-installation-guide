@@ -673,6 +673,38 @@ pacman -Rnscu $(pacman -Qtdq)
 
 ## حالتهای خاص
 
+سرویس acpid به فشرده شدن کلیدهای جهت یا arrow keys هم حساسیت نشون میده و این باعث میشه لاگ سیستم رو الکی پر کنه
+برای جلوگیری از این رفتارش تو ویکی آرچ این راه حل رو گفتن:
+
+```bash
+vim /etc/acpi/events/buttons
+---------------------
+event=button/(up|down|left|right|kpenter)
+action=<drop>
+```
+
+اگر گوگل کروم استفاده می‌کنید اینها هم بد نیست اضافه کنید
+
+```bash
+vim ~/.config/chrome-flags.conf
+---------------------
+#--incognito
+--process-per-site
+--disk-cache-dir="$XDG_RUNTIME_DIR/chromium-cache"
+--js-flags=--noexpose_wasm
+--disable-features=UseSkiaRenderer
+```
+
+برای اجرای سرویس profile-sync-daemon هم باید درحالت یوزر خودتون و بدون سودو اینکارها رو انجام بدین
+
+```bash
+psd
+# First time running psd so please edit ~/.config/psd/psd.conf to your liking and run again.
+systemctl --user enable psd
+Created symlink ~/.config/systemd/user/default.target.wants/psd.service → /usr/lib/systemd/user/psd.service.
+systemctl --user start psd
+```
+
 در صورت استفاده از دو مانیتور این اسکریپت کمک میکنه تا تصویر روی مانیتور اکسترنال بیاد،
 البته که این مشکل رو داشتین که مانیتور اکسترنال تصویر نداشت.
 
