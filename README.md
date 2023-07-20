@@ -222,7 +222,7 @@ cp /etc/pacman.d/mirrorlist  /etc/pacman.d/mirrorlist.bac
 
 pacman -Sy reflector
 
-reflector -c DE,FR,GB,NL -p https -a 24 --sort rate -l 20 -f 10 --save /etc/pacman.d/mirrorlist
+reflector --ipv6 -c DE,FR,GB,NL -p https -a 24 --sort rate -l 30 --score 20 -f 10 --save /etc/pacman.d/mirrorlist
 
 ```
 
