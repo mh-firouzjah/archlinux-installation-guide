@@ -731,7 +731,7 @@ vim ~/.config/chrome-flags.conf
 psd
 # First time running psd so please edit ~/.config/psd/psd.conf to your liking and run again.
 systemctl --user enable psd
-Created symlink ~/.config/systemd/user/default.target.wants/psd.service → /usr/lib/systemd/user/psd.service.
+# Created symlink ~/.config/systemd/user/default.target.wants/psd.service → /usr/lib/systemd/user/psd.service.
 systemctl --user start psd
 ```
 
