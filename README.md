@@ -829,4 +829,5 @@ EndSection
 
 برای کانفیگ کردن ادیتور ویم من از روشی که در 
 [این لینک](https://www.freecodecamp.org/news/vimrc-configuration-guide-customize-your-vim-editor/) گفته شده استفاده کردم. البته روشهای خیلی زیادی وجود داره برای شروع یه نگاهی بهش بندازین
-</>
+
+</div>
