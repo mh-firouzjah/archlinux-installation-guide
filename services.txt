@@ -9,7 +9,6 @@ NetworkManager
 NetworkManager-wait-online
 nvidia-hibernate
 nvidia-suspend
-pipewire-pulse
 power-profiles-daemon
 powertop
 sddm

@@ -564,7 +564,7 @@ title Arch Linux LTS
 linux /vmlinuz-linux-lts
 initrd /intel-ucode.img
 initrd /initramfs-linux-lts.img
-options root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ rw quiet nowatchdog add_efi_memmap acpi_osi=Linux
+options root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ rw quiet nowatchdog add_efi_memmap acpi_osi=Linux acpi_backlight=vendor
 
 vim /boot/loader/entries/fallback.conf
 ---------------------
@@ -572,7 +572,7 @@ title Fallback
 linux /vmlinuz-linux-lts
 initrd /intel-ucode.img
 initrd /initramfs-linux-lts-fallback.img
-options root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ rw quiet nowatchdog add_efi_memmap acpi_osi=Linux
+options root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ rw quiet nowatchdog add_efi_memmap acpi_osi=Linux acpi_backlight=vendor
 
 # check if boot entry is recognized and has no errors
 bootctl list
