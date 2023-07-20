@@ -435,6 +435,8 @@ umount /mnt
 درحالت عادی فشرده سازی انجام میشه ولی لول فشرده کردنش زیاد نیست. میتونید عدد بالاتری بهش بدین و بیشتر فشرده کنید تا خروجی خیلی کم حجم‌تر بشه ولی طبعا 
 انتظار اینم داشته باشید که زمان بیشتری طول میکشه تا دستور mkinitcpio کارش رو تموم بکنه!
 
+<div dir="ltr" align="left">
+
 ```bash
 COMPRESSION_OPTIONS=(-9) #=> this will be considred as Max level for each algorithm
 or
@@ -445,7 +447,6 @@ COMPRESSION_OPTIONS=(-v -5 --long) #=> to save space for custom kernels (especia
 
 <br />
 
-<div dir="ltr" align="left">
 
 ```bash
 bop=ssd,discard,noatime,nodiratime,compress-force=zstd:8,commit=30,space_cache=v2,autodefrag,max_inline=512k,inode_cache,subvol=@
