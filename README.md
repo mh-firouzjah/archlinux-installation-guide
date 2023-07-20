@@ -533,7 +533,7 @@ echo -e "127.0.0.1 localhost\n::1  localhost" > /etc/hosts
 echo "127.0.1.1 ${hostname}.localdomain ${hostname}" >> /etc/hosts
 
 # initiate bootloader
-bootctl install
+bootctl install --efi-boot-option-description="Arch Linux LTS"
 
 # to set a loader edit `/boot/loader/loader.conf` and define a default entry
 vim /boot/loader/loader.conf
