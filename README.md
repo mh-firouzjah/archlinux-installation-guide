@@ -630,6 +630,12 @@ reboot
 
 <div dir="ltr" align="left">
 
+### Configure firewalld
+
+```bash
+firewall-cmd --set-default-zone=drop
+firewall-cmd --reload
+```
 ### Replacing ZSWAP with ZRAM
 
 ```bash
