@@ -627,10 +627,9 @@ reboot
 خب مشخصه که ضروری هست، ولی اینکه از دسکتاپ پلاسما استفاده کنید
 یا کلا دسکتاپ نزنید یا دسکتاپ دیگری انتخاب کنید سلیقه خودتون باشه.
 
+<div dir="ltr" align="left">
 
 ### Replacing ZSWAP with ZRAM
-
-<div dir="ltr" align="left">
 
 ```bash
 echo "blacklist zswap" > /etc/modprobe.d/disable-zswap.conf
