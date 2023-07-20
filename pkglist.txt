@@ -160,7 +160,6 @@ p7zip
 pcaudiolib
 perl-file-mimeinfo
 persepolis
-profile-sync-daemon
 pigz
 pipewire
 pipewire-alsa
