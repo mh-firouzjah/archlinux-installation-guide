@@ -630,6 +630,8 @@ reboot
 
 ### Replacing ZSWAP with ZRAM
 
+<div dir="ltr" align="left">
+
 ```bash
 echo "blacklist zswap" > /etc/modprobe.d/disable-zswap.conf
 
@@ -656,6 +658,8 @@ echo "options i915 enable_rc6=1 enable_fbc=1 fastboot=1" > /etc/modprobe.d/intel
 
 mkinitcpio -P
 ```
+
+</div>
 
 ### شخصی سازی آرچ و نصب دسکتاپ پلاسما
 
@@ -691,6 +695,8 @@ pacman -Rnscu $(pacman -Qtdq)
 و این باعث میشه لاگ سیستم رو الکی پر کنه
 برای جلوگیری از این رفتارش تو ویکی آرچ این راه حل رو گفتن:
 
+<div dir="ltr" align="left">
+
 ```bash
 vim /etc/acpi/events/buttons
 ---------------------
@@ -698,7 +704,11 @@ event=button/(up|down|left|right|kpenter)
 action=<drop>
 ```
 
+</div>
+
 اگر گوگل کروم استفاده می‌کنید اینها هم بد نیست اضافه کنید
+
+<div dir="ltr" align="left">
 
 ```bash
 vim ~/.config/chrome-flags.conf
@@ -710,8 +720,12 @@ vim ~/.config/chrome-flags.conf
 --disable-features=UseSkiaRenderer
 ```
 
+</div>
+
 برای اجرای سرویس profile-sync-daemon هم باید درحالت یوزر خودتون
 و بدون سودو اینکارها رو انجام بدین
+
+<div dir="ltr" align="left">
 
 ```bash
 psd
@@ -721,9 +735,13 @@ Created symlink ~/.config/systemd/user/default.target.wants/psd.service → /usr
 systemctl --user start psd
 ```
 
+</div>
+
 در صورت استفاده از دو مانیتور
 این اسکریپت کمک میکنه تا تصویر روی مانیتور اکسترنال بیاد،
 البته که این مشکل رو داشتین که مانیتور اکسترنال تصویر نداشت.
+
+<div dir="ltr" align="left">
 
 edit `/usr/share/sddm/scripts/Xsetup` and add:
 
@@ -744,7 +762,11 @@ else
 fi
 ```
 
+</div>
+
 برای شناسایی ماوس و تاچ پد در صفحه SDDM این تغییرات رو لازم داشتم:
+
+<div dir="ltr" align="left">
 
 edit/create `/etc/X11/xorg.conf.d/20-touchpad.conf`
 ---------------------
@@ -776,7 +798,11 @@ Section "InputClass"
 EndSection
 ```
 
+</div>
+
 این دوتا هم برای اینکه درست سینک باشه
+
+<div dir="ltr" align="left">
 
 edit/create `/etc/sddm.conf.d/kde_settings.conf`
 ---------------------
@@ -797,8 +823,10 @@ Section "Device"
 EndSection
 ```
 
+</div>
+
 ---
 
 برای کانفیگ کردن ادیتور ویم من از روشی که در 
 [این لینک](https://www.freecodecamp.org/news/vimrc-configuration-guide-customize-your-vim-editor/) گفته شده استفاده کردم. البته روشهای خیلی زیادی وجود داره برای شروع یه نگاهی بهش بندازین
-</div>
+</>
