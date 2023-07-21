@@ -723,9 +723,7 @@ vim ~/.config/chrome-flags.conf
 ---------------------
 #--incognito
 --process-per-site
---disk-cache-dir="$XDG_RUNTIME_DIR/chromium-cache"
---js-flags=--noexpose_wasm
---disable-features=UseSkiaRenderer
+--js-flags="--noexpose_wasm --no-experimental-wasm-anyref --jitless -clear-free-memory --single-threaded-gc"
 ```
 
 </div>
