@@ -171,6 +171,7 @@ pkgfile
 plocate
 power-profiles-daemon
 powertop
+profile-sync-daemon
 pyenv
 realtime-privileges
 reflector
