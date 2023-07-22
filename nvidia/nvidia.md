@@ -7,6 +7,7 @@
 - `nvidia-utils`
 - `nvidia-prime`
 - `nvidia-settings`
+- `xorg-server-devel`
 - `opencl-nvidia`
 
 

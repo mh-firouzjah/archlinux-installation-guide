@@ -461,7 +461,7 @@ mount -o ${bop}root /dev/nvme0n1p2 /mnt/root
 
 mount /dev/nvme0n1p1 /mnt/boot
 
-ntfs-3g -o rw,nls=utf8,noatime,windows_names /dev/sda1 /mnt/hdd
+mount -t ntfs-3g -o rw,nls=utf8,noatime,windows_names /dev/sda1 /mnt/hdd
 ```
 
 </div>
@@ -543,6 +543,7 @@ timeout 0
 editor no
 console-mode max
 ```
+
 </div>
 
 **اینجا رو حواستون باشه!**
@@ -659,40 +660,38 @@ vm.watermark_scale_factor = 125
 vm.page-cluster = 0
 ```
 
-### Add intel graphics kernel parameters
-
-```bash
-echo "options i915 enable_rc6=1 enable_fbc=1 fastboot=1" > /etc/modprobe.d/intel.conf
-
-mkinitcpio -P
-```
-
 </div>
 
 ### شخصی سازی آرچ و نصب دسکتاپ پلاسما
 
 <div dir="ltr" align="left">
 
+### Optional: edit `/etc/pacman.conf` and uncomment or add followings:
+
 ```bash
-echo -e "Color\nILoveCandy\nParallelDownloads = 3" | tee -a /etc/pacman.conf >/dev/null
+vim /etc/pacman.conf
+---------------------
+Color
+ILoveCandy
+ParallelDownloads = 3
+```
 
-pacman -S --needed - < pkgs.txt
-
-systemctl enable $(cat services.txt)
-
+```bash
 # Install pikaur as pacman wraper
 pacman -S --needed base-devel git
 git clone https://aur.archlinux.org/pikaur.git /tmp
 cd /tmp/pikaur
 makepkg -fsri
 
-pikaur -S - < aur.txt
+pikaur -S --needed - < ./pkglist.txt
 
 cp ./fonts.conf ~/.config/fontconfig/
 
 fc-cache -f -v
 
-pacman -Rnscu $(pacman -Qtdq)
+systemctl enable $(cat services.txt)
+
+pikaur -Rnsu $(pikaur -Qtdq)
 ```
 
 </div>
@@ -801,31 +800,6 @@ Section "InputClass"
 
         Option "MiddleEmulation" "on"
         Option "DisableWhileTyping" "on"
-EndSection
-```
-
-</div>
-
-این دوتا هم برای اینکه درست سینک باشه
-
-<div dir="ltr" align="left">
-
-edit/create `/etc/sddm.conf.d/kde_settings.conf`
----------------------
-```bash
-[General]
-Session=plasma.desktop
-
-[Wayland]
-Enable=false
-```
-
-edit/create `/etc/X11/xorg.conf.d/20-intel.conf`
----------------------
-```bash
-Section "Device"
-   Identifier  "Intel Graphics"
-   Driver      "intel"
 EndSection
 ```
 
