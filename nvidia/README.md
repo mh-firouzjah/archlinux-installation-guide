@@ -14,7 +14,7 @@
 ## Configure kernel modules options
 
 ```bash
-print "options nomodeset i915.modeset=0 nouveau.modeset=0 nvidia-drm.modeset=1" > /etc/modprobe.d/nvidia.conf
+echo "options nomodeset i915.modeset=0 nouveau.modeset=0 nvidia-drm.modeset=1" > /etc/modprobe.d/nvidia.conf
 ```
 
 ## Configure initramfs modules for Early loading
