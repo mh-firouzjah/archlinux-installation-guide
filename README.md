@@ -443,10 +443,14 @@ or
 COMPRESSION_OPTIONS=(-v -5 --long) #=> to save space for custom kernels (especially with a dual boot setup)
 ```
 
+</div>
+
 </details>
+
 
 <br />
 
+<div dir="ltr" align="left">
 
 ```bash
 bop=ssd,discard,noatime,nodiratime,compress-force=zstd:8,commit=30,space_cache=v2,autodefrag,max_inline=512k,inode_cache,subvol=@
