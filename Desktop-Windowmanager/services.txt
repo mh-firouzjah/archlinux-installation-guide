@@ -1,6 +1,0 @@
-avahi-daemon
-NetworkManager
-NetworkManager-wait-online
-sddm
-smb
-xdg-user-dirs-update
