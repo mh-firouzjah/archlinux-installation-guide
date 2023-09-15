@@ -6,6 +6,7 @@ breeze-gtk
 dolphin
 dolphin-plugins
 drkonqi
+easyeffects
 falkon
 ffmpegthumbs
 gwenview
@@ -267,6 +268,7 @@ tmux
 tor
 torsocks
 traceroute
+tree
 ttf-cascadia-code-nerd
 ttf-hack-nerd
 turbostat
