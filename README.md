@@ -479,6 +479,7 @@ mount -t ntfs-3g -o rw,nls=utf8,noatime,windows_names /dev/sda1 /mnt/hdd
 کدی که در ادامه اومده شامل مراحل زیر هست:
 - نصب پکیج‌های پایه و همین طور فریم‌ور لینوکس و میکروکد برای پردازند اینتل و پکیج‌های کمکی برای مانت کردن پارتیشن‌های ویندوزی یا همون ntfs و پارتیشن‌های btrfs به همره یک پکیج کمکی برای کامل کردن دستورات بش با زدن دکمه تب و فایروال و بسته‌های لازم برای اتصال به اینترنت و در آخر ادیتور ویم
 - ایجاد فایل fstab که نشون میده بعد از هر بار بوت شدن سیستم عامل، پارتیشن‌ها چطوری مانت بشن
+- ایجاد امکان TRIM برای SSD ها
 - چون یبار با رفلکتور میرورهای پکمن رو بر اساس سرعت دانلود کردن ازشون مرتب کردیم همین لیست رو میبریم رو سیستم مقصد
 - حالا با chroot میریم وارد سیستمی که نصب کردیم میشیم تا تنظیمات پایه‌ای رو انجام بدیم که بشه این سیستم رو بوت کرد و بهش لاگین کرد
 - لوکال تایم رو با توجه به منطقه زمانی ست میکنیم
@@ -503,6 +504,8 @@ mount -t ntfs-3g -o rw,nls=utf8,noatime,windows_names /dev/sda1 /mnt/hdd
 pacstrap /mnt base base-devel linux-lts linux-firmware intel-ucode ntfs-3g btrfs-progs ufw dhcpcd iwd vim
 
 genfstab -U /mnt >> /mnt/etc/fstab
+
+echo "defaults,discard" >> /mnt/etc/fstab
 
 mv /mnt/etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist.back
 
@@ -706,6 +709,13 @@ fc-cache -f -v
 systemctl enable $(cat services.txt)
 
 pikaur -Rnsu $(pikaur -Qtdq)
+```
+
+### Run the `fstrim -A` command every Sunday at 7:00 AM, even if your system is turned off.
+
+```bash
+echo "0 7 * * 7 root fstrim -A" >> /etc/anacrontab
+systemctl restart anacron
 ```
 
 </div>
