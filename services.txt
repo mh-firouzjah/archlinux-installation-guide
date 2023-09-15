@@ -18,5 +18,5 @@ systemd-boot-update
 systemd-oomd
 systemd-zram-setup@zramN.service
 thermald
-upower
 ufw
+upower
