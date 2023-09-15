@@ -6,6 +6,7 @@ breeze-gtk
 dolphin
 dolphin-plugins
 drkonqi
+e2fsprogs
 easyeffects
 falkon
 ffmpegthumbs
