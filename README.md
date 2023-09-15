@@ -453,7 +453,7 @@ COMPRESSION_OPTIONS=(-v -5 --long) #=> to save space for custom kernels (especia
 <div dir="ltr" align="left">
 
 ```bash
-bop=ssd,discard,noatime,nodiratime,compress-force=zstd:8,commit=30,space_cache=v2,autodefrag,max_inline=512k,inode_cache,subvol=@
+bop=ssd,discard,noatime,compress-force=zstd:8,commit=130,space_cache=v2,autodefrag,max_inline=512k,inode_cache,subvol=@
 
 mount -o ${bop} /dev/nvme0n1p2 /mnt
 
@@ -500,7 +500,7 @@ mount -t ntfs-3g -o rw,nls=utf8,noatime,windows_names /dev/sda1 /mnt/hdd
 <div dir="ltr" align="left">
 
 ```bash
-pacstrap /mnt base base-devel linux-lts linux-firmware intel-ucode ntfs-3g btrfs-progs zram-generator firewalld dhcpcd iwd vim
+pacstrap /mnt base base-devel linux-lts linux-firmware intel-ucode ntfs-3g btrfs-progs ufw dhcpcd iwd vim
 
 genfstab -U /mnt >> /mnt/etc/fstab
 
@@ -604,7 +604,7 @@ visudo
 ## or use sed: `sed -i '/^#\s*%wheel ALL=(ALL:ALL) ALL\s*$/s/^#\s*//' /etc/sudoers`
 
 # network and firewall
-systemctl enable firewalld.service
+systemctl enable ufw.service
 systemctl enable dhcpcd.service
 systemctl enable iwd.service
 
@@ -640,12 +640,22 @@ reboot
 ### Configure firewalld
 
 ```bash
-firewall-cmd --set-default-zone=drop
-firewall-cmd --reload
+ufw default deny incoming
+ufw default allow outgoing
+ufw enable
 ```
+</div>
+
+اگر قصد دارید از zram به جای zswap استفاده کنید این چند خط رو انجام بدید.
+
+<div dir="ltr" align="left">
+
 ### Replacing ZSWAP with ZRAM
 
 ```bash
+
+pacstrap /mnt zram-generator
+
 echo "blacklist zswap" > /etc/modprobe.d/disable-zswap.conf
 
 vim /etc/systemd/zram-generator.conf
@@ -666,7 +676,7 @@ vm.page-cluster = 0
 
 </div>
 
-### شخصی سازی آرچ و نصب دسکتاپ پلاسما
+### نصب دسکتاپ پلاسمابه همره درایور انویدیا و سرویس‌های لازم
 
 <div dir="ltr" align="left">
 
