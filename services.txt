@@ -12,6 +12,7 @@ nvidia-suspend
 power-profiles-daemon
 powertop
 sddm
+sshd
 systemd-boot-update
 systemd-oomd
 systemd-zram-setup@zramN.service
