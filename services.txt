@@ -1,11 +1,11 @@
 accounts-daemon
 acpid
-anacron
+avahi-daemon
 bluetooth
 cpupower
 cronie
 dhcpcd
-firewalld
+fstrim.timer
 fwupd
 irqbalance
 NetworkManager
@@ -18,6 +18,7 @@ sddm
 sshd
 systemd-boot-update
 systemd-oomd
+systemd-timesyncd
 systemd-zram-setup@zramN.service
 thermald
 ufw
