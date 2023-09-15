@@ -689,6 +689,7 @@ vm.page-cluster = 0
 vim /etc/pacman.conf
 ---------------------
 Color
+VerbosePkgLists
 ILoveCandy
 ParallelDownloads = 3
 ```
