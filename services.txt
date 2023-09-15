@@ -2,6 +2,7 @@ accounts-daemon
 acpid
 bluetooth
 cpupower
+dhcpcd
 firewalld
 fwupd
 irqbalance
@@ -18,3 +19,4 @@ systemd-oomd
 systemd-zram-setup@zramN.service
 thermald
 upower
+ufw
