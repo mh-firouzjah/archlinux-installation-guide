@@ -85,8 +85,8 @@ alsa-lib
 alsa-topology-conf
 alsa-ucm-conf
 alsa-utils
-anacron
 appmenu-gtk-module
+avahi
 base
 base-devel
 bash-completion
@@ -96,6 +96,7 @@ bluez-utils
 btrfs-assistant
 btrfs-progs
 btrfsmaintenance
+cifs-utils
 ckbcomp
 cpio
 cpupower
@@ -110,6 +111,7 @@ efibootmgr
 enchant
 ethtool
 exa
+exfat-utils
 exfatprogs
 expect
 f2fs-tools
@@ -143,6 +145,7 @@ hwdata
 hwinfo
 hyphen
 icu
+ifplugd
 inetutils
 iniparser
 intel-gpu-tools
@@ -171,6 +174,7 @@ libva
 libva-intel-driver
 libva-mesa-driver
 libva-utils
+libvdpau
 libvdpau-va-gl
 libyuv
 linux-api-headers
@@ -194,6 +198,7 @@ mesa-vdpau
 mtools
 ndctl
 net-tools
+nfs-utils
 nmap
 noto-fonts-emoji
 nss-mdns
@@ -256,6 +261,7 @@ smplayer-themes
 socat
 sof-firmware
 sshfs
+svgpart
 starship
 sysfsutils
 systemd-oomd-defaults
@@ -277,6 +283,7 @@ ttf-hack-nerd
 turbostat
 udiskie
 udisks2
+unarchiver
 unrar
 unzip
 usb_modeswitch
@@ -284,6 +291,7 @@ usbutils
 v4l-utils
 vdpauinfo
 vim
+vulkan-icd-loader
 vulkan-intel
 vulkan-mesa-layers
 vulkan-tools
@@ -292,16 +300,20 @@ wireless_tools
 wireless-regdb
 wireplumber
 woff2
+wpa_supplicant
 wpebackend-fdo
 xcalib
 xdg-dbus-proxy
+xdg-user-dirsacpid avahi-daemon systemd-timesyncd
 xdg-utils
 xf86-video-intel
 xorg-server
-xorg-xhost
 xorg-xinit
 xorg-xinput
+xorg-xkill
+xorg-xrandr
 xsel
+xz
 zip
 zram-generator
 zsh
