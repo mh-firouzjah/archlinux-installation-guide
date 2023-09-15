@@ -1,7 +1,9 @@
 accounts-daemon
 acpid
+anacron
 bluetooth
 cpupower
+cronie
 dhcpcd
 firewalld
 fwupd
