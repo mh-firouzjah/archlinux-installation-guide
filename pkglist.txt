@@ -84,6 +84,7 @@ alsa-lib
 alsa-topology-conf
 alsa-ucm-conf
 alsa-utils
+anacron
 appmenu-gtk-module
 base
 base-devel
@@ -97,6 +98,7 @@ btrfsmaintenance
 ckbcomp
 cpio
 cpupower
+cronie
 curl
 dhcpcd
 dosfstools
