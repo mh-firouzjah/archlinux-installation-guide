@@ -712,13 +712,6 @@ systemctl enable $(cat services.txt)
 pikaur -Rnsu $(pikaur -Qtdq)
 ```
 
-### Run the `fstrim -A` command every Sunday at 7:00 AM, even if your system is turned off.
-
-```bash
-echo "0 7 * * 7 root fstrim -A" >> /etc/anacrontab
-systemctl restart anacron
-```
-
 </div>
 
 ## حالتهای خاص
