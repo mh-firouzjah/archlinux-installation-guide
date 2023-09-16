@@ -240,7 +240,7 @@ reflector --ipv6 -c DE,FR,GB,NL -p https -a 24 --sort rate -l 30 --score 20 -f 1
 دستور `fdisk -l‍` یا `lsblk` برای شناسایی درایوهای سیستم بزنید
 
 حداقل دو تا پارتیشن لازم داریم:
-- یکی برای efi و بوت شدن سیستم. حجم ۵۱۲ مگ رو میشه برای حالت تک کرنل امن درنظر گرفت 
+- یکی برای efi و بوت شدن سیستم. حجم ۵۱۲ مگ رو میشه برای حالت تک کرنل امن درنظر گرفت
   - ولی برای امنیت بیشتر ۱ گیگ بدین
 - و یکی هم برای خود سیستم‌عامل و درایوهای هوم و غیره
 
@@ -695,13 +695,14 @@ ParallelDownloads = 3
 ```
 
 ```bash
+pacman -S --needed - < ./pkglist.txt
+
 # Install pikaur as pacman wraper
-pacman -S --needed base-devel git
 git clone https://aur.archlinux.org/pikaur.git /tmp
 cd /tmp/pikaur
 makepkg -fsri
 
-pikaur -S --needed - < ./pkglist.txt
+pikaur -S --needed - < ./aur-pkglist.txt
 
 cp ./fonts.conf ~/.config/fontconfig/
 
@@ -709,7 +710,6 @@ fc-cache -f -v
 
 systemctl enable $(cat services.txt)
 
-pikaur -Rnsu $(pikaur -Qtdq)
 ```
 
 </div>
@@ -766,8 +766,7 @@ systemctl --user start psd
 
 <div dir="ltr" align="left">
 
-edit `/usr/share/sddm/scripts/Xsetup` and add:
-
+`vim /usr/share/sddm/scripts/Xsetup`
 ---------------------
 ```sh
 #!/bin/sh
@@ -791,7 +790,7 @@ fi
 
 <div dir="ltr" align="left">
 
-edit/create `/etc/X11/xorg.conf.d/20-touchpad.conf`
+`vim /etc/X11/xorg.conf.d/20-touchpad.conf`
 ---------------------
 ```bash
 Section "InputClass"
@@ -807,7 +806,7 @@ Section "InputClass"
 EndSection
 ```
 
-edit/create `/etc/X11/xorg.conf.d/20-mouse.conf`
+`vim /etc/X11/xorg.conf.d/20-mouse.conf`
 ---------------------
 ```bash
 Section "InputClass"
