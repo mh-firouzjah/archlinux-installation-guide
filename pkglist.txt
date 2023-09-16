@@ -200,6 +200,7 @@ ndctl
 net-tools
 nfs-utils
 nmap
+noto-fonts
 noto-fonts-emoji
 nss-mdns
 ntfs-3g
@@ -236,6 +237,7 @@ perl-www-robotrules
 perl-xml-parser
 perl-xml-writer
 persepolis
+phonon-qt5-gstreamer
 pigz
 pipewire
 pipewire-alsa
