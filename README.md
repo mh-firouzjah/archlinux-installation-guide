@@ -528,7 +528,7 @@ locale-gen
 echo "LANGE=en_US.UTF-8" > /etc/locale.conf
 
 # set consolefont
-echo -e "FONT=LatArCyrHeb-14\nFONT_MAP=UTF-8" > /etc/vconsole.conf
+echo "FONT=LatArCyrHeb-14" > /etc/vconsole.conf
 
 # set hostname
 hostname=my_bluetooth_name
