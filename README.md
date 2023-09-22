@@ -505,8 +505,6 @@ pacstrap /mnt base base-devel linux-lts linux-firmware intel-ucode ntfs-3g btrfs
 
 genfstab -U /mnt >> /mnt/etc/fstab
 
-echo "defaults,discard" >> /mnt/etc/fstab
-
 mv /mnt/etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist.back
 
 cp /etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist
@@ -697,7 +695,7 @@ ParallelDownloads = 3
 ```bash
 pacman -S --needed - < ./pkglist.txt
 
-# Install pikaur as pacman wraper
+# Install pikaur as pacman wrapper
 git clone https://aur.archlinux.org/pikaur.git /tmp
 cd /tmp/pikaur
 makepkg -fsri

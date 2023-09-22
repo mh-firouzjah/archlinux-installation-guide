@@ -38,6 +38,7 @@ kscreen
 kscreenlocker
 ksystemlog
 ksystemstats
+kwallet-pam
 kwin
 kwrited
 libkscreen
@@ -97,7 +98,6 @@ cpio
 cpupower
 cronie
 curl
-dhcpcd
 dosfstools
 duf
 dust
@@ -111,7 +111,6 @@ expect
 f2fs-tools
 fatresize
 ffmpeg
-firewalld
 flac
 fscrypt
 fwupd
@@ -147,9 +146,7 @@ intel-media-driver
 intel-ucode
 inxi
 irqbalance
-iwd
 kernel-modules-hook
-kwallet-pam
 layer-shell-qt
 libaio
 libavif
@@ -183,8 +180,6 @@ lua53
 lvm2
 man-db
 man-pages
-memtest86+
-
 mesa-amber
 mesa-demos
 mesa-utils
@@ -275,6 +270,7 @@ ttf-hack-nerd
 turbostat
 udiskie
 udisks2
+ufw
 unarchiver
 unrar
 unzip
