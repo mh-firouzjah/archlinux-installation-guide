@@ -259,7 +259,7 @@ visudo
   <summary>systemd-boot</summary>
 
   ```bash
-  bootctl install --efi-boot-option-description="Arch Linux LTS"
+  bootctl Install
   ```
 
   To set a loader edit `/boot/loader/loader.conf` and define a default entry
