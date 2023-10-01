@@ -118,7 +118,7 @@
 - Install basic system
 
   ```bash
-  pacstrap -K /mnt base base-devel llinux-lts linux-lts-headers inux-firmware intel-ucode ntfs-3g btrfs-progs duperemove neovim networkmanager efibootmgr efitools sbctl
+  pacstrap -K /mnt base base-devel llinux-lts linux-lts-headers inux-firmware intel-ucode ntfs-3g e2fsprogs btrfs-progs duperemove neovim networkmanager efibootmgr efitools sbctl
 
   genfstab -U /mnt >> /mnt/etc/fstab
 
@@ -313,10 +313,8 @@
   lm_sensors # Linux monitoring sensors
   i2c-tools # DIMM temperature sensors
   irqbalance # distribute hardware interrupts across processors on a multiprocessor system in order to increase performance
-  systemctl enable irqbalance.service
+  $ systemctl enable irqbalance.service
   ```
-
-### Network Packages
 
 - Firewall
 
@@ -333,8 +331,10 @@
   ```bash
   modemmanager
   usb_modeswitch # Activating switchable USB devices on Linux
+  wireless_tools
   $ systemctl enable ModemManager.service
-  rp-pppoe
+  rp-pppoe # Roaring Penguin's Point-to-Point Protocol over Ethernet client
+  ethtool # Utility for controlling network drivers and hardware
   ```
 
   - VPN Support
@@ -364,36 +364,21 @@
 
   ```bash
   openssh
+  openssl
   ```
 
 - Download Manager
 
   ```bash
   wget # A network utility to retrieve files from the Web
+  curl # command line tool and library for transferring data with URLs
   ```
 
 - Text WebBrowser
 
   ```bash
-  ELinks # Advanced and well-established feature-rich text mode web browser with mouse wheel scroll support, frames and tables, extensible with Lua & Guile (links fork).
+  elinks # Advanced and well-established feature-rich text mode web browser with mouse wheel scroll support, frames and tables, extensible with Lua & Guile (links fork).
   ```
-
-<!--
-- !! Avahi Daemom
-
-  - disabling systemd-resolved may require some other replacement
-
-  ```bash
-  $ systemctl disable systemd-resolved.service
-  avahi # a free Zero-configuration networking (zeroconf) implementation, including a system for multicast DNS/DNS-SD service discovery
-  nss-mdns # Hostname resolution
-  ## edit the file /etc/nsswitch.conf and change the hosts line to include mdns_minimal [NOTFOUND=return] before resolve and dns
-  ## hosts: mymachines mdns_minimal [NOTFOUND=return] resolve [!UNAVAIL=return] files myhostname dns
-  $ ufw allow 5353
-  cp /usr/share/doc/avahi/ssh.service /etc/avahi/services/
-  $ systemctl enable avahi-daemon.service
-  ```
--->
 
 - Developement packages
 
@@ -406,34 +391,47 @@
 - System maintenance
 
   ```bash
+  bash-completion
   pacman-contrib # this brings `checkupdates` a safe way to check for upgrades
   archlinux-contrib # this brings `checkservices` hecks for processes to be restarted
   htop # Simple, ncurses interactive process viewer
   btop # Htop but more lightweight with more features
+  bat
+  dosfstools # DOS filesystem utilities
+  cpio # tool to copy files into or out of a cpio or tar archive
+  cronie # Daemon that runs specified programs at scheduled times and related tools
+  ecryptfs-utils # Enterprise-class stacked cryptographic filesystem for Linux
+  enchant # A wrapper library for generic spell checking
+  eza # A modern replacement for ls (community fork of exa)
   inxi # A script to get system information
   neofetch # A fast, highly customizable system info script that supports displaying images with w3m
   hwinfo # Powerful hardware detection tool come from openSUSE
+  solid # Hardware integration and detection
   reflector # service will run reflector with the parameters specified in `/etc/xdg/reflector/reflector.conf`
   $ systemctl enable reflector.service reflector.timer
   testdisk # provides both TestDisk and PhotoRec
   e2fsprogs
+  exfatprogs
+  expect # A tool for automating interactive applications
+  f2fs-tools
+  fatresize
+  fscrypt
   smartmontools # Self-Monitoring, Analysis, and Reporting Technology through which devices monitor, store, and analyze the health of their operation
   $ systemctl enable smartd.service
   libatasmart
   libnotify
   procps-ng
-  dust # disk usage display
+  dust # directories disk usage display
+  duf # Disk Usage/Free Utility
   fwupd
   $ systemctl enable systemd-oomd.service
   profile-sync-daemon # is a tiny pseudo-daemon designed to manage browser profile(s) in tmpfs
   $ psd
   $ systemctl --user enable psd
-   util-linux # provides fstrim.service and fstrim.timer systemd unit files
-   $ systemctl enable fstrim.timer
-   hdparm
-   sdparm # are command line utilities to set and view hardware parameters of hard disk drives. hdparm can also be used as a simple benchmarking tool.
-
-
+  util-linux # provides fstrim.service and fstrim.timer systemd unit files
+  $ systemctl enable fstrim.timer
+  hdparm
+  sdparm # are command line utilities to set and view hardware parameters of hard disk drives. hdparm can also be used as a simple benchmarking tool
   ```
 
 - Mounting Devices
@@ -484,12 +482,15 @@
 - Sound
 
   ```bash
-  alsa-utils # This contains (among other utilities) the alsamixer(1) and amixer(1) utilities
-  alsa-plugins # to enable upmixing/downmixing and other advanced features
-  sof-firmware # is required for some newer laptop models
   alsa-firmware # contains firmware that may be required for certain sound cards
+  alsa-lib # An alternative implementation of Linux sound support
   alsa-oss # If you want OSS applications to work with dmix
   alsa-plugins # if you are getting poor sound quality due to bad resampling
+  alsa-plugins # to enable upmixing/downmixing and other advanced features
+  alsa-topology-conf # ALSA topology configuration files
+  alsa-ucm-conf # ALSA Use Case Manager configuration (and topologies)
+  alsa-utils # This contains (among other utilities) the alsamixer(1) and amixer(1) utilities
+  sof-firmware # is required for some newer laptop models
   pipewire # a new low-level multimedia framework. It aims to offer capture and playback for both audio and video with minimal latency and support for PulseAudio, JACK, ALSA and GStreamer-based applications
   $ systemctl enable pipewire.service
   wireplumber # more powerful Session manager and the current recommendation
@@ -498,9 +499,8 @@
   pipewire-pulse
   $ systemctl --global enable pipewire-pulse.service
   pipewire-jack
-  #pipewire-zeroconf
-  #$ ufw allow 5353
-  pipewire-jack-client
+  pipewire-zeroconf
+  $ ufw allow 5353
   pipewire-v4l2
   slurp
   flac
@@ -516,6 +516,39 @@
   man-pages
   ```
 
+- Shell
+
+  ```bash
+  zsh # A very advanced and programmable command interpreter (shell) for UNIX
+  zsh-autosuggestions
+  zsh-completions
+  zsh-history-substring-search
+  zsh-syntax-highlighting
+  zsh-theme-powerlevel10k
+  ```
+
+- Advanced Swapping
+
+  ```bash
+  zram-generator # Systemd unit generator for zram devices
+
+  $ echo "blacklist zswap" > /etc/modprobe.d/disable-zswap.conf
+
+  $ nvim /etc/systemd/zram-generator.conf
+  ---------------------
+  [zram0]
+  zram-size = ram / 2
+  compression-algorithm = zstd
+  swap-priority = 100
+  fs-type = swap
+
+  $ nvim /etc/sysctl.d/99-vm-zram-parameters.conf
+  ---------------------
+  vm.swappiness = 180
+  vm.watermark_boost_factor = 0
+  vm.watermark_scale_factor = 125
+  vm.page-cluster = 0
+  ```
 
 ### GUI
 
@@ -525,6 +558,7 @@
   xorg-server # the most popular display server among Linux users
   xorg-xwayland
   xorg-xeyes
+  appmenu-gtk-module # to integrate application menus with the desktop environment's global menu bar
   ```
 
 - Monitor Gama & Color Adjustment
@@ -553,13 +587,56 @@
 
 - Nvidia Graphics
 
-  ```bash
-  xf86-video-nouveau
-  #nvidia
-  #nvidia-utils
-  #nvidia-settings
-  #nvidia-prime
-  ```
+  - Option One - nouveau:
+
+    ```bash
+    xf86-video-nouveau
+    xorg-server-devel
+    ```
+
+  - Option Two - nvidia:
+
+    ```bash
+    nvidia-lts
+    nvidia-utils
+    nvidia-settings
+    nvidia-prime
+    xorg-server-devel
+
+    $ echo "options nomodeset i915.modeset=0 nouveau.modeset=0 nvidia-drm.modeset=1" > /etc/modprobe.d/nvidia.conf
+    $ nvim /etc/mkinitcpio.conf
+    ---------------------
+    # in `MODULES=` and add the following options to:
+    MODULES=(... nvidia nvidia_modeset nvidia_uvm nvidia_drm)
+
+    $ mkinitcpio -P
+    ```
+
+    *To avoid the possibility of forgetting to update initramfs after an NVIDIA driver upgrade, you may want to use a pacman hook:*
+    *Make sure the Target package set in this hook is the one you have installed in steps above (e.g. `nvidia`, `nvidia-dkms`, `nvidia-lts` or `nvidia-ck-something`).*
+
+
+    ```bash
+    $ nvim /etc/pacman.d/hooks/nvidia.hook
+    ---------------------
+    [Trigger]
+    Operation=Install
+    Operation=Upgrade
+    Operation=Remove
+    Type=Package
+    Target=nvidia-lts
+    Target=linux-lts
+    # Change the `Target=linux` part above and in the Exec line if a different kernel is used
+    # Change the `Target=nvidia` part above if a different nvidia is used
+
+    [Action]
+    Description=Update NVIDIA module in initcpio
+    Depends=mkinitcpio
+    When=PostTransaction
+    NeedsTargets
+    Exec=/bin/sh -c 'while read -r trg; do case $trg in linux-lts) exit 0; esac; done; /usr/bin/mkinitcpio -P'
+    ```
+
 
 - Input devices (Mouse/Keyboard)
 
@@ -578,13 +655,28 @@
   persepolis # Graphical front-end for aria2 download manager with lots of features
   ```
 
-<!--
-- File Sharing
+- File Sharing with Windows
 
   ```bash
   samba
+  smbclient
+  $ systemctl enable nmb.service
   ```
--->
+
+  - Avahi Daemom
+
+    - disabling systemd-resolved may require some other replacement
+
+    ```bash
+    $ systemctl disable systemd-resolved.service
+    avahi # a free Zero-configuration networking (zeroconf) implementation, including a system for multicast DNS/DNS-SD service discovery
+    nss-mdns # Hostname resolution
+    ## edit the file /etc/nsswitch.conf and change the hosts line to include mdns_minimal [NOTFOUND=return] before resolve and dns
+    ## hosts: mymachines mdns_minimal [NOTFOUND=return] resolve [!UNAVAIL=return] files myhostname dns
+    $ ufw allow 5353
+    cp /usr/share/doc/avahi/ssh.service /etc/avahi/services/
+    $ systemctl enable avahi-daemon.service
+    ```
 
 - Multimedia codecs & player
 
@@ -599,8 +691,8 @@
   gst-plugins-ugly
   gstreamer
   gstreamer-vaapi
-  mplayer # simply because pulls in a large number of codecs as dependencies, and also has codecs built in
-  smplayer # because I love it :)
+  mplayer # because pulls in a large number of codecs as dependencies, and also has codecs built in
+  smplayer # I love it :)
   smplayer-skins
   smplayer-themes
   ```
@@ -608,90 +700,260 @@
 - Text Editor & Office
 
   ```bash
-  code # Visual Studio Code Editor
-
+  code # The Open Source build of Visual Studio Code (vscode) editor
+  aur/code-marketplace # Enable vscode marketplace in Code OSS
   libreoffice-still # The office productivity suite compatible to the open and standardized ODF document format
-
   pdfslicer # Simple application to extract, merge, rotate and reorder pages of PDF documents
   ```
 
+- Useful packages (still need to check description)
+
+  ```bash
+  geoip
+  geoip-database
+  gnome-multi-writer
+  gnu-netcat
+  gpm
+  harfbuzz-icu
+  hblock
+  hwdata
+  hyphen
+  icu
+  ifplugd
+  inetutils
+  iniparser
+  intel-gpu-tools
+  kernel-modules-hook
+  layer-shell-qt
+  libaio
+  libavif
+  libcanberra
+  libcanberra-pulse
+  libmanette
+  libmaxminddb
+  libomxil-bellagio
+  libsoup
+  libtraceevent
+  libtracefs
+  liburcu
+  libuv
+  libva
+  libva-mesa-driver
+  libva-utils
+  libvdpau
+  libvdpau-va-gl
+  libyuv
+  linux-api-headers
+  linux-firmware
+  linux-firmware-qlogic
+  linux-lts
+  logrotate
+  lsb-release
+  lua53
+  lvm2
+  mesa-demos
+  mesa-vdpau
+  mtools
+  ndctl
+  net-tools
+  nfs-utils
+  nmap
+  ntp
+  nvidia-lts
+  opencl-nvidia
+  openresolv
+  otf-ipafont
+  pcaudiolib
+  perl-clone
+  perl-file-listing
+  perl-file-mimeinfo
+  perl-html-parser
+  perl-html-tagset
+  perl-http-cookies
+  perl-http-daemon
+  perl-http-date
+  perl-http-message
+  perl-http-negotiate
+  perl-io-html
+  perl-libwww
+  perl-lwp-mediatypes
+  perl-net-http
+  perl-try-tiny
+  perl-www-robotrules
+  perl-xml-parser
+  perl-xml-writer
+  phonon-qt5-gstreamer
+  pigz
+  pipewire-x11-bell
+  pkgfile
+  plocate
+  pyenv
+  realtime-privileges
+  rsync
+  rtkit
+  sg3_utils
+  socat
+  sshfs
+  starship
+  svgpart
+  sysfsutils
+  systemd-sysvcompat
+  telegram-desktop
+  terminus-font
+  thin-provisioning-tools
+  tinycompress
+  tmux
+  traceroute
+  tree
+  ttf-cascadia-code-nerd
+  ttf-hack-nerd
+  usbutils
+  v4l-utils
+  vdpauinfo
+  vulkan-icd-loader
+  vulkan-mesa-layers
+  vulkan-tools
+  wireless-regdb
+  woff2
+  wpa_supplicant
+  wpebackend-fdo
+  xdg-dbus-proxy
+  xdg-user-dirs
+  xdg-utils
+  xorg-xinit
+  xorg-xrandr
+  xsel
+  ```
 
 ### KDE Applications
 
 ```bash
-# desktop environemnt
-plasma # you may need to exclude some pkgs e.g plasma-workspace-wallpapers, flatpak-kcm, plasma-sdk, plymouth-kcm
-plasma-wayland-session
-qt5-wayland
-qt6-wayland
-discover # KDE GUI Pkage Manager
-packagekit-qt5 # to manage packages from Arch Linux repositories (not recommended, use at your own risk)
-keysmith # OTP generation software by KDE
-kwalletmanager # Tool to manage the passwords on your system
-# kdenetwork-filesharing # Windows File and printer sharing for KDE. provides the Samba file sharing setup wizard
-# smb4K # Advanced network neighborhood browser and Samba share mounting utility for KDE
-filelight # Disk usage analyzer by KDE
-sweeper # System cleaning utility for KDE
-ksysguard # System monitor for KDE to monitor running processes and system performance.
-plasma-systemmonitor # Advanced and customizable system monitor for KDE
-kinfocenter # Centralized and convenient overview of system information for KDE
-ksystemLog # System log viewer tool for KDE
-kcron # Tool for KDE to run applications in the background at regular intervals
-ktimer # Little tool for KDE to execute programs after some time
-kshutdown # Graphical shutdown utility, which allows you to turn off or suspend a computer at a specified time
-kate # Full-featured programmer's editor for the KDE desktop with MDI and a filesystem browser
-kexi # Visual database applications creator tool by KDE
-ghostwriter # Distraction-free Markdown editor
-knotes # Program that lets you write the computer equivalent of sticky notes.
-kcalc # Scientific calculator included in the KDE desktop
-kget # Download manager for KDE
-gwenview # Fast and easy to use image viewer for the KDE desktop
-krita # Digital painting and illustration software included based on the KDE platform
-kcolorChooser # Simple application to select the color from the screen or from a pallete
-kdeconnect # Provides integration between devices
-konsole # Terminal emulator included in the KDE desktop
 ark # Archiving tool included in the KDE desktop
-dolphin # File manager included in the KDE desktop
-dolphin-plugins # uses udisksctl to either mount or unmount the iso in Dolphin
-kompare # GUI front-end program for viewing and merging differences between source files with many options to customize the information
-ffmpegthumbs # provides video thumbnailing plugin
-kdegraphics-thumbnailers # provides PDF thumbnailing plugin, among others
-qt5-imageformats # .webp, .tiff, .tga, .jp2 files
-kdesdk-thumbnailers # Plugins for the thumbnailing system
-taglib # Audio files
-kfind # Search tool for KDE to find files by name, type or content
-maliit-keyboard # Virtual keyboard useful for KDE Plasma-Wayland
-kdf # Displays information about hard disks and other storage devices
 aur/isoimagewriter # Tool to write a .iso file to a USB disk
-ktouch # Program to learn and practice touch typing
-kio-extras # MTP support is included in
-bluedevil # KDE's Bluetooth tool
-systemdgenie # a graphical frontend for systemctl
-phonon-qt5-gstreamer # Phonon is the multimedia API provided by KDE and is the standard abstraction for handling multimedia streams within KDE software and also used by several Qt applications
-kio-admin # provides a safe way to edit files as root
-kio-gdrive # provides transparent KIO access to Google Drive
-noto-fonts
-noto-fonts-emoji
-breeze-gtk # a GTK theme designed to mimic the appearance of Plasma's Breeze theme
-cifs-utils # to make it look to Plasma like if the SMB share was just a normal local folder
-powerdevil # for an integrated Plasma power managing service
-sddm-kcm # KDE Configuration Module for SDDM
-kde-gtk-config # GTK2 and GTK3 Configurator for KDE
 aur/kcm-polkit-kde-git # Set of configuration modules which allows administrator to change PolicyKit settings
 aur/systemd-kcm # systemd control module for KDE
-plasma-browser-integration
-xdg-desktop-portal # To use remote input functionality on a Plasma Wayland session/Desktop integration portals for sandboxed apps
-xdg-desktop-portal-kde
+bluedevil # KDE's Bluetooth tool
+breeze # Plasma's Breeze theme
+breeze-gtk # a GTK theme designed to mimic the appearance of Plasma's Breeze theme
+cifs-utils # to make it look to Plasma like if the SMB share was just a normal local folder
+discover # KDE GUI Pkage Manager
+dolphin # File manager included in the KDE desktop
+dolphin-plugins # uses udisksctl to either mount or unmount the iso in Dolphin
+drkonqi # The KDE crash handler
+falkon # Cross-platform QtWebEngine browser
+ffmpegthumbs # provides video thumbnailing plugin
+filelight # Disk usage analyzer by KDE
+ghostwriter # Distraction-free Markdown editor
+gwenview # Fast and easy to use image viewer for the KDE desktop
+kaccounts-providers # Online account providers for the KAccounts system
+kactivitymanagerd # System service to manage user activities and track the usage patterns
+kate # Full-featured programmer's editor for the KDE desktop with MDI and a filesystem browser
+kcalc # Scientific calculator included in the KDE desktop
+kcolorChooser # Simple application to select the color from the screen or from a pallete
+kcron # Tool for KDE to run applications in the background at regular intervals
+kde-cli-tools # Tools based on KDE Frameworks 5 to better interact with the system
+kde-gtk-config # GTK2 and GTK3 Configurator for KDE
+kdeconnect # Provides integration between devices
+kdecoration # Plugin based library to create window decorations
+kdegraphics-thumbnailers # provides PDF thumbnailing plugin, among others
+kdenetwork-filesharing # Windows File and printer sharing for KDE. provides the Samba file sharing setup wizard
+kdeplasma-addons # All kind of addons to improve your Plasma experience
+kdesdk-thumbnailers # Plugins for the thumbnailing system
+kdf # Displays information about hard disks and other storage devices
+kdialog # A utility for displaying dialog boxes from shell scripts
+kexi # Visual database applications creator tool by KDE
+keysmith # OTP generation software by KDE
+kfind # Search tool for KDE to find files by name, type or content
+kgamma5 # Adjust your monitor gamma settings
+kget # Download manager for KDE
+khotkeys
+kimageformats # Image format plugins for Qt5
+kinfocenter # Centralized and convenient overview of system information for KDE
+kinit # Process launcher to speed up launching KDE applications
+kio # Resource and network access abstraction
+kio-admin # provides a safe way to edit files as root
+kio-extras # MTP support is included in
+kio-fuse # FUSE interface for KIO
+kio-gdrive # provides transparent KIO access to Google Drive
+kio-zeroconf # Network Monitor for DNS-SD services (Zeroconf)
+kjournald # Framework for interacting with systemd-journald
+kmenuedit # KDE menu editor
+knotes # Program that lets you write the computer equivalent of sticky notes.
+kompare # GUI front-end program for viewing and merging differences between source files with many options to customize the information
+konsole # Terminal emulator included in the KDE desktop
+kpat # Offers a selection of solitaire card games
+kpipewire
+krita # Digital painting and illustration software included based on the KDE platform
+kscreen
+kscreenlocker
+kshutdown # Graphical shutdown utility, which allows you to turn off or suspend a computer at a specified time
+ksshaskpass # ssh-add helper that uses kwallet and kpassworddialog
+ksysguard # System monitor for KDE to monitor running processes and system performance.
+ksystemLog # System log viewer tool for KDE
+ksystemlog
+ksystemstats # A plugin based system monitoring daemon
+ktimer # Little tool for KDE to execute programs after some time
+ktouch # Program to learn and practice touch typing
+kwallet-pam
+kwalletmanager # Tool to manage the passwords on your system
+kwayland-integration # Provides integration plugins for various KDE frameworks for the wayland windowing system
+kwin
+kwrited # KDE daemon listening for wall and write messages
+layer-shell-qt # Qt component to allow applications to make use of the Wayland wl-layer-shell protocol
 libappindicator-gtk2 # icons in system tray
 libappindicator-gtk3 # an attempt to get clear icons
-spectacle # screenshot app
-plasma5-applets-thermal-monitor # KDE Plasma applet for monitoring CPU, GPU and other available temperature sensors
-plasma-disks # Hard disk health monitoring for KDE Plasma
+libkscreen
+libksysguard
+libqtxdg
+maliit-keyboard # Virtual keyboard useful for KDE Plasma-Wayland
+milou # A dedicated search application built on top of Baloo
+noto-fonts
+noto-fonts-emoji
+okular # Universal document viewer for KDE
+oxygen
+oxygen-sounds
+packagekit-qt5 # to manage packages from Arch Linux repositories (not recommended, use at your own risk)
 partitionmanager # Utility to help you manage the disks, partitions, and file systems on your computer
+phonon-qt5-gstreamer # Phonon is the multimedia API provided by KDE and is the standard abstraction for handling multimedia streams within KDE software
+plasma-browser-integration
+plasma-desktop
+plasma-disks # Hard disk health monitoring for KDE Plasma
+plasma-firewall
+plasma-integration
+plasma-nm
+plasma-pa
+plasma-vault
+plasma-systemmonitor # Advanced and customizable system monitor for KDE
+plasma-wayland-session
+plasma-workspace
+plasma5-applets-thermal-monitor # KDE Plasma applet for monitoring CPU, GPU and other available temperature sensors
+polkit-kde-agent # Daemon providing a polkit authentication UI for KDE
+powerdevil # for an integrated Plasma power managing service
+qt5-imageformats # .webp, .tiff, .tga, .jp2 files
 qt5-virtualkeyboard
-Okular # Universal document viewer for KDE
+qt5-wayland
 qt5ct # Icons
-packagekit-qt5 # to install any context menu plugins
+qt6-imageformats # Plugins for additional image formats: TIFF, MNG, TGA, WBMP
+qt6-shadertools # Provides functionality for the shader pipeline that allows Qt Quick to operate on Vulkan, Metal, and Direct3D, in addition to OpenG
+qt6-wayland
+qtxdg-tools # libqtxdg user tools
+sddm # simple display manager
+sddm-kcm # KDE Configuration Module for SDDM
+smb4K # Advanced network neighborhood browser and Samba share mounting utility for KDE
+spectacle # screenshot app
+sweeper # System cleaning utility for KDE
+systemdgenie # a graphical frontend for systemctl
+systemsettings # KDE system manager for hardware, software, and workspaces
+taglib # Audio files
+xdg-desktop-portal # To use remote input functionality on a Plasma Wayland session/Desktop integration portals for sandboxed apps
+xdg-desktop-portal-kde
+# breeze-plymouth
+# flatpak-kcm # Flatpak Permissions Management KCM
+# plasma-sdk
+# plasma-thunderbolt
+# plasma-welcome
+# plasma-workspace-wallpapers
+# plymouth-kcm
 ```
 
 ## Extra Works
@@ -745,6 +1007,7 @@ $ modprobe -r uvcvideo
 
 ---------------------
 
+aur/mkinitcpio-firmware # The meta-package that contains most optional firmwares
 ```
 
 ## Further Reading
