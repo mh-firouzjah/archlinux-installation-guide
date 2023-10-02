@@ -67,7 +67,7 @@
 
 - Partitioning (recommended to mount `/var` on a spinning disk)
 
-  ```sh
+  ```bash
   fdisk -l
   fdisk /dev/nvme0n1
 
@@ -113,7 +113,7 @@
   mount -t btrfs -o defaults,subvol=@swap /dev/nvme0n1p2 /mnt/swap
   btrfs filesystem mkswapfile --size 16g --uuid clear /mnt/swap/swapfile
   swapon /mnt/swap/swapfile
-```
+  ```
 
 - Install basic system
 
@@ -254,15 +254,15 @@
   sed -i '/^#\s*%wheel ALL=(ALL:ALL) ALL\s*$/s/^#\s*//' /etc/sudoers
 
   # for instance to have some user process running without any open session
-  # $ loginctl enable-linger USERNAME
+  # loginctl enable-linger USERNAME
   ```
 
 - Network Preparation
 
   ```bash
-  $ systemctl enable NetworkManager.service
-  $ systemctl enable NetworkManager-wait-online.service
-  $ systemctl enable NetworkManager-dispatcher.service
+  systemctl enable NetworkManager.service
+  systemctl enable NetworkManager-wait-online.service
+  systemctl enable NetworkManager-dispatcher.service
   ```
 
 - Exit chroot environment
@@ -323,6 +323,7 @@
   $ systemctl enable ufw
   $ ufw default deny incoming
   $ ufw default allow outgoing
+  $ ufw allow 5353 # to allow zeroconf
   $ ufw enable
   ```
 
@@ -345,11 +346,11 @@
     networkmanager-pptp # for PPTP Client
     networkmanager-strongswan # for strongSwan
     networkmanager-vpnc
-    networkmanager-fortisslvpn-git # AUR
-    networkmanager-iodine-git # AUR
-    networkmanager-libreswan # AUR
+    aur/networkmanager-fortisslvpn-git
+    aur/networkmanager-iodine-git
+    aur/networkmanager-libreswan
     networkmanager-l2tp
-    networkmanager-ssh-git # AUR
+    aur/networkmanager-ssh-git
     network-manager-sstp
     ```
 
@@ -529,6 +530,17 @@
 
 - Advanced Swapping
 
+  **Differences between zswap and zram based swap**
+
+  ---
+  A short overview:
+
+  - **Zswap** works in conjunction with regular swap while a **zram** based swap device does not require a backing swap device and may work standalone (if no swap on hard disk is required, i.e. on SSD or kind of flash memory).
+
+  - **Zswap** is a compressed swap cache in RAM and works as a type of proxy for regular swap (in this context also called backing swap device). Zswap gets filled up first and evicts pages from compressed cache on an LRU basis to the backing swap device when the compressed pool reaches its size limit. This not only speeds up swap usage but also reduces hits on backing swap device (i.e. SSD).
+
+  - **Zram** based swap on the other hand works like regular swap (but compressed in RAM) without the opportunity to evict pages. So it gets filled up gradually until it’s full. After that, the next (but probably slower) swap in order (i.e. on hard disk) fills up. This way, it is possible to have stored less frequently used memory pages within the faster zram based swap, while newer frequently used memory pages get swapped to slower hard disk.
+
   ```bash
   zram-generator # Systemd unit generator for zram devices
 
@@ -570,7 +582,7 @@
   xorg-xbacklight
   ddcutil
   autorandr # Automatically select a display configuration based on connected devices
-```
+  ```
 
 - Intel Graphics
 
@@ -660,23 +672,46 @@
   ```bash
   samba
   smbclient
+
+  $ nvim /etc/samba/smb.conf
+  ---------------------
+  [global]
+  workgroup = WORKGROUP
+  server string = Samba Server %v
+  netbios name = archlinux
+  security = user
+  map to guest = bad user
+  dns proxy = no
+
+  [share]
+  comment = Samba Share
+  path = /path/to/share
+  browseable = yes
+  read only = no
+  guest ok = yes
+  create mask = 0644
+  directory mask = 0755
+  ---------------------
+
+  $ systemctl enable smb.service
   $ systemctl enable nmb.service
+  $ ufw allow Samba
   ```
 
-  - Avahi Daemom
+- Avahi Daemomd
 
-    - disabling systemd-resolved may require some other replacement
+  - disabling systemd-resolved may require some other replacement
 
-    ```bash
-    $ systemctl disable systemd-resolved.service
-    avahi # a free Zero-configuration networking (zeroconf) implementation, including a system for multicast DNS/DNS-SD service discovery
-    nss-mdns # Hostname resolution
-    ## edit the file /etc/nsswitch.conf and change the hosts line to include mdns_minimal [NOTFOUND=return] before resolve and dns
-    ## hosts: mymachines mdns_minimal [NOTFOUND=return] resolve [!UNAVAIL=return] files myhostname dns
-    $ ufw allow 5353
-    cp /usr/share/doc/avahi/ssh.service /etc/avahi/services/
-    $ systemctl enable avahi-daemon.service
-    ```
+  ```bash
+  $ systemctl disable systemd-resolved.service
+  avahi # a free Zero-configuration networking (zeroconf) implementation, including a system for multicast DNS/DNS-SD service discovery
+  nss-mdns # Hostname resolution
+  ## edit the file /etc/nsswitch.conf and change the hosts line to include mdns_minimal [NOTFOUND=return] before resolve and dns
+  ## hosts: mymachines mdns_minimal [NOTFOUND=return] resolve [!UNAVAIL=return] files myhostname dns
+  $ ufw allow 5353
+  cp /usr/share/doc/avahi/ssh.service /etc/avahi/services/
+  $ systemctl enable avahi-daemon.service
+  ```
 
 - Multimedia codecs & player
 
@@ -948,7 +983,7 @@ taglib # Audio files
 xdg-desktop-portal # To use remote input functionality on a Plasma Wayland session/Desktop integration portals for sandboxed apps
 xdg-desktop-portal-kde
 # breeze-plymouth
-# flatpak-kcm # Flatpak Permissions Management KCM
+# flatpak-kcm # Flatpak Permissions Management KCM for discover
 # plasma-sdk
 # plasma-thunderbolt
 # plasma-welcome
