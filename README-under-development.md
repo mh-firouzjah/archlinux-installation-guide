@@ -100,7 +100,7 @@
 
   umount /mnt
 
-  mop="ssd,discard=async,noatime,compress-force=zstd:8,commit=120,space_cache=v2,autodefrag,max_inline=512k,inode_cache,subvol=@"
+  mop="ssd,discard=async,noatime,compress=zstd:8,space_cache=v2,max_inline=512k,inode_cache,async_commit,subvol_cache,subvol=@"
 
   mount -t btrfs -o ${mop} /dev/nvme0n1p2 /mnt
   mkdir -p /mnt/{boot,root,home,swap,hdd}
