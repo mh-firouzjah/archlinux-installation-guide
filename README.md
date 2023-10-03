@@ -1,4 +1,6 @@
-# Arch Linux Systemd-boot BTRFS
+# Arch Linux
+
+In this content I'll explain how to install Arch Linux and use systemd-boot and Ext4/BTRFS
 
 ## Preparation
 
@@ -10,19 +12,19 @@
 - Validation check
 
   ```bash
-  gpg --keyserver-options auto-key-retrieve --verify archlinux-version-x86_64.iso.sig
+  gpg --keyserver-options auto-key-retrieve --verify archlinux-VERSION-x86_64.iso.sig
   ```
 
   - Or
 
     ```bash
-    pacman-key -v archlinux-version-x86_64.iso.sig
+    pacman-key -v archlinux-VERSION-x86_64.iso.sig
     ```
 
 - Burn to CD/DVD or make a bootable USB
 
   ```bash
-  dd bs=4M if=path/to/archlinux-version-x86_64.iso of=/dev/sdx conv=fsync oflag=direct status=progress
+  dd bs=4M if=path/to/archlinux-VERSION-x86_64.iso of=/dev/sdx conv=fsync oflag=direct status=progress
   ```
 
 
@@ -87,33 +89,52 @@
   w
 
   mkfs.fat -F 32 -n EFI /dev/nvme0n1p1
-  mkfs.btrfs -f -L ROOT /dev/nvme0n1p2
-
-  mount /dev/nvme0n1p2 /mnt
-
-  btrfs su cr /mnt/@
-  btrfs su cr /mnt/@root
-  btrfs su cr /mnt/@home
-  btrfs su cr /mnt/@swap
-
-  btrfs su li /mnt
-
-  umount /mnt
-
-  mop="ssd,discard=async,noatime,compress=zstd:8,space_cache=v2,max_inline=512k,inode_cache,async_commit,subvol_cache,subvol=@"
-
-  mount -t btrfs -o ${mop} /dev/nvme0n1p2 /mnt
-  mkdir -p /mnt/{boot,root,home,swap,hdd}
-  mount -t btrfs -o ${mop}root /dev/nvme0n1p2 /mnt/root
-  mount -t btrfs -o ${mop}home /dev/nvme0n1p2 /mnt/home
-  mount /dev/nvme0n1p1 /mnt/boot
-  mount -t ntfs3 -o rw,nls=utf8,noatime,windows_names,x-systemd.automount,x-systemd.idle-timeout=10min /dev/sda1 /mnt/hdd
-
-  # swapfile
-  mount -t btrfs -o defaults,subvol=@swap /dev/nvme0n1p2 /mnt/swap
-  btrfs filesystem mkswapfile --size 16g --uuid clear /mnt/swap/swapfile
-  swapon /mnt/swap/swapfile
   ```
+
+  - Ext4 Partitioning
+
+    ```bash
+    mke2fs -v -T ext4 -L ROOT -b 4096 -O none,dir_index,extent,filetype,flex_bg,has_journal,sparse_super,uninit_bg /dev/nvme0n1p2
+
+    mount -t ext4 -o journal_checksum,commit=120,min_batch_time=200,discard,noatime,nouser_xattr /dev/nvme0n1p2 /mnt
+    ```
+
+  - BTRFS Partitioning
+
+    ```bash
+    mkfs.btrfs -f -L ROOT /dev/nvme0n1p2
+
+    mount /dev/nvme0n1p2 /mnt
+
+    btrfs su cr /mnt/@            # root directory
+    btrfs su cr /mnt/@root        # home directory of root user
+    btrfs su cr /mnt/@home        # home directory of non-root user
+    btrfs su cr /mnt/@var         # log, some temp files, caches, etc.
+    btrfs su cr /mnt/@tmp         # main Temporary files location
+    btrfs su cr /mnt/@snapshots   # snapper will store BTRFS snapshots here, if not using snapper this partition is not needed
+    btrfs su cr /mnt/@swap        # location of swapfile
+
+    btrfs su li /mnt
+
+    umount /mnt
+
+    mop="defaults,discard=async,noatime,compress=zstd:8,max_inline=512k,inode_cache,commit=120,subvol_cache,subvol=@"
+
+    mount -t btrfs -o ${mop} /dev/nvme0n1p2 /mnt
+    mkdir -p /mnt/{boot,root,home,var,tmp,swap,hdd}
+    mount -t btrfs -o ${mop}root /dev/nvme0n1p2 /mnt/root
+    mount -t btrfs -o ${mop}home /dev/nvme0n1p2 /mnt/home
+    mount -t btrfs -o ${mop}var /dev/nvme0n1p2 /mnt/var
+    mount -t btrfs -o ${mop}tmp /dev/nvme0n1p2 /mnt/tmp
+    mount -t btrfs -o ${mop}snapshots /dev/nvme0n1p2 /mnt/snapshots
+    mount /dev/nvme0n1p1 /mnt/boot
+    mount -t ntfs3 -o rw,nls=utf8,noatime,windows_names,x-systemd.automount,x-systemd.idle-timeout=10min /dev/sda1 /mnt/hdd
+
+    # swapfile
+    mount -t btrfs -o defaults,subvol=@swap /dev/nvme0n1p2 /mnt/swap
+    btrfs filesystem mkswapfile --size 16g --uuid clear /mnt/swap/swapfile
+    swapon /mnt/swap/swapfile
+    ```
 
 - Install basic system
 
@@ -221,6 +242,15 @@
   ```bash
   nvim /etc/mkinitcpio.conf
   ---------------------
+  # in MODULES add the following based on the list bellow:
+  # BTRFS -> btrfs
+  # Ext4 -> ext4
+  # intel GPU -> i915
+  # AMD GPU -> amdgpu
+  # Nvidia GPU -> nvidia nvidia_modeset nvidia_uvm nvidia_drm
+  # Nouveau Driver -> nouveau
+  MODULES = (...)
+
   # in `HOOKS=` replace `udev` with `systemd`
   HOOKS=(base systemd[udev] fsck ...)
 
