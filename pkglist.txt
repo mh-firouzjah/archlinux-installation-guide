@@ -1,3 +1,4 @@
+
 acpi
 acpid
 acpilight
@@ -40,12 +41,11 @@ e2fsprogs
 ecryptfs-utils
 efibootmgr
 efitools
-elinks
 enchant
 ethtool
-eza
 exfatprogs
 expect
+eza
 f2fs-tools
 fatresize
 ffmpeg
@@ -228,6 +228,7 @@ sshfs
 starship
 svgpart
 sysfsutils
+systemd-sysvcompat
 tcl
 telegram-desktop
 terminus-font

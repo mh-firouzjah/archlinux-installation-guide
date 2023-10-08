@@ -1,4 +1,4 @@
-#visual-studio-code-bin
+visual-studio-code-bin
 auto-cpufreq
 btrfs-assistant
 btrfsmaintenance

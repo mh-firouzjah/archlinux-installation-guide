@@ -1,52 +1,61 @@
-# Arch Linux
+# Arch Linux Installaion Guide
 
-In this content I'll explain how to install Arch Linux and use systemd-boot and Ext4/BTRFS
-
-## Preparation
+In this content I'll explain how to install Arch Linux (64-bit) using systemd-boot and Ext4 or BTRFS filesystem and booting in UEFI mode
 
 
-- Download the iso at
+## Prepare an installation medium
 
-    https://archlinux.org/download/
+- Acquire an installation ISO image
 
-- Validation check
+  Download the iso image from the offical website at https://archlinux.org/download/
 
-  ```bash
-  gpg --keyserver-options auto-key-retrieve --verify archlinux-VERSION-x86_64.iso.sig
-  ```
+- Verify signature
 
-  - Or
+  - Download the ISO PGP signature under Checksums in the Download Page at https://archlinux.org/download/#checksums
+
+  - Verifying it with
+
+    ```bash
+    gpg --keyserver-options auto-key-retrieve --verify archlinux-VERSION-x86_64.iso.sig
+    ```
+
+  - Alternatively, from an existing Arch Linux installation run
 
     ```bash
     pacman-key -v archlinux-VERSION-x86_64.iso.sig
     ```
 
-- Burn to CD/DVD or make a bootable USB
+- Burn the image to CD/DVD or to make a bootable USB run
 
   ```bash
   dd bs=4M if=path/to/archlinux-VERSION-x86_64.iso of=/dev/sdx conv=fsync oflag=direct status=progress
   ```
 
 
-## Live Environment
+## Boot the live environment
 
+- ***Note**: Arch Linux installation images do not support Secure Boot. You will need to disable Secure Boot to boot the installation medium. If desired, Secure Boot can be set up after completing the installation.*
 
-- Connect to wi-fi (cable connection doesn't require user action)
+- Connect to the internet:
 
-  ```bash
-  lwctl --passphrase PASSWORD station wlan0 connect WIFINAME
-  ```
+	- Ethernet — plug in the cable
 
-- Check internet connection
+	- Wi-Fi — authenticate to the wireless network using iwctl
+
+	  ```bash
+	  lwctl --passphrase PASSWORD station wlan0 connect WIFINAME
+	  ```
+
+- The connection may be verified with `ping`
 
   ```bash
   ping -c 4 archlinux.org
   ```
 
-- Ensure the system clock is accurate
+- Update the system clock
 
   ```bash
-  timedatectl
+  timedatectl set-ntp true
   ```
 
 - Update pacman keys
@@ -64,39 +73,79 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
 - Verify system uefi/bios
 
   ```bash
-  ls /sys/firmware/efi/efivars
+  ls /sys/firmware/efi/efivars # any output indicates uefi boot
   ```
 
-- Partitioning (recommended to mount `/var` on a spinning disk)
+- Partition the disks 
+
+  - Since we are using UEFI boot, we need to create a GPT partition table and also we need an efi partition. it's easier to consider `/boot` for that efi partition.
+
+  - You can use 1 GiB size for `/boot` to be on the safe side.
+  for example adding nvidia mudole to mkinitcpio will increase ~=50-60mb to each initramfs and it's fallback.
+
+  - Since `/var` is frequently read or written, it is recommended that you consider the location of this partition on a spinning disk.
+
+    - With that being said, newer SSDs, especially those with higher capacities, have a longer lifespan (support lots of writes and erases e.g 20g/dey for near 10 years).
+
+  - If you want to go with BTRFS, consider creating subvolumes for other directories that contain data you do not want to include in snapshots and rollbacks of the `@` subvolume, such as `/var/cache`, `/var/spool`, `/var/tmp`, `/var/lib/machines` (systemd-nspawn), `/var/lib/docker` (Docker), `/var/lib/postgres` (PostgreSQL), and other data directories under `/var/lib/`. It is up to you if you want to follow the flat layout or create nested subvolumes. On the other hand, the pacman database in `/var/lib/pacman` **_must_** stay on the root subvolume (`@`).
 
   ```bash
-  fdisk -l
-  fdisk /dev/nvme0n1
+  $ fdisk -l
 
-  g
-  n
-  enter
-  enter
-  +1G
-  n
-  enter
-  enter
-  enter
-  t
-  1
-  1
-  p
-  w
+  $ fdisk -f /dev/nvme0n1
 
-  mkfs.fat -F 32 -n EFI /dev/nvme0n1p1
+  # Welcome to fdisk (util-linux X.X.X)
+  # Changes will remain in memory only, until you decide to write them
+  # Be careful before using the write command
+
+  Command (m for help): g
+  # Created a new GPT disklabel (GUID: XXX)
+
+  Command (m for help):  n
+  Partition number (1-128, default 1): enter
+  First sector (2048-15441886, default 2048): enter
+  Last sector, +/-sectors or +/-size{K,M,G,T,P} (2048-15441886, default 15439871): +1G
+  # Created a new partition 1 of type 'Linux filesystem' and of size 1 GiB
+
+  Command (m for help): n
+  Partition number (3-128, default 3): enter
+  First sector (9439232-15441886, default 9439232): enter
+  Last sector, +/-sectors or +/-size{K,M,G,T,P} (9439232-15441886, default 15439871): enter
+  # Created a new partition 3 of type 'Linux filesystem' and of size 2.9 GiB
+
+  Command (m for help): p
+  #
+  # Device          Start     End    Sectors  Size  Type
+  # /dev/nvme0n1p1     2048  1050623 1048576  512M  Linux filesystem
+  # /dev/nvme0n1p2  9439232 15439871 6000640  2.9G  Linux filesystem
+
+  Command (m for help): t
+  Partition number (1-2, default 2): 1
+  Partition type or alias (type L to list all): 1
+  #Changed type of partition 'Linux filesystem' to 'EFI System'
+
+  Command (m for help): p
+  #
+  # Device           Start      End  Sectors  Size  Type
+  # /dev/nvme0n1p1     2048  1050623 1048576  1G    EFI System
+  # /dev/nvme0n1p2  9439232 15439871 6000640  29G  Linux filesystem
+
+  Command (m for help): w
+  # The partition table has been altered
   ```
+
+  - Format EFI parition
+
+    ```bash
+    mkfs.fat -F 32 -n EFI /dev/nvme0n1p1
+    ```
 
   - Ext4 Partitioning
 
     ```bash
-    mke2fs -v -T ext4 -L ROOT -b 4096 -O none,dir_index,extent,filetype,flex_bg,has_journal,sparse_super,uninit_bg /dev/nvme0n1p2
+     mkfs.ext4 -c -e remount-ro -L ROOT -O dir_index,extent,filetype,flex_bg,has_journal,sparse_super,uninit_bg -E lazy_itable_init,discard /dev/nvme0n1p2
 
-    mount -t ext4 -o journal_checksum,commit=120,min_batch_time=200,discard,noatime,nouser_xattr /dev/nvme0n1p2 /mnt
+     mount -t ext4 -o defaults,noatime,discard,journal_checksum,commit=120,min_batch_time=200,auto_da_alloc,i_version /dev/nvme0n1p2 /mnt
     ```
 
   - BTRFS Partitioning
@@ -107,9 +156,14 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
     mount /dev/nvme0n1p2 /mnt
 
     btrfs su cr /mnt/@            # root directory
-    btrfs su cr /mnt/@root        # home directory of root user
     btrfs su cr /mnt/@home        # home directory of non-root user
-    btrfs su cr /mnt/@var         # log, some temp files, caches, etc.
+    btrfs su cr /mnt/@var_cache
+    btrfs su cr /mnt/@var_log
+    btrfs su cr /mnt/@var_spool
+    btrfs su cr /mnt/@var_tmp
+    btrfs su cr /mnt/@var_lib_machines
+    btrfs su cr /mnt/@var_lib_docker
+    btrfs su cr /mnt/@var_lib_postgres
     btrfs su cr /mnt/@tmp         # main Temporary files location
     btrfs su cr /mnt/@snapshots   # snapper will store BTRFS snapshots here, if not using snapper this partition is not needed
     btrfs su cr /mnt/@swap        # location of swapfile
@@ -121,14 +175,11 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
     mop="defaults,discard=async,noatime,compress=zstd:8,max_inline=512k,inode_cache,commit=120,subvol_cache,subvol=@"
 
     mount -t btrfs -o ${mop} /dev/nvme0n1p2 /mnt
-    mkdir -p /mnt/{boot,root,home,var,tmp,swap,hdd}
-    mount -t btrfs -o ${mop}root /dev/nvme0n1p2 /mnt/root
+    mkdir -p /mnt/{boot,home,var...,tmp,swap,.snapshots,hdd}
     mount -t btrfs -o ${mop}home /dev/nvme0n1p2 /mnt/home
-    mount -t btrfs -o ${mop}var /dev/nvme0n1p2 /mnt/var
+    mount -t btrfs -o ${mop}var... /dev/nvme0n1p2 /mnt/var...
     mount -t btrfs -o ${mop}tmp /dev/nvme0n1p2 /mnt/tmp
     mount -t btrfs -o ${mop}snapshots /dev/nvme0n1p2 /mnt/snapshots
-    mount /dev/nvme0n1p1 /mnt/boot
-    mount -t ntfs3 -o rw,nls=utf8,noatime,windows_names,x-systemd.automount,x-systemd.idle-timeout=10min /dev/sda1 /mnt/hdd
 
     # swapfile
     mount -t btrfs -o defaults,subvol=@swap /dev/nvme0n1p2 /mnt/swap
@@ -136,10 +187,17 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
     swapon /mnt/swap/swapfile
     ```
 
+  - EFI and other partitions
+
+    ```bash
+    mount /dev/nvme0n1p1 /mnt/boot
+    mount -t ntfs3 -o rw,nls=utf8,noatime,windows_names,x-systemd.automount,x-systemd.idle-timeout=10min /dev/sda1 /mnt/hdd
+    ```
+
 - Install basic system
 
   ```bash
-  pacstrap -K /mnt base base-devel llinux-lts linux-lts-headers inux-firmware intel-ucode ntfs-3g e2fsprogs btrfs-progs duperemove neovim networkmanager efibootmgr efitools sbctl
+  pacstrap -K /mnt base base-devel linux-lts linux-lts-headers linux-firmware intel-ucode ntfs-3g e2fsprogs btrfs-progs neovim networkmanager efibootmgr efitools sbctl
 
   genfstab -U /mnt >> /mnt/etc/fstab
 
@@ -205,7 +263,7 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
   linux /vmlinuz-linux-lts
   initrd /intel-ucode.img
   initrd /initramfs-linux-lts.img
-  options root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ rw bgrt_disable add_efi_memmap
+  options root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ add_efi_memmap rw
 
   nvim /boot/loader/entries/fallback.conf
   ---------------------
@@ -213,16 +271,20 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
   linux /vmlinuz-linux-lts
   initrd /intel-ucode.img
   initrd /initramfs-linux-lts-fallback.img
-  options root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ rw bgrt_disable add_efi_memmap
+  options root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ add_efi_memmap rw
   ```
 
-- Verify bootloader
+- Verify bootloaderes
 
   ```bash
   bootctl list
   ```
 
 - Secure Boot
+
+Secure Boot is in Setup Mode when the Platform Key is removed. To put firmware in Setup Mode, enter firmware setup utility and find an option to delete or clear certificates.
+
+  - *__Note__: sbctl does not work with all hardware. How well it will work depends on the manufacturer.*
 
   ```bash
   sbctl create-keys
@@ -256,7 +318,14 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
 
   # uncomment and edit `COMPRESSION_OPTIONS=` to save space for custom kernels
   COMPRESSION_OPTIONS=(-v -5 --long)
+  
+  # add this line at the end
+  MODULES_DECOMPRESS="yes"
 
+  ```
+  Then run
+
+  ```bash
   mkinitcpio -P
   ```
 
@@ -281,6 +350,8 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
   useradd -m -G wheel,realtime -s /bin/bash username
   passwd username
 
+  EDITOR=nvim visudo
+  - Or
   sed -i '/^#\s*%wheel ALL=(ALL:ALL) ALL\s*$/s/^#\s*//' /etc/sudoers
 
   # for instance to have some user process running without any open session
@@ -290,10 +361,14 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
 - Network Preparation
 
   ```bash
-  systemctl enable NetworkManager.service
-  systemctl enable NetworkManager-wait-online.service
-  systemctl enable NetworkManager-dispatcher.service
+  systemctl enable NetworkManager
   ```
+
+  - then to connect to Wi-Fi run
+
+    ```bash
+     nmcli dev wlan0 connect WIFI_NAME password "network-password"
+    ```
 
 - Exit chroot environment
 
@@ -313,7 +388,35 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
   reboot
   ```
 
-## List of Packages
+## Additional Packages
+
+Although I’ll explain my suggested packages later, for convenience let’s use Pacman’s feature to install the packages listed in a text file.
+
+- **You may edit the list to include only the packages you want.*
+
+- Packages from AUR are prefixed with `aur/`, but their listed in `aur-pkglist.txt` and not in `pkglist.txt` and ou can use any pacman wrapper of your choice to install them.
+
+- I recmmend `pikaur`, it uses the same command as pacman's - obviously the command starts with pikaur ;)
+*It's safer to use pikaur to install packages once loged-in with non-root user
+
+
+```bash
+pacman -S --needed - < pkglist.txt
+```
+
+- Optional - Install a Pacman Wrapper (AUR helper)
+
+  ```bash
+  # non-root user
+  cd /tmp
+  git clone https://aur.archlinux.org/pikaur.git
+  cd pikaur
+  makepkg -fsri
+  pikaur -S - < aur-pkglist.txt
+  ```
+
+### Packages
+
 
 - Power Management
 
@@ -321,14 +424,15 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
   powertop
   power-profiles-daemon # handles power profiles (e.g. balanced, power-saver, performance)
   $ systemctl enable power-profiles-daemon.service
-  acpi
   tcl
   tk
+  acpi
   acpid # a flexible and extensible daemon for delivering ACPI events.
   $ systemctl enable acpid.service
   aur/laptop-mode-tools # considered by many to be the de facto utility for power saving
   xss-lock
   ```
+
 
 - CPU Performance
 
@@ -346,6 +450,7 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
   $ systemctl enable irqbalance.service
   ```
 
+
 - Firewall
 
   ```bash
@@ -357,18 +462,19 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
   $ ufw enable
   ```
 
+
 - Network Manager
 
   ```bash
   modemmanager
+  $ systemctl enable ModemManager.service
   usb_modeswitch # Activating switchable USB devices on Linux
   wireless_tools
-  $ systemctl enable ModemManager.service
   rp-pppoe # Roaring Penguin's Point-to-Point Protocol over Ethernet client
   ethtool # Utility for controlling network drivers and hardware
   ```
 
-  - VPN Support
+  - Network Manager VPN Support
 
     ```bash
     networkmanager-openconnect # for OpenConnect
@@ -384,12 +490,14 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
     network-manager-sstp
     ```
 
+
 - Anonymizing overlay network
 
   ```bash
   tor
   torsocks
   ```
+
 
 - Ncrypted communication sessions over a computer network
 
@@ -398,6 +506,7 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
   openssl
   ```
 
+
 - Download Manager
 
   ```bash
@@ -405,19 +514,16 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
   curl # command line tool and library for transferring data with URLs
   ```
 
-- Text WebBrowser
 
-  ```bash
-  elinks # Advanced and well-established feature-rich text mode web browser with mouse wheel scroll support, frames and tables, extensible with Lua & Guile (links fork).
-  ```
-
-- Developement packages
+- Developer Tools
 
   ```bash
   git
   github-cli
   ipython
+  neovim
   ```
+
 
 - System maintenance
 
@@ -426,12 +532,9 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
   pacman-contrib # this brings `checkupdates` a safe way to check for upgrades
   archlinux-contrib # this brings `checkservices` hecks for processes to be restarted
   htop # Simple, ncurses interactive process viewer
-  btop # Htop but more lightweight with more features
-  bat
-  dosfstools # DOS filesystem utilities
+  bat # colorful cat :)
   cpio # tool to copy files into or out of a cpio or tar archive
   cronie # Daemon that runs specified programs at scheduled times and related tools
-  ecryptfs-utils # Enterprise-class stacked cryptographic filesystem for Linux
   enchant # A wrapper library for generic spell checking
   eza # A modern replacement for ls (community fork of exa)
   inxi # A script to get system information
@@ -440,10 +543,29 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
   solid # Hardware integration and detection
   reflector # service will run reflector with the parameters specified in `/etc/xdg/reflector/reflector.conf`
   $ systemctl enable reflector.service reflector.timer
+  expect # A tool for automating interactive applications
+  dust # directories disk usage display
+  duf # Disk Usage/Free Utility
+  hdparm
+  sdparm # are command line utilities to set and view hardware parameters of hard disk drives. hdparm can also be used as a simple benchmarking tool
+  fwupd
+  profile-sync-daemon # is a tiny pseudo-daemon designed to manage browser profile(s) in tmpfs
+  $ psd
+  $ systemctl --user enable psd
+  util-linux # provides fstrim.service and fstrim.timer systemd unit files
+  $ systemctl enable fstrim.timer
+  $ systemctl enable systemd-oomd.service
+  ```
+
+
+- Filesystem Utils
+
+  ```bash
+  dosfstools # DOS filesystem utilities
+  ecryptfs-utils # Enterprise-class stacked cryptographic filesystem for Linux
   testdisk # provides both TestDisk and PhotoRec
   e2fsprogs
   exfatprogs
-  expect # A tool for automating interactive applications
   f2fs-tools
   fatresize
   fscrypt
@@ -452,18 +574,8 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
   libatasmart
   libnotify
   procps-ng
-  dust # directories disk usage display
-  duf # Disk Usage/Free Utility
-  fwupd
-  $ systemctl enable systemd-oomd.service
-  profile-sync-daemon # is a tiny pseudo-daemon designed to manage browser profile(s) in tmpfs
-  $ psd
-  $ systemctl --user enable psd
-  util-linux # provides fstrim.service and fstrim.timer systemd unit files
-  $ systemctl enable fstrim.timer
-  hdparm
-  sdparm # are command line utilities to set and view hardware parameters of hard disk drives. hdparm can also be used as a simple benchmarking tool
   ```
+
 
 - Mounting Devices
 
@@ -485,6 +597,7 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
   scrcpy # display and control your Android device
   ```
 
+
 - Bluetooth
 
   ```bash
@@ -494,11 +607,13 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
   $ systemctl enable bluetooth.service
   ```
 
+
 - User Privilege
 
   ```bash
   polkit # for defining and handling the policy that allows unprivileged processes to speak to privileged processes
   ```
+
 
 - Archiving
 
@@ -509,6 +624,7 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
   p7zip
   unarchiver
   ```
+
 
 - Sound
 
@@ -540,12 +656,14 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
   libmad
   ```
 
+
 - Manual pages
 
   ```bash
   man-db
   man-pages
   ```
+
 
 - Shell
 
@@ -558,12 +676,8 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
   zsh-theme-powerlevel10k
   ```
 
+
 - Advanced Swapping
-
-  **Differences between zswap and zram based swap**
-
-  ---
-  A short overview:
 
   - **Zswap** works in conjunction with regular swap while a **zram** based swap device does not require a backing swap device and may work standalone (if no swap on hard disk is required, i.e. on SSD or kind of flash memory).
 
@@ -592,7 +706,8 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
   vm.page-cluster = 0
   ```
 
-### GUI
+### GUI Evironment
+
 
 - Not for a specific DE
 
@@ -602,6 +717,7 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
   xorg-xeyes
   appmenu-gtk-module # to integrate application menus with the desktop environment's global menu bar
   ```
+
 
 - Monitor Gama & Color Adjustment
 
@@ -614,18 +730,19 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
   autorandr # Automatically select a display configuration based on connected devices
   ```
 
+
 - Intel Graphics
 
   ```bash
   xf86-video-intel
-  #mesa
-  mesa-amber # it's for gen7 and older but you may use mesa instead
+  mesa-amber # it's for intel cpu gen7 and older but you may use mesa instead
   mesa-utils
   vulkan-intel
   intel-media-driver
   libva-intel-driver
   adriconf # GUI tool to configure Mesa drivers by setting options and writing them to the standard drirc file
   ```
+
 
 - Nvidia Graphics
 
@@ -683,19 +800,21 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
 - Input devices (Mouse/Keyboard)
 
   ```bash
-  libinput
-  xf86-input-libinput
+  libinput # libinput is a library to handle input devices
+  xf86-input-libinput # libinput is a library to handle input devices
   xorg-xinput # On-demand disabling and enabling of input sources
   xorg-xset
   xorg-xkill # Killing an application visually
   xclip
   ```
 
+
 - Download Manager
 
   ```bash
   persepolis # Graphical front-end for aria2 download manager with lots of features
   ```
+
 
 - File Sharing with Windows
 
@@ -728,6 +847,7 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
   $ ufw allow Samba
   ```
 
+
 - Avahi Daemomd
 
   - disabling systemd-resolved may require some other replacement
@@ -742,6 +862,7 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
   cp /usr/share/doc/avahi/ssh.service /etc/avahi/services/
   $ systemctl enable avahi-daemon.service
   ```
+
 
 - Multimedia codecs & player
 
@@ -762,14 +883,19 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
   smplayer-themes
   ```
 
+
 - Text Editor & Office
 
   ```bash
-  code # The Open Source build of Visual Studio Code (vscode) editor
+  code # Code OSS - The Open Source build of Visual Studio Code (vscode) editor
   aur/code-marketplace # Enable vscode marketplace in Code OSS
+  # Or
+  aur/visual-studio-code-bin # Visual Studio Code (vscode)
+
   libreoffice-still # The office productivity suite compatible to the open and standardized ODF document format
   pdfslicer # Simple application to extract, merge, rotate and reorder pages of PDF documents
   ```
+
 
 - Useful packages (still need to check description)
 
@@ -860,7 +986,6 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
   socat
   sshfs
   starship
-  svgpart
   sysfsutils
   systemd-sysvcompat
   telegram-desktop
@@ -890,6 +1015,7 @@ In this content I'll explain how to install Arch Linux and use systemd-boot and 
   xsel
   ```
 
+
 ### KDE Applications
 
 ```bash
@@ -914,7 +1040,7 @@ kaccounts-providers # Online account providers for the KAccounts system
 kactivitymanagerd # System service to manage user activities and track the usage patterns
 kate # Full-featured programmer's editor for the KDE desktop with MDI and a filesystem browser
 kcalc # Scientific calculator included in the KDE desktop
-kcolorChooser # Simple application to select the color from the screen or from a pallete
+kcolorlhooser # Simple application to select the color from the screen or from a pallete
 kcron # Tool for KDE to run applications in the background at regular intervals
 kde-cli-tools # Tools based on KDE Frameworks 5 to better interact with the system
 kde-gtk-config # GTK2 and GTK3 Configurator for KDE
@@ -943,7 +1069,6 @@ kio-gdrive # provides transparent KIO access to Google Drive
 kio-zeroconf # Network Monitor for DNS-SD services (Zeroconf)
 kjournald # Framework for interacting with systemd-journald
 kmenuedit # KDE menu editor
-knotes # Program that lets you write the computer equivalent of sticky notes.
 kompare # GUI front-end program for viewing and merging differences between source files with many options to customize the information
 konsole # Terminal emulator included in the KDE desktop
 kpat # Offers a selection of solitaire card games
@@ -954,8 +1079,7 @@ kscreenlocker
 kshutdown # Graphical shutdown utility, which allows you to turn off or suspend a computer at a specified time
 ksshaskpass # ssh-add helper that uses kwallet and kpassworddialog
 ksysguard # System monitor for KDE to monitor running processes and system performance.
-ksystemLog # System log viewer tool for KDE
-ksystemlog
+ksystemlog # System log viewer tool for KDE
 ksystemstats # A plugin based system monitoring daemon
 ktimer # Little tool for KDE to execute programs after some time
 ktouch # Program to learn and practice touch typing
@@ -970,7 +1094,7 @@ libappindicator-gtk3 # an attempt to get clear icons
 libkscreen
 libksysguard
 libqtxdg
-maliit-keyboard # Virtual keyboard useful for KDE Plasma-Wayland
+markdownpart # KPart for rendering Markdown content (kate/okular markdown preview)
 milou # A dedicated search application built on top of Baloo
 noto-fonts
 noto-fonts-emoji
@@ -1004,14 +1128,13 @@ qt6-wayland
 qtxdg-tools # libqtxdg user tools
 sddm # simple display manager
 sddm-kcm # KDE Configuration Module for SDDM
-smb4K # Advanced network neighborhood browser and Samba share mounting utility for KDE
 spectacle # screenshot app
 sweeper # System cleaning utility for KDE
 systemdgenie # a graphical frontend for systemctl
 systemsettings # KDE system manager for hardware, software, and workspaces
+svgpart # A KPart for viewing SVGs (kate/okular svg preview)
 taglib # Audio files
-xdg-desktop-portal # To use remote input functionality on a Plasma Wayland session/Desktop integration portals for sandboxed apps
-xdg-desktop-portal-kde
+xdg-desktop-portal-kde # To use remote input functionality on a Plasma Wayland session/Desktop integration portals for sandboxed apps
 # breeze-plymouth
 # flatpak-kcm # Flatpak Permissions Management KCM for discover
 # plasma-sdk
@@ -1021,10 +1144,11 @@ xdg-desktop-portal-kde
 # plymouth-kcm
 ```
 
-## Extra Works
+## Troubleshooting
+
+### SDDM: Touchpad Tapping
 
 ```bash
-# SDDM: Touchpad Tapping
 nvim /etc/X11/xorg.conf.d/30-touchpad.conf
 ---------------------
 Section "InputClass"
@@ -1034,44 +1158,88 @@ Section "InputClass"
     Option "Tapping" "on"
     Option "TappingButtonMap" "lmr"
 EndSection
+```
 
-# ACPID: Disabling ordinary key events
+
+### ACPID:
+
+acpid generates events for some ordinary key presses, such as arrow keys. This results in event/handler spam, visible in system logs or top. Events for these buttons can be dropped in the configuration file:
+
+```bash
 nvim /etc/acpi/events/buttons
 ---------------------
 event=button/(up|down|left|right|kpenter)
 action=<drop>
+```
 
-# Advanced Sound
+
+### Advanced Sound
+
+```bash
 nvim /etc/modprobe.d/alsa-base.conf
 ---------------------
 options snd_mia index=0
 options snd_hda_intel index=1
+
 
 nvim /etc/modules-load.d/seq-pcm-mixer.conf
 ---------------------
 snd-seq-oss
 snd-pcm-oss
 snd-mixer-oss
+```
 
----------------------
-# By default, audio power saving is turned off by most drivers. It can be enabled by setting the power_save parameter; a time (in seconds) to go into idle mode. To idle the audio card after one second, create the following file for Intel soundcards:
+By default, audio power saving is turned off by most drivers. It can be enabled by setting the power_save parameter; a time (in seconds) to go into idle mode. To idle the audio card after one second, create the following file for Intel soundcards
+
+```bash
 nvim /etc/modprobe.d/audio_powersave.conf
 ---------------------
 options snd_hda_intel power_save=1
+```
 
-# 1- It is also possible to further reduce the audio power requirements by disabling the HDMI audio output, which can done by blacklisting the appropriate kernel modules (e.g. snd_hda_codec_hdmi in case of Intel hardware).
-# 2- also If you will not use integrated web camera then blacklist the uvcvideo module.
+It is also possible to further reduce the audio power requirements by disabling the HDMI audio output, which can done by blacklisting the appropriate kernel modules (e.g. snd_hda_codec_hdmi in case of Intel hardware).
+
+If you will not use integrated web camera then blacklist the uvcvideo module.
+
+```bash
 nvim /etc/modprobe.d/blacklist.conf
 ---------------------
 blacklist snd_hda_codec_hdmi
 blacklist uvcvideo
+```
 
-# Temporarily enable or disable the webcam:
-$ modprobe uvcvideo
-$ modprobe -r uvcvideo
+  - Temporarily enable or disable the webcam
 
+    ```bash
+    modprobe uvcvideo
+    modprobe -r uvcvideo
+    ```
+
+### Toggle external monitor
+
+This script toggles between an external monitor (specified by $extern) and a default monitor (specified by $intern), so that only one monitor is active at a time.
+
+The default monitor should be connected when running the script, which is always true for a laptop.
+
+- Note: To leave the default monitor enabled when an external monitor is connected, in the else clause comment the first line and uncomment the next line.
+
+```bash
+nvim /usr/share/sddm/scripts/Xsetup
 ---------------------
+intern=LVDS1
+extern=VGA1
 
+if xrandr | grep "$extern disconnected"; then
+    xrandr --output "$extern" --off --output "$intern" --auto
+else
+    xrandr --output "$intern" --off --output "$extern" --auto
+    # xrandr --output "$intern" --primary --auto --output "$extern" --right-of "$intern" --auto
+fi
+```
+
+### Optional Firmwares
+
+```bash
 aur/mkinitcpio-firmware # The meta-package that contains most optional firmwares
 ```
 
