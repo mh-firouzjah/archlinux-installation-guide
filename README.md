@@ -143,9 +143,9 @@ In this content I'll explain how to install Arch Linux (64-bit) using systemd-bo
   - Ext4 Partitioning
 
     ```bash
-     mkfs.ext4 -c -e remount-ro -L ROOT -O dir_index,extent,filetype,flex_bg,has_journal,sparse_super,uninit_bg -E lazy_itable_init,discard /dev/nvme0n1p2
+    mkfs.ext4 -c -e remount-ro -L ROOT -O dir_index,extent,filetype,flex_bg,has_journal,sparse_super,uninit_bg -E lazy_itable_init,discard /dev/nvme0n1p2
 
-     mount -t ext4 -o defaults,noatime,discard,journal_checksum,commit=120,min_batch_time=200,auto_da_alloc,i_version /dev/nvme0n1p2 /mnt
+    mount -t ext4 -o defaults,noatime,discard,journal_checksum,commit=120,min_batch_time=200,auto_da_alloc,i_version /dev/nvme0n1p2 /mnt
     ```
 
   - BTRFS Partitioning
@@ -260,19 +260,32 @@ In this content I'll explain how to install Arch Linux (64-bit) using systemd-bo
   nvim /boot/loader/entries/arch-lts.conf
   ---------------------
   title Arch Linux LTS
-  linux /vmlinuz-linux-lts
-  initrd /intel-ucode.img
-  initrd /initramfs-linux-lts.img
-  options root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ add_efi_memmap rw
-
-  nvim /boot/loader/entries/fallback.conf
-  ---------------------
-  title Fallback
-  linux /vmlinuz-linux-lts
-  initrd /intel-ucode.img
-  initrd /initramfs-linux-lts-fallback.img
-  options root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ add_efi_memmap rw
+  linux vmlinuz-linux-lts
+  initrd intel-ucode.img
+  initrd initramfs-linux-lts.img
   ```
+
+  - For Ext4
+
+    - *Note:* Because this loader entry will mount the root partition then the `fstab` line regarding the mount of root partition will remount that partition so I wrote all mount options here as `rootflags` and I removed that line from `/etc/fstab`, I don't know if it's a bad idea or not.
+
+    ```bash
+    echo "options root=/dev/nvme0n1p2 rootfstype=ext4 rootflags=rw,noatime,discard,journal_checksum,commit=120,min_batch_time=200,auto_da_alloc add_efi_memmap" >> arch-lts.conf
+    ```
+
+  - For BTRFS 
+
+    ```bash
+    echo "options root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ add_efi_memmap" >> arch-lts.conf
+    ```
+
+  - Generate a fallback option
+
+    ```bash
+    cd /boot/loader/entries
+    sed '/title/s/Arch Linux LTS/Fallback/' arch-lts.conf > fallback.conf
+    sed -i '/initrd/s/lts.img/lts-fallback.img/' fallback.conf
+    ```
 
 - Verify bootloaderes
 
@@ -423,14 +436,14 @@ pacman -S --needed - < pkglist.txt
   ```bash
   powertop
   power-profiles-daemon # handles power profiles (e.g. balanced, power-saver, performance)
-  $ systemctl enable power-profiles-daemon.service
   tcl
   tk
   acpi
   acpid # a flexible and extensible daemon for delivering ACPI events.
-  $ systemctl enable acpid.service
   aur/laptop-mode-tools # considered by many to be the de facto utility for power saving
   xss-lock
+  $ systemctl enable power-profiles-daemon.service
+  $ systemctl enable acpid.service
   ```
 
 
@@ -438,15 +451,15 @@ pacman -S --needed - < pkglist.txt
 
   ```bash
   x86_energy_perf_policy # On Intel processors, x86_energy_perf_policy can also be used to configure Turbo Boost
-  $ x86_energy_perf_policy --turbo-enable 0
   cpupower # a set of userspace utilities designed to assist with CPU frequency scaling
-  $ systemctl enable cpupower.service
   thermald # a Linux daemon used to prevent the overheating of Intel CPUs
-  $ systemctl enable thermald.service
   turbostat # can display the frequency, power consumption, idle status and other statistics of the modern Intel and AMD CPUs
   lm_sensors # Linux monitoring sensors
   i2c-tools # DIMM temperature sensors
   irqbalance # distribute hardware interrupts across processors on a multiprocessor system in order to increase performance
+  $ x86_energy_perf_policy --turbo-enable 0
+  $ systemctl enable cpupower.service
+  $ systemctl enable thermald.service
   $ systemctl enable irqbalance.service
   ```
 
@@ -466,12 +479,50 @@ pacman -S --needed - < pkglist.txt
 - Network Manager
 
   ```bash
+  geoip # Non-DNS IP-to-country resolver C library & utils
+  geoip-database # GeoIP legacy country database (based on GeoLite2 data created by MaxMind)
+  gnu-netcat # GNU rewrite of netcat, the network piping application
+  hblock # Adblocker that creates a hosts file from multiple sources
   modemmanager
-  $ systemctl enable ModemManager.service
   usb_modeswitch # Activating switchable USB devices on Linux
   wireless_tools
+  wireless-regdb
+  ifplugd # A daemon which brings up/down network interfaces upon cable insertion/removal.
+  inetutils # A collection of common network programs
+  libmaxminddb # MaxMindDB GeoIP2 database library
+  libomxil-bellagio # An opensource implementation of the OpenMAX Integration Layer API
+  libsoup # HTTP client/server library for GNOME
+  net-tools # Configuration tools for Linux networking
+  nmap # Utility for network discovery and security auditing
+  ntp # Network Time Protocol reference implementation
+  openresolv # resolv.conf management framework (resolvconf)
+  rsync # A fast and versatile file copying tool for remote and local files
+  socat # Multipurpose relay
+  sshfs # FUSE client based on the SSH File Transfer Protocol
+  thin-provisioning-tools # Suite of tools for manipulating the metadata of the dm-thin device-mapper target
+  traceroute # Tracks the route taken by packets over an IP network
+  nfs-utils # Support programs for Network File Systems
+  perl-clone # Recursive copy of nested objects.
+  perl-file-listing # parse directory listing
+  perl-file-mimeinfo # Determine file type, includes mimeopen and mimetype
+  perl-html-parser # Perl HTML parser class
+  perl-html-tagset # Data tables useful in parsing HTML
+  perl-http-cookies # HTTP cookie jars
+  perl-http-daemon # Simple http server class
+  perl-http-date # Date conversion routines
+  perl-http-message # HTTP style messages
+  perl-http-negotiate # Choose a variant to serve
+  perl-io-html # Open an HTML file with automatic charset detection
+  perl-libwww # The World-Wide Web library for Perl
+  perl-lwp-mediatypes # Guess the media type of a file or a URL
+  perl-net-http # Low-level HTTP connection (client)
+  perl-try-tiny # Minimal try/catch with proper localization of $@
+  perl-www-robotrules # Database of robots.txt-derived permissions
+  perl-xml-parser # Expat-based XML parser module for perl
+  perl-xml-writer # Module for writing XML documents
   rp-pppoe # Roaring Penguin's Point-to-Point Protocol over Ethernet client
   ethtool # Utility for controlling network drivers and hardware
+  $ systemctl enable ModemManager.service
   ```
 
   - Network Manager VPN Support
@@ -496,6 +547,7 @@ pacman -S --needed - < pkglist.txt
   ```bash
   tor
   torsocks
+  $ systemctl enable tor.service
   ```
 
 
@@ -518,10 +570,11 @@ pacman -S --needed - < pkglist.txt
 - Developer Tools
 
   ```bash
+  neovim
   git
   github-cli
   ipython
-  neovim
+  pyenv # Easily switch between multiple versions of Python
   ```
 
 
@@ -542,17 +595,49 @@ pacman -S --needed - < pkglist.txt
   hwinfo # Powerful hardware detection tool come from openSUSE
   solid # Hardware integration and detection
   reflector # service will run reflector with the parameters specified in `/etc/xdg/reflector/reflector.conf`
-  $ systemctl enable reflector.service reflector.timer
   expect # A tool for automating interactive applications
   dust # directories disk usage display
   duf # Disk Usage/Free Utility
   hdparm
   sdparm # are command line utilities to set and view hardware parameters of hard disk drives. hdparm can also be used as a simple benchmarking tool
   fwupd
+  bind
+  freeipmi
+  hddtemp
+  tree
+  usbutils
+  vulkan-tools
+  xorg-xdpyinfo
+  xorg-xdriinfo
+  gpm # A mouse server for the console and xterm
+  hwdata # hardware identification databases
+  iniparser # A free stand-alone ini file parsing library written in portable ANSI C
+  kernel-modules-hook # Keeps your system fully functional after a kernel upgrade
+  libaio # The Linux-native asynchronous I/O facility (aio) library
+  libtraceevent # Linux kernel trace event library
+  libtracefs # Linux kernel trace file system library
+  liburcu # LGPLv2.1 userspace RCU (read-copy-update) library
+  libuv # Multi-platform support library with a focus on asynchronous I/O
+  libyuv # Library for YUV scaling
+  linux-api-headers # Kernel headers sanitized for use in userspace
+  logrotate # Rotates system logs automatically
+  lsb-release # LSB version query program
+  ndctl # Utility library for managing the libnvdimm (non-volatile memory device) sub-system in the Linux kernel
+  pkgfile # a pacman .files metadata explorer
+  plocate # Alternative to locate, faster and compatible with mlocate's database.
+  realtime-privileges # Realtime privileges for users
+  rtkit # Realtime Policy and Watchdog Daemon
+  sg3_utils # Generic SCSI utilities
+  starship # The cross-shell prompt for astronauts
+  sysfsutils # System Utilities Based on Sysfs
+  systemd-sysvcompat # sysvinit compat for systemd
+  tmux # Terminal multiplexer
+  tree # A directory listing program displaying a depth indented list of files
+  util-linux # provides fstrim.service and fstrim.timer systemd unit files
   profile-sync-daemon # is a tiny pseudo-daemon designed to manage browser profile(s) in tmpfs
   $ psd
   $ systemctl --user enable psd
-  util-linux # provides fstrim.service and fstrim.timer systemd unit files
+  $ systemctl enable reflector.service reflector.timer
   $ systemctl enable fstrim.timer
   $ systemctl enable systemd-oomd.service
   ```
@@ -569,11 +654,13 @@ pacman -S --needed - < pkglist.txt
   f2fs-tools
   fatresize
   fscrypt
-  smartmontools # Self-Monitoring, Analysis, and Reporting Technology through which devices monitor, store, and analyze the health of their operation
-  $ systemctl enable smartd.service
   libatasmart
   libnotify
   procps-ng
+  xfsprogs
+  mtools
+  smartmontools # Self-Monitoring, Analysis, and Reporting Technology through which devices monitor, store, and analyze the health of their operation
+  $ systemctl enable smartd.service
   ```
 
 
@@ -581,7 +668,6 @@ pacman -S --needed - < pkglist.txt
 
   ```bash
   udisks2 # implements D-Bus interfaces used to query and manipulate storage devices
-  $ systemctl enable udisks2.service
   udiskie # automounter with optional notifications, tray icon and support for password protected LUKS devices
   gvfs # virtual filesystem implementation for GIO
   gvfs-mtp # media players and mobile devices that use MTP
@@ -595,6 +681,10 @@ pacman -S --needed - < pkglist.txt
   android-udev # This package contains per manufacturer/device udev rules for MTP devices, making it easier to use ADB or MTP
   android-tools # The Android Debug Bridge (ADB) is a command-line tool that can be used to install, uninstall and debug apps, transfer files and access the device's shell
   scrcpy # display and control your Android device
+  gparted # partition manager (kde has its own partition manager!)
+  gpart # for recovering corrupt partition tables
+  xorg-xhost # authorization from wayland
+  $ systemctl enable udisks2.service
   ```
 
 
@@ -604,6 +694,7 @@ pacman -S --needed - < pkglist.txt
   bluez
   bluez-utils
   bluez-hid2hci
+  bluez-tools
   $ systemctl enable bluetooth.service
   ```
 
@@ -622,6 +713,8 @@ pacman -S --needed - < pkglist.txt
   zip
   unrar
   p7zip
+  gzip
+  pigz # Parallel implementation of the gzip file compressor
   unarchiver
   ```
 
@@ -632,28 +725,33 @@ pacman -S --needed - < pkglist.txt
   alsa-firmware # contains firmware that may be required for certain sound cards
   alsa-lib # An alternative implementation of Linux sound support
   alsa-oss # If you want OSS applications to work with dmix
-  alsa-plugins # if you are getting poor sound quality due to bad resampling
-  alsa-plugins # to enable upmixing/downmixing and other advanced features
+  alsa-plugins # if you are getting poor sound quality due to bad resampling + to enable upmixing/downmixing and other advanced features
   alsa-topology-conf # ALSA topology configuration files
   alsa-ucm-conf # ALSA Use Case Manager configuration (and topologies)
   alsa-utils # This contains (among other utilities) the alsamixer(1) and amixer(1) utilities
   sof-firmware # is required for some newer laptop models
   pipewire # a new low-level multimedia framework. It aims to offer capture and playback for both audio and video with minimal latency and support for PulseAudio, JACK, ALSA and GStreamer-based applications
-  $ systemctl enable pipewire.service
   wireplumber # more powerful Session manager and the current recommendation
   pipewire-audio
   pipewire-alsa
   pipewire-pulse
-  $ systemctl --global enable pipewire-pulse.service
   pipewire-jack
   pipewire-zeroconf
-  $ ufw allow 5353
   pipewire-v4l2
   slurp
   flac
   wavpack
   lame
   libmad
+  libavif # Library for encoding and decoding .avif files
+  libcanberra # A small and lightweight implementation of the XDG Sound Theme Specification
+  libmanette # Simple GObject game controller library
+  pcaudiolib # Portable C Audio Library
+  pipewire-x11-bell # Low-latency audio/video router and processor - X11 bell
+  tinycompress # ALSA compressed device interface
+  $ systemctl enable pipewire.service
+  $ systemctl --global enable pipewire-pulse.service
+  $ ufw allow 5353
   ```
 
 
@@ -716,6 +814,14 @@ pacman -S --needed - < pkglist.txt
   xorg-xwayland
   xorg-xeyes
   appmenu-gtk-module # to integrate application menus with the desktop environment's global menu bar
+  wpebackend-fdo # Freedesktop.org backend for WPE WebKit
+  xdg-dbus-proxy # Filtering proxy for D-Bus connections
+  xdg-user-dirs # Manage user directories like ~/Desktop and ~/Music
+  xdg-utils # Command line tools that assist applications with a variety of desktop integration tasks
+  xorg-xinit # X.Org initialisation program
+  xsel # Command-line program for getting and setting the contents of the X selection
+  gtk3
+  gtk2
   ```
 
 
@@ -727,11 +833,10 @@ pacman -S --needed - < pkglist.txt
   acpilight
   xorg-xbacklight
   ddcutil
-  autorandr # Automatically select a display configuration based on connected devices
   ```
 
 
-- Intel Graphics
+- Intel CPU and Graphics
 
   ```bash
   xf86-video-intel
@@ -740,6 +845,18 @@ pacman -S --needed - < pkglist.txt
   vulkan-intel
   intel-media-driver
   libva-intel-driver
+  v4l-utils
+  vdpauinfo
+  vulkan-icd-loader
+  vulkan-mesa-layers
+  libva
+  libva-mesa-driver
+  libva-utils
+  libvdpau
+  libvdpau-va-gl
+  mesa-demos
+  intel-gpu-tools
+  mesa-vdpau
   adriconf # GUI tool to configure Mesa drivers by setting options and writing them to the standard drirc file
   ```
 
@@ -808,62 +925,6 @@ pacman -S --needed - < pkglist.txt
   xclip
   ```
 
-
-- Download Manager
-
-  ```bash
-  persepolis # Graphical front-end for aria2 download manager with lots of features
-  ```
-
-
-- File Sharing with Windows
-
-  ```bash
-  samba
-  smbclient
-
-  $ nvim /etc/samba/smb.conf
-  ---------------------
-  [global]
-  workgroup = WORKGROUP
-  server string = Samba Server %v
-  netbios name = archlinux
-  security = user
-  map to guest = bad user
-  dns proxy = no
-
-  [share]
-  comment = Samba Share
-  path = /path/to/share
-  browseable = yes
-  read only = no
-  guest ok = yes
-  create mask = 0644
-  directory mask = 0755
-  ---------------------
-
-  $ systemctl enable smb.service
-  $ systemctl enable nmb.service
-  $ ufw allow Samba
-  ```
-
-
-- Avahi Daemomd
-
-  - disabling systemd-resolved may require some other replacement
-
-  ```bash
-  $ systemctl disable systemd-resolved.service
-  avahi # a free Zero-configuration networking (zeroconf) implementation, including a system for multicast DNS/DNS-SD service discovery
-  nss-mdns # Hostname resolution
-  ## edit the file /etc/nsswitch.conf and change the hosts line to include mdns_minimal [NOTFOUND=return] before resolve and dns
-  ## hosts: mymachines mdns_minimal [NOTFOUND=return] resolve [!UNAVAIL=return] files myhostname dns
-  $ ufw allow 5353
-  cp /usr/share/doc/avahi/ssh.service /etc/avahi/services/
-  $ systemctl enable avahi-daemon.service
-  ```
-
-
 - Multimedia codecs & player
 
   ```bash
@@ -881,6 +942,7 @@ pacman -S --needed - < pkglist.txt
   smplayer # I love it :)
   smplayer-skins
   smplayer-themes
+  phonon-qt5-gstreamer # Phonon GStreamer backend for Qt5
   ```
 
 
@@ -896,129 +958,23 @@ pacman -S --needed - < pkglist.txt
   pdfslicer # Simple application to extract, merge, rotate and reorder pages of PDF documents
   ```
 
-
-- Useful packages (still need to check description)
+- Fonts
 
   ```bash
-  geoip
-  geoip-database
-  gnome-multi-writer
-  gnu-netcat
-  gpm
-  harfbuzz-icu
-  hblock
-  hwdata
-  hyphen
-  icu
-  ifplugd
-  inetutils
-  iniparser
-  intel-gpu-tools
-  kernel-modules-hook
-  layer-shell-qt
-  libaio
-  libavif
-  libcanberra
-  libcanberra-pulse
-  libmanette
-  libmaxminddb
-  libomxil-bellagio
-  libsoup
-  libtraceevent
-  libtracefs
-  liburcu
-  libuv
-  libva
-  libva-mesa-driver
-  libva-utils
-  libvdpau
-  libvdpau-va-gl
-  libyuv
-  linux-api-headers
-  linux-firmware
-  linux-firmware-qlogic
-  linux-lts
-  logrotate
-  lsb-release
-  lua53
-  lvm2
-  mesa-demos
-  mesa-vdpau
-  mtools
-  ndctl
-  net-tools
-  nfs-utils
-  nmap
-  ntp
-  nvidia-lts
-  opencl-nvidia
-  openresolv
-  otf-ipafont
-  pcaudiolib
-  perl-clone
-  perl-file-listing
-  perl-file-mimeinfo
-  perl-html-parser
-  perl-html-tagset
-  perl-http-cookies
-  perl-http-daemon
-  perl-http-date
-  perl-http-message
-  perl-http-negotiate
-  perl-io-html
-  perl-libwww
-  perl-lwp-mediatypes
-  perl-net-http
-  perl-try-tiny
-  perl-www-robotrules
-  perl-xml-parser
-  perl-xml-writer
-  phonon-qt5-gstreamer
-  pigz
-  pipewire-x11-bell
-  pkgfile
-  plocate
-  pyenv
-  realtime-privileges
-  rsync
-  rtkit
-  sg3_utils
-  socat
-  sshfs
-  starship
-  sysfsutils
-  systemd-sysvcompat
-  telegram-desktop
-  terminus-font
-  thin-provisioning-tools
-  tinycompress
-  tmux
-  traceroute
-  tree
-  ttf-cascadia-code-nerd
-  ttf-hack-nerd
-  usbutils
-  v4l-utils
-  vdpauinfo
-  vulkan-icd-loader
-  vulkan-mesa-layers
-  vulkan-tools
-  wireless-regdb
-  woff2
-  wpa_supplicant
-  wpebackend-fdo
-  xdg-dbus-proxy
-  xdg-user-dirs
-  xdg-utils
-  xorg-xinit
-  xorg-xrandr
-  xsel
+  harfbuzz-icu # OpenType text shaping engine - ICU integration
+  icu # International Components for Unicode library
+  otf-ipafont # Japanese outline fonts by Information-technology Promotion Agency, Japan (IPA)
+  terminus-font # Monospace bitmap font (for X11 and console)
+  ttf-cascadia-code-nerd # Patched font Cascadia Code (Caskaydia) from nerd fonts library
+  ttf-hack-nerd # Patched font Hack from nerd fonts library
+  woff2 # Web Open Font Format 2 reference implementation
   ```
 
 
 ### KDE Applications
 
 ```bash
+layer-shell-qt # Qt component to allow applications to make use of the Wayland wl-layer-shell protocol
 ark # Archiving tool included in the KDE desktop
 aur/isoimagewriter # Tool to write a .iso file to a USB disk
 aur/kcm-polkit-kde-git # Set of configuration modules which allows administrator to change PolicyKit settings
@@ -1241,6 +1197,20 @@ fi
 
 ```bash
 aur/mkinitcpio-firmware # The meta-package that contains most optional firmwares
+```
+that includes firmwares listed bellow including `linux-firmware-mellanox` too.
+
+```bash
+linux-firmware
+linux-firmware-qlogic
+linux-firmware-bnx2x
+linux-firmware-liquidio
+linux-firmware-nfp
+
+aur/ast-firmware
+aur/aic94xx-firmware
+aur/wd719x-firmware
+aur/upd72020x-fw
 ```
 
 ## Further Reading
