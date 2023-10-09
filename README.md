@@ -421,6 +421,7 @@ pacman -S --needed - < pkglist.txt
 
   ```bash
   # non-root user
+  sudo pacman -S --needed base-devel git
   cd /tmp
   git clone https://aur.archlinux.org/pikaur.git
   cd pikaur
