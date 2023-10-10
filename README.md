@@ -750,8 +750,7 @@ pacman -S --needed - < pkglist.txt
   pcaudiolib # Portable C Audio Library
   pipewire-x11-bell # Low-latency audio/video router and processor - X11 bell
   tinycompress # ALSA compressed device interface
-  $ systemctl enable pipewire.service
-  $ systemctl --global enable pipewire-pulse.service
+  $ systemctl --global enable pipewire.service pipewire-pulse.service
   $ ufw allow 5353
   ```
 
