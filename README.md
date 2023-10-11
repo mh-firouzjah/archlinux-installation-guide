@@ -194,7 +194,7 @@ In this content I'll explain how to install Arch Linux (64-bit) using systemd-bo
 
     ```bash
     mount /dev/nvme0n1p1 /mnt/boot
-    mount -t ntfs3 -o rw,nls=utf8,noatime,windows_names,x-systemd.automount,x-systemd.idle-timeout=10min /dev/sda1 /mnt/hdd
+    mount -t ntfs-3g -o defaults,noauto,noatime,discard,nofail,users,windows_names,utf8,nls=utf8,x-systemd.idle-timeout=10min /dev/sda1 /mnt/hdd
     ```
 
 - Install basic system
@@ -847,6 +847,7 @@ pacman -S --needed - < pkglist.txt
     ---------------------
     # in `MODULES=` and add the following options to:
     MODULES=(... nvidia nvidia_modeset nvidia_uvm nvidia_drm)
+
     # in HOOKS remove kms
 
     $ mkinitcpio -P
