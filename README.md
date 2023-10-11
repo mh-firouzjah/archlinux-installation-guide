@@ -2,16 +2,15 @@
 
 In this content I'll explain how to install Arch Linux (64-bit) using systemd-boot and Ext4 or BTRFS filesystem and booting in UEFI mode
 
-
 ## Prepare an installation medium
 
 - Acquire an installation ISO image
 
-  Download the iso image from the offical website at https://archlinux.org/download/
+  Download the iso image from the official website at <https://archlinux.org/download/>
 
 - Verify signature
 
-  - Download the ISO PGP signature under Checksums in the Download Page at https://archlinux.org/download/#checksums
+  - Download the ISO PGP signature under Checksums in the Download Page at <https://archlinux.org/download/#checksums>
 
   - Verifying it with
 
@@ -31,20 +30,19 @@ In this content I'll explain how to install Arch Linux (64-bit) using systemd-bo
   dd bs=4M if=path/to/archlinux-VERSION-x86_64.iso of=/dev/sdx conv=fsync oflag=direct status=progress
   ```
 
-
 ## Boot the live environment
 
 - ***Note**: Arch Linux installation images do not support Secure Boot. You will need to disable Secure Boot to boot the installation medium. If desired, Secure Boot can be set up after completing the installation.*
 
 - Connect to the internet:
 
-	- Ethernet — plug in the cable
+  - Ethernet — plug in the cable
 
-	- Wi-Fi — authenticate to the wireless network using iwctl
+  - Wi-Fi — authenticate to the wireless network using iwctl
 
-	  ```bash
-	  lwctl --passphrase PASSWORD station wlan0 connect WIFINAME
-	  ```
+   ```bash
+   lwctl --passphrase PASSWORD station wlan0 connect WIFINAME
+   ```
 
 - The connection may be verified with `ping`
 
@@ -76,18 +74,23 @@ In this content I'll explain how to install Arch Linux (64-bit) using systemd-bo
   ls /sys/firmware/efi/efivars # any output indicates uefi boot
   ```
 
-- Partition the disks 
+- Partition the disks
 
   - Since we are using UEFI boot, we need to create a GPT partition table and also we need an efi partition. it's easier to consider `/boot` for that efi partition.
 
   - You can use 1 GiB size for `/boot` to be on the safe side.
-  for example adding nvidia mudole to mkinitcpio will increase ~=50-60mb to each initramfs and it's fallback.
+  for example adding nvidia mudole to `mkinitcpio` will increase ~=50-60mb to each initramfs and it's fallback.
 
   - Since `/var` is frequently read or written, it is recommended that you consider the location of this partition on a spinning disk.
 
     - With that being said, newer SSDs, especially those with higher capacities, have a longer lifespan (support lots of writes and erases e.g 20g/dey for near 10 years).
 
-  - If you want to go with BTRFS, consider creating subvolumes for other directories that contain data you do not want to include in snapshots and rollbacks of the `@` subvolume, such as `/var/cache`, `/var/spool`, `/var/tmp`, `/var/lib/machines` (systemd-nspawn), `/var/lib/docker` (Docker), `/var/lib/postgres` (PostgreSQL), and other data directories under `/var/lib/`. It is up to you if you want to follow the flat layout or create nested subvolumes. On the other hand, the pacman database in `/var/lib/pacman` **_must_** stay on the root subvolume (`@`).
+  - If you want to go with `BTRFS`, consider creating subvolumes for other directories that contain data you do not want to include in snapshots and rollbacks of the `@` subvolume, such as `/var/cache`, `/var/spool`, `/var/tmp`, `/var/lib/machines` (systemd-nspawn), `/var/lib/docker` (Docker), `/var/lib/postgres` (PostgreSQL), and other data directories under `/var/lib/`. It is up to you if you want to follow the flat layout or create nested subvolumes. On the other hand, the pacman database in `/var/lib/pacman` ***must*** stay on the root subvolume (`@`).
+
+  | partition | size | fs-type | mount | point | partition |
+  | --- | --- | --- | --- | --- | --- |
+  |efi | 1 GiB          | EFI system     | /mnt/boot | /dev/efi_partition
+  |root| remaining space| Linux file sys | /mnt      | /dev/root_partition
 
   ```bash
   $ fdisk -l
@@ -134,7 +137,7 @@ In this content I'll explain how to install Arch Linux (64-bit) using systemd-bo
   # The partition table has been altered
   ```
 
-  - Format EFI parition
+  - Format EFI partition
 
     ```bash
     mkfs.fat -F 32 -n EFI /dev/nvme0n1p1
@@ -231,7 +234,7 @@ In this content I'll explain how to install Arch Linux (64-bit) using systemd-bo
 
   locale-gen
 
-  echo "LANGE=en_US.UTF-8" > /etc/locale.conf
+  echo "LANG=en_US.UTF-8" > /etc/locale.conf
   ```
 
 - Configure network
@@ -267,13 +270,11 @@ In this content I'll explain how to install Arch Linux (64-bit) using systemd-bo
 
   - For Ext4
 
-    - *Note:* Because this loader entry will mount the root partition then the `fstab` line regarding the mount of root partition will remount that partition so I wrote all mount options here as `rootflags` and I removed that line from `/etc/fstab`, I don't know if it's a bad idea or not.
-
     ```bash
-    echo "options root=/dev/nvme0n1p2 rootfstype=ext4 rootflags=rw,noatime,discard,journal_checksum,commit=120,min_batch_time=200,auto_da_alloc add_efi_memmap" >> arch-lts.conf
+    echo "options root=/dev/nvme0n1p2 rootfstype=ext4 add_efi_memmap" >> arch-lts.conf
     ```
 
-  - For BTRFS 
+  - For BTRFS
 
     ```bash
     echo "options root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ add_efi_memmap" >> arch-lts.conf
@@ -295,9 +296,9 @@ In this content I'll explain how to install Arch Linux (64-bit) using systemd-bo
 
 - Secure Boot
 
-Secure Boot is in Setup Mode when the Platform Key is removed. To put firmware in Setup Mode, enter firmware setup utility and find an option to delete or clear certificates.
+  Secure Boot is in Setup Mode when the Platform Key is removed. To put firmware in Setup Mode, enter firmware setup utility and find an option to delete or clear certificates.
 
-  - *__Note__: sbctl does not work with all hardware. How well it will work depends on the manufacturer.*
+  - ***Note**: sbctl does not work with all hardware. How well it will work depends on the manufacturer.*
 
   ```bash
   sbctl create-keys
@@ -330,12 +331,12 @@ Secure Boot is in Setup Mode when the Platform Key is removed. To put firmware i
   HOOKS=(base systemd[udev] fsck ...)
 
   # uncomment and edit `COMPRESSION_OPTIONS=` to save space for custom kernels
-  COMPRESSION_OPTIONS=(-v -5 --long)
-  
+  COMPRESSION_OPTIONS=(-v -9 --long)
+
   # add this line at the end
   MODULES_DECOMPRESS="yes"
-
   ```
+
   Then run
 
   ```bash
@@ -380,7 +381,7 @@ Secure Boot is in Setup Mode when the Platform Key is removed. To put firmware i
   - then to connect to Wi-Fi run
 
     ```bash
-     nmcli dev wlan0 connect WIFI_NAME password "network-password"
+     nmcli dev wifi connect WIFI_NAME password "network-password"
     ```
 
 - Exit chroot environment
@@ -412,7 +413,6 @@ Although I’ll explain my suggested packages later, for convenience let’s use
 - I recmmend `pikaur`, it uses the same command as pacman's - obviously the command starts with pikaur ;)
 *It's safer to use pikaur to install packages once loged-in with non-root user
 
-
 ```bash
 pacman -S --needed - < pkglist.txt
 ```
@@ -431,7 +431,6 @@ pacman -S --needed - < pkglist.txt
 
 ### Packages
 
-
 - Power Management
 
   ```bash
@@ -446,7 +445,6 @@ pacman -S --needed - < pkglist.txt
   $ systemctl enable power-profiles-daemon.service
   $ systemctl enable acpid.service
   ```
-
 
 - CPU Performance
 
@@ -464,7 +462,6 @@ pacman -S --needed - < pkglist.txt
   $ systemctl enable irqbalance.service
   ```
 
-
 - Firewall
 
   ```bash
@@ -475,7 +472,6 @@ pacman -S --needed - < pkglist.txt
   $ ufw allow 5353 # to allow zeroconf
   $ ufw enable
   ```
-
 
 - Network Manager
 
@@ -542,7 +538,6 @@ pacman -S --needed - < pkglist.txt
     network-manager-sstp
     ```
 
-
 - Anonymizing overlay network
 
   ```bash
@@ -551,7 +546,6 @@ pacman -S --needed - < pkglist.txt
   $ systemctl enable tor.service
   ```
 
-
 - Ncrypted communication sessions over a computer network
 
   ```bash
@@ -559,14 +553,12 @@ pacman -S --needed - < pkglist.txt
   openssl
   ```
 
-
 - Download Manager
 
   ```bash
   wget # A network utility to retrieve files from the Web
   curl # command line tool and library for transferring data with URLs
   ```
-
 
 - Developer Tools
 
@@ -577,7 +569,6 @@ pacman -S --needed - < pkglist.txt
   ipython
   pyenv # Easily switch between multiple versions of Python
   ```
-
 
 - System maintenance
 
@@ -593,8 +584,7 @@ pacman -S --needed - < pkglist.txt
   eza # A modern replacement for ls (community fork of exa)
   inxi # A script to get system information
   neofetch # A fast, highly customizable system info script that supports displaying images with w3m
-  hwinfo # Powerful hardware detection tool come from openSUSE
-  solid # Hardware integration and detection
+  hwinfo # Powerful hardware detection tool come from openSUSE  
   reflector # service will run reflector with the parameters specified in `/etc/xdg/reflector/reflector.conf`
   expect # A tool for automating interactive applications
   dust # directories disk usage display
@@ -643,7 +633,6 @@ pacman -S --needed - < pkglist.txt
   $ systemctl enable systemd-oomd.service
   ```
 
-
 - Filesystem Utils
 
   ```bash
@@ -664,7 +653,6 @@ pacman -S --needed - < pkglist.txt
   $ systemctl enable smartd.service
   ```
 
-
 - Mounting Devices
 
   ```bash
@@ -677,7 +665,6 @@ pacman -S --needed - < pkglist.txt
   gvfs-afc # Apple mobile devices
   gvfs-gphoto2 # for having access at least to the photos
   libmtp # is a library MTP implementation, which also comes with some example command-line tools
-  android-file-transfer
   mtpfs # based on libmtp, it is a FUSE filesystem that supports reading and writing from any MTP device
   android-udev # This package contains per manufacturer/device udev rules for MTP devices, making it easier to use ADB or MTP
   android-tools # The Android Debug Bridge (ADB) is a command-line tool that can be used to install, uninstall and debug apps, transfer files and access the device's shell
@@ -687,7 +674,6 @@ pacman -S --needed - < pkglist.txt
   xorg-xhost # authorization from wayland
   $ systemctl enable udisks2.service
   ```
-
 
 - Bluetooth
 
@@ -699,13 +685,11 @@ pacman -S --needed - < pkglist.txt
   $ systemctl enable bluetooth.service
   ```
 
-
 - User Privilege
 
   ```bash
   polkit # for defining and handling the policy that allows unprivileged processes to speak to privileged processes
   ```
-
 
 - Archiving
 
@@ -718,7 +702,6 @@ pacman -S --needed - < pkglist.txt
   pigz # Parallel implementation of the gzip file compressor
   unarchiver
   ```
-
 
 - Sound
 
@@ -733,6 +716,7 @@ pacman -S --needed - < pkglist.txt
   sof-firmware # is required for some newer laptop models
   pipewire # a new low-level multimedia framework. It aims to offer capture and playback for both audio and video with minimal latency and support for PulseAudio, JACK, ALSA and GStreamer-based applications
   wireplumber # more powerful Session manager and the current recommendation
+  upower
   pipewire-audio
   pipewire-alsa
   pipewire-pulse
@@ -750,10 +734,9 @@ pacman -S --needed - < pkglist.txt
   pcaudiolib # Portable C Audio Library
   pipewire-x11-bell # Low-latency audio/video router and processor - X11 bell
   tinycompress # ALSA compressed device interface
-  $ systemctl --global enable pipewire.service pipewire-pulse.service
+  $ systemctl --global enable pipewire pipewire-pulse upower
   $ ufw allow 5353
   ```
-
 
 - Manual pages
 
@@ -761,7 +744,6 @@ pacman -S --needed - < pkglist.txt
   man-db
   man-pages
   ```
-
 
 - Shell
 
@@ -773,7 +755,6 @@ pacman -S --needed - < pkglist.txt
   zsh-syntax-highlighting
   zsh-theme-powerlevel10k
   ```
-
 
 - Advanced Swapping
 
@@ -806,35 +787,15 @@ pacman -S --needed - < pkglist.txt
 
 ### GUI Evironment
 
-
 - Not for a specific DE
 
   ```bash
-  xorg-server # the most popular display server among Linux users
-  xorg-xwayland
-  xorg-xeyes
   appmenu-gtk-module # to integrate application menus with the desktop environment's global menu bar
   wpebackend-fdo # Freedesktop.org backend for WPE WebKit
   xdg-dbus-proxy # Filtering proxy for D-Bus connections
   xdg-user-dirs # Manage user directories like ~/Desktop and ~/Music
   xdg-utils # Command line tools that assist applications with a variety of desktop integration tasks
-  xorg-xinit # X.Org initialisation program
-  xsel # Command-line program for getting and setting the contents of the X selection
-  gtk3
-  gtk2
   ```
-
-
-- Monitor Gama & Color Adjustment
-
-  ```bash
-  xcalib # Monitor calibration loader
-  xorg-xgamma # Alter a monitor's gamma correction
-  acpilight
-  xorg-xbacklight
-  ddcutil
-  ```
-
 
 - Intel CPU and Graphics
 
@@ -860,7 +821,6 @@ pacman -S --needed - < pkglist.txt
   adriconf # GUI tool to configure Mesa drivers by setting options and writing them to the standard drirc file
   ```
 
-
 - Nvidia Graphics
 
   - Option One - nouveau:
@@ -873,7 +833,10 @@ pacman -S --needed - < pkglist.txt
   - Option Two - nvidia:
 
     ```bash
-    nvidia-lts
+    dkms
+    # nvidia
+    # nvidia-lts
+    nvidia-dkms
     nvidia-utils
     nvidia-settings
     nvidia-prime
@@ -884,13 +847,14 @@ pacman -S --needed - < pkglist.txt
     ---------------------
     # in `MODULES=` and add the following options to:
     MODULES=(... nvidia nvidia_modeset nvidia_uvm nvidia_drm)
+    # in HOOKS remove kms
 
     $ mkinitcpio -P
+    $ systemctl enable nvidia-hibernate nvidia-resume nvidia-persistenced  nvidia-suspend nvidia-powerd
     ```
 
     *To avoid the possibility of forgetting to update initramfs after an NVIDIA driver upgrade, you may want to use a pacman hook:*
     *Make sure the Target package set in this hook is the one you have installed in steps above (e.g. `nvidia`, `nvidia-dkms`, `nvidia-lts` or `nvidia-ck-something`).*
-
 
     ```bash
     $ nvim /etc/pacman.d/hooks/nvidia.hook
@@ -913,18 +877,6 @@ pacman -S --needed - < pkglist.txt
     Exec=/bin/sh -c 'while read -r trg; do case $trg in linux-lts) exit 0; esac; done; /usr/bin/mkinitcpio -P'
     ```
 
-
-- Input devices (Mouse/Keyboard)
-
-  ```bash
-  libinput # libinput is a library to handle input devices
-  xf86-input-libinput # libinput is a library to handle input devices
-  xorg-xinput # On-demand disabling and enabling of input sources
-  xorg-xset
-  xorg-xkill # Killing an application visually
-  xclip
-  ```
-
 - Multimedia codecs & player
 
   ```bash
@@ -939,12 +891,16 @@ pacman -S --needed - < pkglist.txt
   gstreamer
   gstreamer-vaapi
   mplayer # because pulls in a large number of codecs as dependencies, and also has codecs built in
-  smplayer # I love it :)
-  smplayer-skins
-  smplayer-themes
-  phonon-qt5-gstreamer # Phonon GStreamer backend for Qt5
   ```
 
+  - SMPlayers
+
+    ```bash
+    smplayer
+    smplayer-skins
+    smplayer-themes
+    phonon-qt5-gstreamer # Phonon GStreamer backend for Qt5
+    ```
 
 - Text Editor & Office
 
@@ -962,18 +918,16 @@ pacman -S --needed - < pkglist.txt
 
   ```bash
   harfbuzz-icu # OpenType text shaping engine - ICU integration
-  icu # International Components for Unicode library
-  otf-ipafont # Japanese outline fonts by Information-technology Promotion Agency, Japan (IPA)
   terminus-font # Monospace bitmap font (for X11 and console)
   ttf-cascadia-code-nerd # Patched font Cascadia Code (Caskaydia) from nerd fonts library
   ttf-hack-nerd # Patched font Hack from nerd fonts library
   woff2 # Web Open Font Format 2 reference implementation
   ```
 
-
 ### KDE Applications
 
 ```bash
+solid # Hardware integration and detection
 layer-shell-qt # Qt component to allow applications to make use of the Wayland wl-layer-shell protocol
 ark # Archiving tool included in the KDE desktop
 aur/isoimagewriter # Tool to write a .iso file to a USB disk
@@ -1116,8 +1070,7 @@ Section "InputClass"
 EndSection
 ```
 
-
-### ACPID:
+### ACPID
 
 acpid generates events for some ordinary key presses, such as arrow keys. This results in event/handler spam, visible in system logs or top. Events for these buttons can be dropped in the configuration file:
 
@@ -1127,7 +1080,6 @@ nvim /etc/acpi/events/buttons
 event=button/(up|down|left|right|kpenter)
 action=<drop>
 ```
-
 
 ### Advanced Sound
 
@@ -1164,7 +1116,7 @@ blacklist snd_hda_codec_hdmi
 blacklist uvcvideo
 ```
 
-  - Temporarily enable or disable the webcam
+- Temporarily enable or disable the webcam
 
     ```bash
     modprobe uvcvideo
@@ -1198,6 +1150,7 @@ fi
 ```bash
 aur/mkinitcpio-firmware # The meta-package that contains most optional firmwares
 ```
+
 that includes firmwares listed bellow including `linux-firmware-mellanox` too.
 
 ```bash
@@ -1215,4 +1168,4 @@ aur/upd72020x-fw
 
 ## Further Reading
 
-https://wiki.archlinux.org/title/Core_utilities#find_alternatives
+<https://wiki.archlinux.org/title/Core_utilities#find_alternatives>
