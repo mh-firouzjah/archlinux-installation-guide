@@ -684,6 +684,7 @@ pacman -S --needed - < pkglist.txt
   bluez-utils
   bluez-hid2hci
   bluez-tools
+  blueman # for DEs except KDE, Gnome
   $ systemctl enable bluetooth.service
   ```
 
@@ -703,6 +704,7 @@ pacman -S --needed - < pkglist.txt
   gzip
   pigz # Parallel implementation of the gzip file compressor
   unarchiver
+  xarchiver # GUI tool
   ```
 
 - Sound
@@ -792,6 +794,7 @@ pacman -S --needed - < pkglist.txt
 - Not for a specific DE
 
   ```bash
+  accountsservice # D-Bus interface for user account query and manipulation required by display managers
   appmenu-gtk-module # to integrate application menus with the desktop environment's global menu bar
   wpebackend-fdo # Freedesktop.org backend for WPE WebKit
   xdg-dbus-proxy # Filtering proxy for D-Bus connections
@@ -802,25 +805,25 @@ pacman -S --needed - < pkglist.txt
 - Intel CPU and Graphics
 
   ```bash
-  xf86-video-intel
-  mesa-amber # it's for intel cpu gen7 and older but you may use mesa instead
-  mesa-utils
-  vulkan-intel
+  adriconf # GUI tool to configure Mesa drivers by setting options and writing them to the standard drirc file
+  intel-gpu-tools
   intel-media-driver
-  libva-intel-driver
-  v4l-utils
-  vdpauinfo
-  vulkan-icd-loader
-  vulkan-mesa-layers
   libva
+  libva-intel-driver
   libva-mesa-driver
   libva-utils
   libvdpau
   libvdpau-va-gl
+  mesa-amber # it's for intel cpu gen7 and older but you may use mesa instead
   mesa-demos
-  intel-gpu-tools
+  mesa-utils
   mesa-vdpau
-  adriconf # GUI tool to configure Mesa drivers by setting options and writing them to the standard drirc file
+  v4l-utils
+  vdpauinfo
+  vulkan-icd-loader
+  vulkan-intel
+  vulkan-mesa-layers
+  xf86-video-intel
   ```
 
 - Nvidia Graphics
@@ -843,6 +846,8 @@ pacman -S --needed - < pkglist.txt
     nvidia-settings
     nvidia-prime
     xorg-server-devel
+    xapp
+    aur/optimus-manager
 
     $ echo "options nomodeset i915.modeset=0 nouveau.modeset=0 nvidia-drm.modeset=1" > /etc/modprobe.d/nvidia.conf
     $ nvim /etc/mkinitcpio.conf
@@ -867,8 +872,8 @@ pacman -S --needed - < pkglist.txt
     Operation=Upgrade
     Operation=Remove
     Type=Package
-    Target=nvidia-lts
-    Target=linux-lts
+    Target=nvidia-dkms
+    Target=linux-zen
     # Change the `Target=linux` part above and in the Exec line if a different kernel is used
     # Change the `Target=nvidia` part above if a different nvidia is used
 
@@ -877,8 +882,10 @@ pacman -S --needed - < pkglist.txt
     Depends=mkinitcpio
     When=PostTransaction
     NeedsTargets
-    Exec=/bin/sh -c 'while read -r trg; do case $trg in linux-lts) exit 0; esac; done; /usr/bin/mkinitcpio -P'
+    Exec=/bin/sh -c 'while read -r trg; do case $trg in linux-zen) exit 0; esac; done; /usr/bin/mkinitcpio -P'
     ```
+
+    - To use optimus-manager for the first time, call `prime-offload` then do e.g `optimus-manager --switch MODE`
 
 - Multimedia codecs & player
 
