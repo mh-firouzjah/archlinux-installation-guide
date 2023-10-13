@@ -473,6 +473,7 @@ pacman -S --needed - < pkglist.txt
   $ ufw default allow outgoing
   $ ufw allow 5353 # to allow zeroconf
   $ ufw enable
+  $ ufw logging off
   ```
 
 - Network Manager
@@ -850,6 +851,11 @@ pacman -S --needed - < pkglist.txt
     aur/optimus-manager
 
     $ echo "options nomodeset i915.modeset=0 nouveau.modeset=0 nvidia-drm.modeset=1" > /etc/modprobe.d/nvidia.conf
+
+    $ nvim /boot/loader/entries/arch-zen.conf
+    ---------------------
+    options ... loglevel=3 nvidia_drm.modeset=1 video=HDMI-A-1:1920x1080@60D
+
     $ nvim /etc/mkinitcpio.conf
     ---------------------
     # in `MODULES=` and add the following options to:
