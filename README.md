@@ -437,14 +437,12 @@ pacman -S --needed - < pkglist.txt
 
   ```bash
   powertop
-  power-profiles-daemon # handles power profiles (e.g. balanced, power-saver, performance)
   tcl
   tk
   acpi
   acpid # a flexible and extensible daemon for delivering ACPI events.
   aur/laptop-mode-tools # considered by many to be the de facto utility for power saving
   xss-lock
-  $ systemctl enable power-profiles-daemon.service
   $ systemctl enable acpid.service
   ```
 
@@ -458,10 +456,19 @@ pacman -S --needed - < pkglist.txt
   lm_sensors # Linux monitoring sensors
   i2c-tools # DIMM temperature sensors
   irqbalance # distribute hardware interrupts across processors on a multiprocessor system in order to increase performance
-  $ x86_energy_perf_policy --turbo-enable 0
+  power-profiles-daemon # handles power profiles (e.g. balanced, power-saver, performance)
+
   $ systemctl enable cpupower.service
   $ systemctl enable thermald.service
   $ systemctl enable irqbalance.service
+  $ systemctl enable power-profiles-daemon.service
+
+  # Note: careful about the following lines
+  $ x86_energy_perf_policy --turbo-enable 0
+  $ powerprofilesctl set power-saver
+  $ nvim /boot/loader/entries/arch-zen.conf
+  ---------------------
+  options ... cpufreq.default_governor=powersave # performance - balance - powersave
   ```
 
 - Firewall
@@ -854,7 +861,7 @@ pacman -S --needed - < pkglist.txt
 
     $ nvim /boot/loader/entries/arch-zen.conf
     ---------------------
-    options ... loglevel=3 nvidia_drm.modeset=1 video=HDMI-A-1:1920x1080@60D
+    options ... loglevel=3 nvidia_drm.modeset=1 video=HDMI-A-1:1920x1080@60D cpufreq.default_governor=powersave
 
     $ nvim /etc/mkinitcpio.conf
     ---------------------
@@ -864,7 +871,7 @@ pacman -S --needed - < pkglist.txt
     # in HOOKS remove kms
 
     $ mkinitcpio -P
-    $ systemctl enable nvidia-hibernate nvidia-resume nvidia-persistenced  nvidia-suspend nvidia-powerd
+    $ systemctl enable nvidia-hibernate nvidia-resume  nvidia-suspend
     ```
 
     *To avoid the possibility of forgetting to update initramfs after an NVIDIA driver upgrade, you may want to use a pacman hook:*
