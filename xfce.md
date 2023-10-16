@@ -15,8 +15,33 @@ sudo pacman -Rns tumbler ristretto
   xfce4-goodies
   lightdm-gtk-greeter
   lightdm-gtk-greeter-settings
-  gnome-keyring
   ```
+
+  - gnome-keyring
+
+    Add auth optional pam_gnome_keyring.so at the end of the auth section and session
+    optional pam_gnome_keyring.so auto_start at the end of the session section.
+
+    ```bash
+    gnome-keyring
+    libsecret
+
+    $ nvim /etc/pam.d/login
+    ---------------------
+    ...         ...           ...
+    auth       optional     pam_gnome_keyring.so
+    ...         ...           ...
+    session    optional     pam_gnome_keyring.so auto_start
+    ```
+
+  - Automatically change keyring password with user password
+
+    ```bash
+    $ nvim /etc/pam.d/passwd
+    ---------------------
+    ...
+    password optional pam_gnome_keyring.so
+    ```
 
 - Themes
 

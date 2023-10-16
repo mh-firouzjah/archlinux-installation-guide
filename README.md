@@ -250,6 +250,14 @@ In this content I'll explain how to install Arch Linux (64-bit) using systemd-bo
   echo "127.0.1.1 ${hostname}.localdomain ${hostname}" >> /etc/hosts
   ```
 
+- Configure TTY Fonts
+
+  This will prevent systemd-vconsole-setup.service logging error message too
+
+  ```bash
+  echo "FONT=LatArCyrHeb-14" > /etc/vconsole.conf
+  ```
+
 - Configure bootloader
 
   ```bash
