@@ -406,14 +406,15 @@ In this content I'll explain how to install Arch Linux (64-bit) using systemd-bo
 
 ## Additional Packages
 
-Although I’ll explain my suggested packages later, for convenience let’s use Pacman’s feature to install the packages listed in a text file.
+Although I’ll explain my suggested packages later, for convenience let’s use Pacman’s
+feature to install the packages listed in a text file.
 
-- **You may edit the list to include only the packages you want.*
+- **You have to generatesthe list to include only the packages you want.*
 
-- Packages from AUR are prefixed with `aur/`, but their listed in `aur-pkglist.txt` and not in `pkglist.txt` and ou can use any pacman wrapper of your choice to install them.
+- Packages from AUR are prefixed with `aur/`, you can use any pacman wrapper of your choice to install them.
 
-- I recmmend `pikaur`, it uses the same command as pacman's - obviously the command starts with pikaur ;)
-*It's safer to use pikaur to install packages once loged-in with non-root user
+- I recommend `pikaur`, it uses the same command as pacman's - obviously the command starts with pikaur
+*It's safer to use pikaur to install packages once logged-in with non-root user
 
 ```bash
 pacman -S --needed - < pkglist.txt
@@ -466,7 +467,7 @@ pacman -S --needed - < pkglist.txt
   # Note: careful about the following lines
   $ x86_energy_perf_policy --turbo-enable 0
   $ powerprofilesctl set power-saver
-  $ nvim /boot/loader/entries/arch-zen.conf
+  $ nvim /boot/loader/entries/arch-lts.conf
   ---------------------
   options ... cpufreq.default_governor=powersave # performance - balance - powersave
   ```
@@ -483,53 +484,25 @@ pacman -S --needed - < pkglist.txt
   $ ufw logging off
   ```
 
-- Network Manager
+- Network
 
   ```bash
-  geoip # Non-DNS IP-to-country resolver C library & utils
-  geoip-database # GeoIP legacy country database (based on GeoLite2 data created by MaxMind)
-  gnu-netcat # GNU rewrite of netcat, the network piping application
+  ethtool # Utility for controlling network drivers and hardware
   hblock # Adblocker that creates a hosts file from multiple sources
-  modemmanager
-  usb_modeswitch # Activating switchable USB devices on Linux
-  wireless_tools
-  wireless-regdb
   ifplugd # A daemon which brings up/down network interfaces upon cable insertion/removal.
   inetutils # A collection of common network programs
-  libmaxminddb # MaxMindDB GeoIP2 database library
-  libomxil-bellagio # An opensource implementation of the OpenMAX Integration Layer API
-  libsoup # HTTP client/server library for GNOME
+  modemmanager # Mobile broadband modem management service
   net-tools # Configuration tools for Linux networking
+  network-manager-applet # GUI tool for DEs except KDE, Gnome
   nmap # Utility for network discovery and security auditing
   ntp # Network Time Protocol reference implementation
   openresolv # resolv.conf management framework (resolvconf)
   rsync # A fast and versatile file copying tool for remote and local files
-  socat # Multipurpose relay
   sshfs # FUSE client based on the SSH File Transfer Protocol
-  thin-provisioning-tools # Suite of tools for manipulating the metadata of the dm-thin device-mapper target
   traceroute # Tracks the route taken by packets over an IP network
-  nfs-utils # Support programs for Network File Systems
-  perl-clone # Recursive copy of nested objects.
-  perl-file-listing # parse directory listing
-  perl-file-mimeinfo # Determine file type, includes mimeopen and mimetype
-  perl-html-parser # Perl HTML parser class
-  perl-html-tagset # Data tables useful in parsing HTML
-  perl-http-cookies # HTTP cookie jars
-  perl-http-daemon # Simple http server class
-  perl-http-date # Date conversion routines
-  perl-http-message # HTTP style messages
-  perl-http-negotiate # Choose a variant to serve
-  perl-io-html # Open an HTML file with automatic charset detection
-  perl-libwww # The World-Wide Web library for Perl
-  perl-lwp-mediatypes # Guess the media type of a file or a URL
-  perl-net-http # Low-level HTTP connection (client)
-  perl-try-tiny # Minimal try/catch with proper localization of $@
-  perl-www-robotrules # Database of robots.txt-derived permissions
-  perl-xml-parser # Expat-based XML parser module for perl
-  perl-xml-writer # Module for writing XML documents
-  rp-pppoe # Roaring Penguin's Point-to-Point Protocol over Ethernet client
-  ethtool # Utility for controlling network drivers and hardware
+  usb_modeswitch # Activating switchable USB devices on Linux
   $ systemctl enable ModemManager.service
+  $ sudo hblock
   ```
 
   - Network Manager VPN Support
@@ -583,7 +556,7 @@ pacman -S --needed - < pkglist.txt
 - System maintenance
 
   ```bash
-  bash-completion
+  perl-file-mimeinfo # Determine file type, includes mimeopen and mimetype
   pacman-contrib # this brings `checkupdates` a safe way to check for upgrades
   archlinux-contrib # this brings `checkservices` hecks for processes to be restarted
   htop # Simple, ncurses interactive process viewer
@@ -594,7 +567,7 @@ pacman -S --needed - < pkglist.txt
   eza # A modern replacement for ls (community fork of exa)
   inxi # A script to get system information
   neofetch # A fast, highly customizable system info script that supports displaying images with w3m
-  hwinfo # Powerful hardware detection tool come from openSUSE  
+  hwinfo # Powerful hardware detection tool come from openSUSE
   reflector # service will run reflector with the parameters specified in `/etc/xdg/reflector/reflector.conf`
   expect # A tool for automating interactive applications
   dust # directories disk usage display
@@ -649,6 +622,7 @@ pacman -S --needed - < pkglist.txt
   dosfstools # DOS filesystem utilities
   ecryptfs-utils # Enterprise-class stacked cryptographic filesystem for Linux
   testdisk # provides both TestDisk and PhotoRec
+  nfs-utils # Support programs for Network File Systems
   e2fsprogs
   exfatprogs
   f2fs-tools
@@ -685,7 +659,7 @@ pacman -S --needed - < pkglist.txt
   $ systemctl enable udisks2.service
   ```
 
-- Bluetooth
+- Bluetooth & Network
 
   ```bash
   bluez
@@ -694,12 +668,6 @@ pacman -S --needed - < pkglist.txt
   bluez-tools
   blueman # for DEs except KDE, Gnome
   $ systemctl enable bluetooth.service
-  ```
-
-- User Privilege
-
-  ```bash
-  polkit # for defining and handling the policy that allows unprivileged processes to speak to privileged processes
   ```
 
 - Archiving
@@ -760,6 +728,7 @@ pacman -S --needed - < pkglist.txt
 - Shell
 
   ```bash
+  bash-completion
   zsh # A very advanced and programmable command interpreter (shell) for UNIX
   zsh-autosuggestions
   zsh-completions
@@ -770,11 +739,22 @@ pacman -S --needed - < pkglist.txt
 
 - Advanced Swapping
 
-  - **Zswap** works in conjunction with regular swap while a **zram** based swap device does not require a backing swap device and may work standalone (if no swap on hard disk is required, i.e. on SSD or kind of flash memory).
+  - **Zswap** works in conjunction with regular swap while a **zram** based swap device
+  does not require a backing swap device and may work standalone
+  (if no swap on hard disk is required, i.e. on SSD or kind of flash memory).
 
-  - **Zswap** is a compressed swap cache in RAM and works as a type of proxy for regular swap (in this context also called backing swap device). Zswap gets filled up first and evicts pages from compressed cache on an LRU basis to the backing swap device when the compressed pool reaches its size limit. This not only speeds up swap usage but also reduces hits on backing swap device (i.e. SSD).
+  - **Zswap** is a compressed swap cache in RAM and works as a type of proxy
+  for regular swap (in this context also called backing swap device).
+  Zswap gets filled up first and evicts pages from compressed cache on an LRU basis
+  to the backing swap device when the compressed pool reaches its size limit.
+  This not only speeds up swap usage but also reduces hits on backing swap device (i.e. SSD).
 
-  - **Zram** based swap on the other hand works like regular swap (but compressed in RAM) without the opportunity to evict pages. So it gets filled up gradually until it’s full. After that, the next (but probably slower) swap in order (i.e. on hard disk) fills up. This way, it is possible to have stored less frequently used memory pages within the faster zram based swap, while newer frequently used memory pages get swapped to slower hard disk.
+  - **Zram** based swap on the other hand works like regular swap
+  (but compressed in RAM) without the opportunity to evict pages.
+  So it gets filled up gradually until it’s full.
+  After that, the next (but probably slower) swap in order (i.e. on hard disk) fills up.
+  This way, it is possible to have stored less frequently used memory pages within
+  the faster zram based swap, while newer frequently used memory pages get swapped to slower hard disk.
 
   ```bash
   zram-generator # Systemd unit generator for zram devices
@@ -795,19 +775,6 @@ pacman -S --needed - < pkglist.txt
   vm.watermark_boost_factor = 0
   vm.watermark_scale_factor = 125
   vm.page-cluster = 0
-  ```
-
-### GUI Evironment
-
-- Not for a specific DE
-
-  ```bash
-  accountsservice # D-Bus interface for user account query and manipulation required by display managers
-  appmenu-gtk-module # to integrate application menus with the desktop environment's global menu bar
-  wpebackend-fdo # Freedesktop.org backend for WPE WebKit
-  xdg-dbus-proxy # Filtering proxy for D-Bus connections
-  xdg-user-dirs # Manage user directories like ~/Desktop and ~/Music
-  xdg-utils # Command line tools that assist applications with a variety of desktop integration tasks
   ```
 
 - Intel CPU and Graphics
@@ -847,9 +814,10 @@ pacman -S --needed - < pkglist.txt
 
     ```bash
     dkms
-    # nvidia
-    # nvidia-lts
-    nvidia-dkms
+    # nvidia -> kernel
+    # nvidia-lts -> kernel-lts
+    # nvidia-dkms -> kernel-zen or other kernels
+    nvidia-lts
     nvidia-utils
     nvidia-settings
     nvidia-prime
@@ -859,7 +827,7 @@ pacman -S --needed - < pkglist.txt
 
     $ echo "options nomodeset i915.modeset=0 nouveau.modeset=0 nvidia-drm.modeset=1" > /etc/modprobe.d/nvidia.conf
 
-    $ nvim /boot/loader/entries/arch-zen.conf
+    $ nvim /boot/loader/entries/arch-lts.conf
     ---------------------
     options ... loglevel=3 nvidia_drm.modeset=1 video=HDMI-A-1:1920x1080@60D cpufreq.default_governor=powersave
 
@@ -878,6 +846,9 @@ pacman -S --needed - < pkglist.txt
     *Make sure the Target package set in this hook is the one you have installed in steps above (e.g. `nvidia`, `nvidia-dkms`, `nvidia-lts` or `nvidia-ck-something`).*
 
     ```bash
+    # If a different kernel is used change the Target=linux-lts also in the Exec line
+    # If a different nvidia package is used change the Target=nvidia-lts
+
     $ nvim /etc/pacman.d/hooks/nvidia.hook
     ---------------------
     [Trigger]
@@ -885,17 +856,15 @@ pacman -S --needed - < pkglist.txt
     Operation=Upgrade
     Operation=Remove
     Type=Package
-    Target=nvidia-dkms
-    Target=linux-zen
-    # Change the `Target=linux` part above and in the Exec line if a different kernel is used
-    # Change the `Target=nvidia` part above if a different nvidia is used
+    Target=nvidia-lts
+    Target=linux-lts
 
     [Action]
     Description=Update NVIDIA module in initcpio
     Depends=mkinitcpio
     When=PostTransaction
     NeedsTargets
-    Exec=/bin/sh -c 'while read -r trg; do case $trg in linux-zen) exit 0; esac; done; /usr/bin/mkinitcpio -P'
+    Exec=/bin/sh -c 'while read -r trg; do case $trg in linux-lts) exit 0; esac; done; /usr/bin/mkinitcpio -P'
     ```
 
     - To use optimus-manager for the first time, call `prime-offload` then do e.g `optimus-manager --switch MODE`
@@ -933,165 +902,22 @@ pacman -S --needed - < pkglist.txt
   # Or
   aur/visual-studio-code-bin # Visual Studio Code (vscode)
 
-  libreoffice-still # The office productivity suite compatible to the open and standardized ODF document format
+  libreoffice-fresh # The office productivity suite compatible to the open and standardized ODF document format
   pdfslicer # Simple application to extract, merge, rotate and reorder pages of PDF documents
   ```
 
 - Fonts
 
   ```bash
+  awesome-terminal-fonts # icon package
   harfbuzz-icu # OpenType text shaping engine - ICU integration
   terminus-font # Monospace bitmap font (for X11 and console)
   ttf-cascadia-code-nerd # Patched font Cascadia Code (Caskaydia) from nerd fonts library
   ttf-hack-nerd # Patched font Hack from nerd fonts library
+  noto-fonts
+  noto-fonts-emoji
   woff2 # Web Open Font Format 2 reference implementation
   ```
-
-### KDE Applications
-
-```bash
-solid # Hardware integration and detection
-layer-shell-qt # Qt component to allow applications to make use of the Wayland wl-layer-shell protocol
-ark # Archiving tool included in the KDE desktop
-aur/isoimagewriter # Tool to write a .iso file to a USB disk
-aur/kcm-polkit-kde-git # Set of configuration modules which allows administrator to change PolicyKit settings
-aur/systemd-kcm # systemd control module for KDE
-bluedevil # KDE's Bluetooth tool
-breeze # Plasma's Breeze theme
-breeze-gtk # a GTK theme designed to mimic the appearance of Plasma's Breeze theme
-cifs-utils # to make it look to Plasma like if the SMB share was just a normal local folder
-discover # KDE GUI Pkage Manager
-dolphin # File manager included in the KDE desktop
-dolphin-plugins # uses udisksctl to either mount or unmount the iso in Dolphin
-drkonqi # The KDE crash handler
-falkon # Cross-platform QtWebEngine browser
-ffmpegthumbs # provides video thumbnailing plugin
-filelight # Disk usage analyzer by KDE
-ghostwriter # Distraction-free Markdown editor
-gwenview # Fast and easy to use image viewer for the KDE desktop
-kaccounts-providers # Online account providers for the KAccounts system
-kactivitymanagerd # System service to manage user activities and track the usage patterns
-kate # Full-featured programmer's editor for the KDE desktop with MDI and a filesystem browser
-kcalc # Scientific calculator included in the KDE desktop
-kcolorlhooser # Simple application to select the color from the screen or from a pallete
-kcron # Tool for KDE to run applications in the background at regular intervals
-kde-cli-tools # Tools based on KDE Frameworks 5 to better interact with the system
-kde-gtk-config # GTK2 and GTK3 Configurator for KDE
-kdeconnect # Provides integration between devices
-kdecoration # Plugin based library to create window decorations
-kdegraphics-thumbnailers # provides PDF thumbnailing plugin, among others
-kdenetwork-filesharing # Windows File and printer sharing for KDE. provides the Samba file sharing setup wizard
-kdeplasma-addons # All kind of addons to improve your Plasma experience
-kdesdk-thumbnailers # Plugins for the thumbnailing system
-kdf # Displays information about hard disks and other storage devices
-kdialog # A utility for displaying dialog boxes from shell scripts
-kexi # Visual database applications creator tool by KDE
-keysmith # OTP generation software by KDE
-kfind # Search tool for KDE to find files by name, type or content
-kgamma5 # Adjust your monitor gamma settings
-kget # Download manager for KDE
-khotkeys
-kimageformats # Image format plugins for Qt5
-kinfocenter # Centralized and convenient overview of system information for KDE
-kinit # Process launcher to speed up launching KDE applications
-kio # Resource and network access abstraction
-kio-admin # provides a safe way to edit files as root
-kio-extras # MTP support is included in
-kio-fuse # FUSE interface for KIO
-kio-gdrive # provides transparent KIO access to Google Drive
-kio-zeroconf # Network Monitor for DNS-SD services (Zeroconf)
-kjournald # Framework for interacting with systemd-journald
-kmenuedit # KDE menu editor
-kompare # GUI front-end program for viewing and merging differences between source files with many options to customize the information
-konsole # Terminal emulator included in the KDE desktop
-kpat # Offers a selection of solitaire card games
-kpipewire
-krita # Digital painting and illustration software included based on the KDE platform
-kscreen
-kscreenlocker
-kshutdown # Graphical shutdown utility, which allows you to turn off or suspend a computer at a specified time
-ksshaskpass # ssh-add helper that uses kwallet and kpassworddialog
-ksysguard # System monitor for KDE to monitor running processes and system performance.
-ksystemlog # System log viewer tool for KDE
-ksystemstats # A plugin based system monitoring daemon
-ktimer # Little tool for KDE to execute programs after some time
-ktouch # Program to learn and practice touch typing
-kwallet-pam
-kwalletmanager # Tool to manage the passwords on your system
-kwayland-integration # Provides integration plugins for various KDE frameworks for the wayland windowing system
-kwin
-kwrited # KDE daemon listening for wall and write messages
-layer-shell-qt # Qt component to allow applications to make use of the Wayland wl-layer-shell protocol
-libappindicator-gtk2 # icons in system tray
-libappindicator-gtk3 # an attempt to get clear icons
-libkscreen
-libksysguard
-libqtxdg
-markdownpart # KPart for rendering Markdown content (kate/okular markdown preview)
-milou # A dedicated search application built on top of Baloo
-noto-fonts
-noto-fonts-emoji
-okular # Universal document viewer for KDE
-oxygen
-oxygen-sounds
-packagekit-qt5 # to manage packages from Arch Linux repositories (not recommended, use at your own risk)
-partitionmanager # Utility to help you manage the disks, partitions, and file systems on your computer
-phonon-qt5-gstreamer # Phonon is the multimedia API provided by KDE and is the standard abstraction for handling multimedia streams within KDE software
-plasma-browser-integration
-plasma-desktop
-plasma-disks # Hard disk health monitoring for KDE Plasma
-plasma-firewall
-plasma-integration
-plasma-nm
-plasma-pa
-plasma-vault
-plasma-systemmonitor # Advanced and customizable system monitor for KDE
-plasma-wayland-session
-plasma-workspace
-plasma5-applets-thermal-monitor # KDE Plasma applet for monitoring CPU, GPU and other available temperature sensors
-polkit-kde-agent # Daemon providing a polkit authentication UI for KDE
-powerdevil # for an integrated Plasma power managing service
-qt5-imageformats # .webp, .tiff, .tga, .jp2 files
-qt5-virtualkeyboard
-qt5-wayland
-qt5ct # Icons
-qt6-imageformats # Plugins for additional image formats: TIFF, MNG, TGA, WBMP
-qt6-shadertools # Provides functionality for the shader pipeline that allows Qt Quick to operate on Vulkan, Metal, and Direct3D, in addition to OpenG
-qt6-wayland
-qtxdg-tools # libqtxdg user tools
-sddm # simple display manager
-sddm-kcm # KDE Configuration Module for SDDM
-spectacle # screenshot app
-sweeper # System cleaning utility for KDE
-systemdgenie # a graphical frontend for systemctl
-systemsettings # KDE system manager for hardware, software, and workspaces
-svgpart # A KPart for viewing SVGs (kate/okular svg preview)
-taglib # Audio files
-xdg-desktop-portal-kde # To use remote input functionality on a Plasma Wayland session/Desktop integration portals for sandboxed apps
-# breeze-plymouth
-# flatpak-kcm # Flatpak Permissions Management KCM for discover
-# plasma-sdk
-# plasma-thunderbolt
-# plasma-welcome
-# plasma-workspace-wallpapers
-# plymouth-kcm
-```
-
-## Troubleshooting
-
-### SDDM: Touchpad Tapping
-
-```bash
-nvim /etc/X11/xorg.conf.d/30-touchpad.conf
----------------------
-Section "InputClass"
-    Identifier "touchpad"
-    Driver "libinput"
-    MatchIsTouchpad "on"
-    Option "Tapping" "on"
-    Option "TappingButtonMap" "lmr"
-EndSection
-```
 
 ### ACPID
 
@@ -1155,15 +981,19 @@ The default monitor should be connected when running the script, which is always
 - Note: To leave the default monitor enabled when an external monitor is connected, in the else clause comment the first line and uncomment the next line.
 
 ```bash
-nvim /usr/share/sddm/scripts/Xsetup
+nvim /usr/bin/multiple-monitors.sh
 ---------------------
-intern=LVDS1
-extern=VGA1
+#!/bin/sh
+
+# run xrandr to see which monitors you have
+intern=eDP1
+extern=HDMI1
 
 if xrandr | grep "$extern disconnected"; then
     xrandr --output "$extern" --off --output "$intern" --auto
 else
     xrandr --output "$intern" --off --output "$extern" --auto
+    ## To leave the default monitor enabled when an external monitor is connected, replace the else clause with
     # xrandr --output "$intern" --primary --auto --output "$extern" --right-of "$intern" --auto
 fi
 ```
@@ -1174,7 +1004,7 @@ fi
 aur/mkinitcpio-firmware # The meta-package that contains most optional firmwares
 ```
 
-that includes firmwares listed bellow including `linux-firmware-mellanox` too.
+- that includes firmwares listed bellow including `linux-firmware-mellanox` too.
 
 ```bash
 linux-firmware
@@ -1188,6 +1018,11 @@ aur/aic94xx-firmware
 aur/wd719x-firmware
 aur/upd72020x-fw
 ```
+
+### Desktops
+
+- [KDE/Plasma](./plasma.md)
+- [XFCE](./xfce.md)
 
 ## Further Reading
 
