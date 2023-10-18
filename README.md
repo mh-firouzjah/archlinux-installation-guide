@@ -199,7 +199,9 @@ In this content I'll explain how to install Arch Linux (64-bit) using systemd-bo
     mount -t ntfs-3g -o defaults,noauto,noatime,discard,nofail,users,windows_names,utf8,nls=utf8,x-systemd.idle-timeout=10min /dev/sda1 /mnt/hdd
     ```
 
-## Install basic system
+## Installation
+
+- Basic System
 
   ```bash
   pacstrap -K /mnt base base-devel linux-lts linux-lts-headers linux-firmware intel-ucode ntfs-3g e2fsprogs btrfs-progs neovim networkmanager efibootmgr efitools sbctl # grub
