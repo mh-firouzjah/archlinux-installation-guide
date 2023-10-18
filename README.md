@@ -74,18 +74,18 @@ In this content I'll explain how to install Arch Linux (64-bit) using systemd-bo
   ls /sys/firmware/efi/efivars # any output indicates uefi boot
   ```
 
-- Partition the disks
+## Partition the disks
 
-  - Since we are using UEFI boot, we need to create a GPT partition table and also we need an efi partition. it's easier to consider `/boot` for that efi partition.
+- Since we are using UEFI boot, we need to create a GPT partition table and also we need an efi partition. it's easier to consider `/boot` for that efi partition.
 
-  - You can use 1 GiB size for `/boot` to be on the safe side.
+- You can use 1 GiB size for `/boot` to be on the safe side.
   for example adding nvidia mudole to `mkinitcpio` will increase ~=50-60mb to each initramfs and it's fallback.
 
-  - Since `/var` is frequently read or written, it is recommended that you consider the location of this partition on a spinning disk.
+- Since `/var` is frequently read or written, it is recommended that you consider the location of this partition on a spinning disk.
 
-    - With that being said, newer SSDs, especially those with higher capacities, have a longer lifespan (support lots of writes and erases e.g 20g/dey for near 10 years).
+  - With that being said, newer SSDs, especially those with higher capacities, have a longer lifespan (support lots of writes and erases e.g 20g/dey for near 10 years).
 
-  - If you want to go with `BTRFS`, consider creating subvolumes for other directories that contain data you do not want to include in snapshots and rollbacks of the `@` subvolume, such as `/var/cache`, `/var/spool`, `/var/tmp`, `/var/lib/machines` (systemd-nspawn), `/var/lib/docker` (Docker), `/var/lib/postgres` (PostgreSQL), and other data directories under `/var/lib/`. It is up to you if you want to follow the flat layout or create nested subvolumes. On the other hand, the pacman database in `/var/lib/pacman` ***must*** stay on the root subvolume (`@`).
+- If you want to go with `BTRFS`, consider creating subvolumes for other directories that contain data you do not want to include in snapshots and rollbacks of the `@` subvolume, such as `/var/cache`, `/var/spool`, `/var/tmp`, `/var/lib/machines` (systemd-nspawn), `/var/lib/docker` (Docker), `/var/lib/postgres` (PostgreSQL), and other data directories under `/var/lib/`. It is up to you if you want to follow the flat layout or create nested subvolumes. On the other hand, the pacman database in `/var/lib/pacman` ***must*** stay on the root subvolume (`@`).
 
   | partition | size | fs-type | mount | point | partition |
   | --- | --- | --- | --- | --- | --- |
@@ -137,13 +137,13 @@ In this content I'll explain how to install Arch Linux (64-bit) using systemd-bo
   # The partition table has been altered
   ```
 
-  - Format EFI partition
+- Format EFI partition
 
     ```bash
     mkfs.fat -F 32 -n EFI /dev/nvme0n1p1
     ```
 
-  - Ext4 Partitioning
+- Ext4 Partitioning
 
     ```bash
     mkfs.ext4 -c -e remount-ro -L ROOT -O dir_index,extent,filetype,flex_bg,has_journal,sparse_super,uninit_bg -E lazy_itable_init,discard /dev/nvme0n1p2
@@ -151,7 +151,7 @@ In this content I'll explain how to install Arch Linux (64-bit) using systemd-bo
     mount -t ext4 -o defaults,noatime,discard,journal_checksum,commit=120,min_batch_time=200,auto_da_alloc,i_version /dev/nvme0n1p2 /mnt
     ```
 
-  - BTRFS Partitioning
+- BTRFS Partitioning
 
     ```bash
     mkfs.btrfs -f -L ROOT /dev/nvme0n1p2
@@ -190,7 +190,7 @@ In this content I'll explain how to install Arch Linux (64-bit) using systemd-bo
     swapon /mnt/swap/swapfile
     ```
 
-  - EFI and other partitions
+- EFI and other partitions
 
     ```bash
     # noauto - will prevent automount and regarding that we have to mount the partition manually
@@ -199,10 +199,10 @@ In this content I'll explain how to install Arch Linux (64-bit) using systemd-bo
     mount -t ntfs-3g -o defaults,noauto,noatime,discard,nofail,users,windows_names,utf8,nls=utf8,x-systemd.idle-timeout=10min /dev/sda1 /mnt/hdd
     ```
 
-- Install basic system
+## Install basic system
 
   ```bash
-  pacstrap -K /mnt base base-devel linux-lts linux-lts-headers linux-firmware intel-ucode ntfs-3g e2fsprogs btrfs-progs neovim networkmanager efibootmgr efitools sbctl
+  pacstrap -K /mnt base base-devel linux-lts linux-lts-headers linux-firmware intel-ucode ntfs-3g e2fsprogs btrfs-progs neovim networkmanager efibootmgr efitools sbctl # grub
 
   genfstab -U /mnt >> /mnt/etc/fstab
 
@@ -258,18 +258,70 @@ In this content I'll explain how to install Arch Linux (64-bit) using systemd-bo
   echo "FONT=LatArCyrHeb-14" > /etc/vconsole.conf
   ```
 
-- Configure bootloader
+## Install bootloader
+
+<details>
+  <summary>Grub</summary>
+
+  Install required packages:
+
+  ```bash
+  pacman -S grub efibootmgr
+  ```
+
+  Now, we'll use the grub-install command to
+  install GRUB in the newly mounted EFI system partition:
+
+  ```bash
+  grub-install --target=x86_64-efi --bootloader-id=grub
+  ```
+
+- If you're installing alongside other operating systems:</summary>
+
+  - you'll also need the os-prober package:
+
+      ```bash
+      pacman -S os-prober
+      ```
+
+  - and you have to uncomment `#GRUB_DISABLE_OS_PROBER=false` from `/etc/default/grub`:
+
+      ```bash
+      vim /etc/default/grub
+      ---------------------
+      remove '#' from the following line
+      #GRUB_DISABLE_OS_PROBER=false
+      ```
+
+  Now execute the following command to generate the configuration file:
+
+  ```bash
+  grub-mkconfig -o /boot/grub/grub.cfg
+  ```
+
+</details>
+
+<details>
+  <summary>systemd-boot</summary>
 
   ```bash
   bootctl install --efi-boot-option-description="Arch Linux LTS"
+  ```
 
+- To set a loader edit `/boot/loader/loader.conf` and define a default entry
+
+  ```bash
   nvim /boot/loader/loader.conf
   ---------------------
   default arch-lts.conf
   timeout 0
   editor no
   console-mode max
+  ```
 
+- Define default and fallback bootloaders
+
+  ```bash
   nvim /boot/loader/entries/arch-lts.conf
   ---------------------
   title Arch Linux LTS
@@ -278,19 +330,19 @@ In this content I'll explain how to install Arch Linux (64-bit) using systemd-bo
   initrd initramfs-linux-lts.img
   ```
 
-  - For Ext4
+- For Ext4
 
     ```bash
     echo "options root=/dev/nvme0n1p2 rootfstype=ext4 add_efi_memmap" >> arch-lts.conf
     ```
 
-  - For BTRFS
+- For BTRFS
 
     ```bash
     echo "options root=/dev/nvme0n1p2 rootfstype=btrfs rootflags=subvol=@ add_efi_memmap" >> arch-lts.conf
     ```
 
-  - Generate a fallback option
+- Generate a fallback option
 
     ```bash
     cd /boot/loader/entries
@@ -298,7 +350,7 @@ In this content I'll explain how to install Arch Linux (64-bit) using systemd-bo
     sed -i '/initrd/s/lts.img/lts-fallback.img/' fallback.conf
     ```
 
-- Verify bootloaderes
+- Verify boot-loaders
 
   ```bash
   bootctl list
@@ -328,6 +380,23 @@ In this content I'll explain how to install Arch Linux (64-bit) using systemd-bo
   ```bash
   nvim /etc/mkinitcpio.conf
   ---------------------
+  # in `HOOKS=` replace `udev` with `systemd`
+  HOOKS=(base systemd[udev] fsck ...)
+  ```
+
+  Then run
+
+  ```bash
+  mkinitcpio -P
+  ```
+
+</details>
+
+- Configure mkinitcpio
+
+  ```bash
+  nvim /etc/mkinitcpio.conf
+  ---------------------
   # in MODULES add the following based on the list bellow:
   # BTRFS -> btrfs
   # Ext4 -> ext4
@@ -336,9 +405,6 @@ In this content I'll explain how to install Arch Linux (64-bit) using systemd-bo
   # Nvidia GPU -> nvidia nvidia_modeset nvidia_uvm nvidia_drm
   # Nouveau Driver -> nouveau
   MODULES = (...)
-
-  # in `HOOKS=` replace `udev` with `systemd`
-  HOOKS=(base systemd[udev] fsck ...)
 
   # uncomment and edit `COMPRESSION_OPTIONS=` to save space for custom kernels
   COMPRESSION_OPTIONS=(-v -9 --long)
@@ -361,6 +427,8 @@ In this content I'll explain how to install Arch Linux (64-bit) using systemd-bo
   [Service]
   TTYVTDisallocate=no
   ```
+
+## Manage Accounts
 
 - Set root password
 
@@ -391,7 +459,7 @@ In this content I'll explain how to install Arch Linux (64-bit) using systemd-bo
   - then to connect to Wi-Fi run
 
     ```bash
-     nmcli dev wifi connect WIFI_NAME password "network-password"
+    nmcli dev wifi connect WIFI_NAME password "network-password"
     ```
 
 - Exit chroot environment
