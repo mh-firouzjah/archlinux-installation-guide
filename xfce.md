@@ -46,6 +46,7 @@ sudo pacman -Rns tumbler ristretto
 - Themes
 
   ```bash
+  xfce-theme-manager
   gnome-themes-extra
   arc-gtk-theme
   arc-solid-gtk-theme
