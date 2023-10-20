@@ -24,39 +24,29 @@ kdegraphics-thumbnailers # provides PDF thumbnailing plugin, among others
 kdeplasma-addons # All kind of addons to improve your Plasma experience
 kdesdk-thumbnailers # Plugins for the thumbnailing system
 kdialog # A utility for displaying dialog boxes from shell scripts
-kfind # Search tool for KDE to find files by name, type or content
 kget # Download manager for KDE
 kimageformats # Image format plugins for Qt5
 kinit # Process launcher to speed up launching KDE applications
-kjournald # Framework for interacting with systemd-journald
 konsole # Terminal emulator included in the KDE desktop
 kpat # Offers a selection of solitaire card games
-kshutdown # Graphical shutdown utility, which allows you to turn off or suspend a computer at a specified time
 ksysguard # System monitor for KDE to monitor running processes and system performance.
 ksystemlog # System log viewer tool for KDE
 ksystemstats # A plugin based system monitoring daemon
-ktimer # Little tool for KDE to execute programs after some time
 kwalletmanager # Tool to manage the passwords on your system
 libappindicator-gtk2 # icons in system tray
 libappindicator-gtk3 # an attempt to get clear icons
 libqtxdg # Library providing freedesktop.org XDG specs implementations for Qt
 markdownpart # KPart for rendering Markdown content (kate/okular markdown preview)
-noto-fonts
-noto-fonts-emoji
+noto-fonts # 
+noto-fonts-emoji # 
 okular # Universal document viewer for KDE
-packagekit-qt5 # to manage packages from Arch Linux repositories (not recommended, use at your own risk)
+packagekit-qt5 # lets discoover to manage packages from Arch Linux repositories (not recommended, use at your own risk)
 partitionmanager # Utility to help you manage the disks, partitions, and file systems on your computer
 phonon-qt5-gstreamer # Phonon is the multimedia API provided by KDE and is the standard abstraction for handling multimedia streams within KDE software
 plasma # Plasma Package Group
-plasma-wayland-session
+plasma-wayland-session # 
 plasma5-applets-thermal-monitor # KDE Plasma applet for monitoring CPU, GPU and other available temperature sensors
 qt5-imageformats # Plugins for additional image formats: TIFF, MNG, TGA, WBMP
-qt5-virtualkeyboard
-qt5-wayland
-qt5ct # Icons
-qt6-imageformats # Plugins for additional image formats: TIFF, MNG, TGA, WBMP
-qt6-shadertools # Provides functionality for the shader pipeline that allows Qt Quick to operate on Vulkan, Metal, and Direct3D, in addition to OpenG
-qt6-wayland
 qtxdg-tools # libqtxdg user tools
 solid # Hardware integration and detection
 spectacle # screenshot app
@@ -77,7 +67,7 @@ taglib # Audio files
 - SDDM Touchpad Tapping
 
 ```bash
-nvim /etc/X11/xorg.conf.d/30-touchpad.conf
+sudo nvim /etc/X11/xorg.conf.d/30-touchpad.conf
 ---------------------
 Section "InputClass"
     Identifier "touchpad"
@@ -93,7 +83,19 @@ EndSection
   from the main file that script should be used here
 
 ```bash
-nvim /usr/share/sddm/scripts/Xsetup
+sudo nvim /usr/share/sddm/scripts/Xsetup
 ---------------------
-source /usr/bin/multiple-monitors.sh
+#!/bin/sh
+
+# run xrandr to see which monitors you have
+intern=eDP1
+extern=HDMI1
+
+if xrandr | grep "$extern disconnected"; then
+    xrandr --output "$extern" --off --output "$intern" --auto
+else
+    xrandr --output "$intern" --off --output "$extern" --auto
+    ## To leave the default monitor enabled when an external monitor is connected, replace the else clause with
+    # xrandr --output "$intern" --primary --auto --output "$extern" --right-of "$intern" --auto
+fi
 ```

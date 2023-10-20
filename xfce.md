@@ -54,10 +54,16 @@ sudo pacman -Rns tumbler ristretto
   papirus-icon-theme
   ```
 
-- Image viewer
+- Helpers
 
   ```bash
-  viewnior
+  viewnior # Image viewer
+  xarchiver # Archive manager
+  network-manager-applet
+  lxsession
+  wpebackend-fdo
+  ibus-typing-booster # Emoji selector
+  pavucontrol # Volume control
   ```
 
 - LightDM Toggle External Monitor

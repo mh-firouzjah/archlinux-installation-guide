@@ -1076,6 +1076,12 @@ else
 fi
 ```
 
+then run 
+
+```bash
+sudo chmod +x /usr/bin/multiple-monitors.sh  
+```
+
 ### Optional Firmwares
 
 ```bash
