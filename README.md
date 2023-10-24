@@ -196,7 +196,7 @@ In this content I'll explain how to install Arch Linux (64-bit) using systemd-bo
     # noauto - will prevent automount and regarding that we have to mount the partition manually
     # users - will cause any user have read/write access but the drive is owned by root
     mount /dev/nvme0n1p1 /mnt/boot
-    mount -t ntfs-3g -o defaults,noauto,noatime,discard,nofail,users,windows_names,utf8,nls=utf8,x-systemd.idle-timeout=10min /dev/sda1 /mnt/hdd
+    mount -t ntfs-3g -o rw,noauto,x-systemd.automount,noatime,async,discard,users,user_id=1000,group_id=1000,umask=000,allow_other,nls=utf-8,utf8 /dev/sda1 /mnt/hdd
     ```
 
 ## Installation
